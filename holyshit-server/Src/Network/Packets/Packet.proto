@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option csharp_namespace = "HolyShitServer.Src.Network.Packets";
+
+enum PacketId {
+  UNKNOWN = 0;
+  C2SRegisterRequest = 1;
+  S2CRegisterResponse = 2;
+  C2SLoginRequest = 3;
+  S2CLoginResponse = 4;
+}

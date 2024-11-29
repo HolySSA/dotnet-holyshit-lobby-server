@@ -54,6 +54,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[2.67.0, )"
+            },
+            "System.Collections.Immutable": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             }
           },
           "imports": [

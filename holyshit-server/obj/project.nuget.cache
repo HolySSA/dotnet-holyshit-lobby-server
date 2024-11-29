@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "3uDjZIcy6TpCyTJi39VPunWnrqpa5nV+yU/pfOPceircfyJEo8Ko3keLHc8IwKzLfCZGiJgeQ7UAkifclyVECg==",
+  "dgSpecHash": "+pkM5cYRJl25QZRI2EOPyfH49XTua6S+2CS2uyU7pF3YXZo/dtW/hvCEXdseGL2mx5ecVEXDCrN9LCw29ajQjQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\SHIN\\Desktop\\git\\dotnet-holyshit\\holyshit-server\\holyshit-server.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\SHIN\\.nuget\\packages\\google.protobuf\\3.29.0\\google.protobuf.3.29.0.nupkg.sha512",
-    "C:\\Users\\SHIN\\.nuget\\packages\\grpc.tools\\2.67.0\\grpc.tools.2.67.0.nupkg.sha512"
+    "C:\\Users\\SHIN\\.nuget\\packages\\grpc.tools\\2.67.0\\grpc.tools.2.67.0.nupkg.sha512",
+    "C:\\Users\\SHIN\\.nuget\\packages\\system.collections.immutable\\9.0.0\\system.collections.immutable.9.0.0.nupkg.sha512"
   ],
   "logs": []
 }
