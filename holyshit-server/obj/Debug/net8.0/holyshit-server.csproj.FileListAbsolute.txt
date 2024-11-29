@@ -1,0 +1,16 @@
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\bin\Debug\net8.0\Assets\MonsterInfo.json
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\bin\Debug\net8.0\holyshit-server.exe
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\bin\Debug\net8.0\holyshit-server.deps.json
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\bin\Debug\net8.0\holyshit-server.runtimeconfig.json
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\bin\Debug\net8.0\holyshit-server.dll
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\bin\Debug\net8.0\holyshit-server.pdb
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\holyshit-server.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\holyshit-server.AssemblyInfoInputs.cache
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\holyshit-server.AssemblyInfo.cs
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\holyshit-server.csproj.CoreCompileInputs.cache
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\holyshit-server.sourcelink.json
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\holyshit-server.dll
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\refint\holyshit-server.dll
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\holyshit-server.pdb
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\holyshit-server.genruntimeconfig.cache
+C:\Users\SHIN\Desktop\git\dotnet-holyshit\holyshit-server\obj\Debug\net8.0\ref\holyshit-server.dll
