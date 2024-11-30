@@ -1,42 +1,89 @@
 using System.Net.Sockets;
-using System.Text;
+using Google.Protobuf;
+using HolyShitServer.Src.Network.Protocol;
+using HolyShitServer.Src.Network.Handlers;
+using HolyShitServer.Src.Network.Packets;
 
 namespace HolyShitServer.Src.Network;
 
 public class TcpClientHandler : IDisposable
 {
   private readonly TcpClient _client; // 현재 연결된 클라이언트
+  private readonly NetworkStream _stream; // 클라이언트와의 네트워크 스트림
+  private readonly List<IPacketHandler> _packetHandlers; // 패킷 핸들러 목록
+  private readonly byte[] _buffer = new byte[8192]; // 8KB 버퍼
   private bool _disposed = false; // 객체 해제 여부
-  public event Action<string>? onDataReceived; // 클라이언트로부터 데이터를 수신했을 때 실행될 콜백 이벤트
 
   // 생성자 - 필드 초기화
   public TcpClientHandler(TcpClient client)
   {
     _client = client;
+    _stream = client.GetStream();
+    _packetHandlers = new List<IPacketHandler>{
+      new AuthPacketHandler(this)
+
+      // 다른 핸들러 추가
+    };
+
+    RegisterAllHandlers();
+  }
+
+  private void RegisterAllHandlers()
+  {
+    foreach (var handler in _packetHandlers)
+    {
+      handler.RegisterHandlers();
+    }
+  }
+
+  private void UnregisterAllHandlers()
+  {
+    foreach (var handler in _packetHandlers)
+    {
+      handler.UnregisterHandlers();
+    }
   }
 
   // 클라이언트 통신 처리 비동기로 시작
   public async Task StartHandlingClientAsync()
   {
-    // 네트워크 스트림 - 데이터 read / write 시 필요
-    using var stream = _client.GetStream();
-    using var reader = new StreamReader(stream, Encoding.UTF8);
-    using var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true }; // AutoFlush로 매번 즉시 전송
-
-    while (!_disposed)
+    try
     {
-      try
+      while (!_disposed)
       {
-        string? data = await reader.ReadLineAsync(); // 데이터를 한 줄 씩 비동기로 읽기
-        if (data == null) break;
+        // 헤더 읽기
+        var headerBuffer = new byte[PacketSerializer.HEADER_SIZE];
+        int headerBytesRead = await _stream.ReadAsync(headerBuffer, 0, PacketSerializer.HEADER_SIZE);
+        if (headerBytesRead == 0) break;
 
-        onDataReceived?.Invoke(data); // 데이터 수신 이벤트 - 데이터 전달
-        await writer.WriteLineAsync($"Server Received: {data}"); // 클라이언트에게 응답
+        // 페이로드 길이 추출 (헤더의 마지막 4바이트)
+        var payloadLength = BitConverter.ToInt32(headerBuffer, 7);
+
+        // 페이로드 읽기
+        var payloadBuffer = new byte[payloadLength];
+        int payloadBytesRead = await _stream.ReadAsync(payloadBuffer, 0, payloadLength);
+        if (payloadBytesRead == 0) break;
+
+        // 전체 패킷 조합
+        var packetBuffer = new byte[PacketSerializer.HEADER_SIZE + payloadLength];
+        Array.Copy(headerBuffer, 0, packetBuffer, 0, PacketSerializer.HEADER_SIZE);
+        Array.Copy(payloadBuffer, 0, packetBuffer, PacketSerializer.HEADER_SIZE, payloadLength);
+
+        // 패킷 처리
+        var result = PacketSerializer.Deserialize<IMessage>(packetBuffer);
+        if (result.HasValue)
+        {
+          var (id, sequence, message) = result.Value;
+          if (message != null)
+          {
+            await PacketManager.ProcessMessageAsync(id, sequence, message);
+          }
+        }
       }
-      catch (Exception ex)
-      {
-        Console.WriteLine($"클라이언트 처리 중 오류: {ex.Message}");
-      }
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"클라이언트 처리 중 오류: {ex.Message}");
     }
   }
 
@@ -45,6 +92,8 @@ public class TcpClientHandler : IDisposable
     // 객체 해제 여부 확인
     if (_disposed) return;
 
+    UnregisterAllHandlers();
+    _stream?.Dispose(); // 네트워크 스트림 해제
     _client.Dispose(); // TcpClient 객체 해제
     _disposed = true;
   }

@@ -83,6 +83,7 @@ class Program
   {
     TcpClientHandler? handler = null; // 클라이언트 핸들러 객체 
     var clientEndPoint = client.Client.RemoteEndPoint?.ToString() ?? "알 수 없는 클라이언트";
+    Console.WriteLine($"새로운 클라이언트 연결: {clientEndPoint}");
 
     try
     {
@@ -92,17 +93,6 @@ class Program
       {
         _activeClients.Add(handler); // 연결된 클라이언트 목록 추가
       }
-
-      // 데이터 수신 이벤트 핸들러 등록
-      handler.onDataReceived += async (data) =>
-      {
-        await Task.Run(() =>
-        {
-          Console.WriteLine($"수신한 데이터: {data}");
-
-          // 비동기로 데이터 처리 로직
-        });
-      };
 
       await handler.StartHandlingClientAsync(); // 클라이언트 핸들러 처리 시작
     }
@@ -121,6 +111,8 @@ class Program
 
         handler.Dispose(); // 클라이언트 핸들러 객체 해제
       }
+      
+      Console.WriteLine($"클라이언트 연결 종료: {clientEndPoint}");
     }
   }
 
