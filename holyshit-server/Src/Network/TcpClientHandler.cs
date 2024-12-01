@@ -70,14 +70,24 @@ public class TcpClientHandler : IDisposable
         Array.Copy(payloadBuffer, 0, packetBuffer, PacketSerializer.HEADER_SIZE, payloadLength);
 
         // 패킷 처리
-        var result = PacketSerializer.Deserialize<IMessage>(packetBuffer);
+        var result = PacketSerializer.Deserialize(packetBuffer);
         if (result.HasValue)
         {
           var (id, sequence, message) = result.Value;
           if (message != null)
           {
+            Console.WriteLine($"패킷 처리 시작: ID={id}, Type={message.GetType().Name}");
             await PacketManager.ProcessMessageAsync(id, sequence, message);
+            Console.WriteLine($"패킷 처리 완료: ID={id}");
           }
+          else
+          {
+            Console.WriteLine($"메시지가 null입니다: ID={id}");
+          }
+        }
+        else
+        {
+          Console.WriteLine("패킷 역직렬화 실패");
         }
       }
     }

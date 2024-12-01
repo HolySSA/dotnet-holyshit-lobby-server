@@ -5,7 +5,7 @@ namespace HolyShitServer.Src.Network.Protocol;
 
 public static class HandlerManager
 {
-  private static readonly Dictionary<PacketId, Func<IMessage, Task>> _handlers = new();
+  private static readonly Dictionary<PacketId, Func<uint, IMessage, Task>> _handlers = new();
 
   // 핸들러 등록
   public static void RegisterHandler<T>(PacketId packetId, Func<uint, T, Task> handler) where T : IMessage
@@ -21,7 +21,9 @@ public static class HandlerManager
     {
       try
       {
+        Console.WriteLine($"핸들러 실행 시작: {id}");
         await handler(sequence, message);
+        Console.WriteLine($"핸들러 실행 완료: {id}");
       }
       catch (Exception ex)
       {
@@ -46,8 +48,14 @@ public static class HandlerManager
   {
     if (_handlers.Remove(id))
     {
-      Console.WriteLine($"핸들러 제거: {id} / seq:{sequence}");
+      Console.WriteLine($"핸들러 제거: {id}");
     }
+  }
+
+  // 모든 핸들러 반환
+  public static IEnumerable<PacketId> GetRegisteredHandlers()
+  {
+    return _handlers.Keys;
   }
 
   // 모든 핸들러 초기화

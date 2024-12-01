@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Reflection;
 using Google.Protobuf;
 using HolyShitServer.Src.Network.Packets;
 
@@ -6,53 +7,69 @@ namespace HolyShitServer.Src.Network.Protocol;
 
 public class PacketManager
 {
-  private static readonly ImmutableDictionary<PacketId, MessageParser> _parser;
-  private static readonly ImmutableDictionary<Type, PacketId> _packetTypes;
-
+  private static readonly Dictionary<PacketId, MessageParser> _parsers = new();
   private static uint _currentSequence = 0;
 
   static PacketManager()
   {
-    var parserBuilder = ImmutableDictionary.CreateBuilder<PacketId, MessageParser>();
-    var typeBuilder = ImmutableDictionary.CreateBuilder<Type, PacketId>();
+    // 사용 가능한 모든 PacketId 값 출력
+    Console.WriteLine("사용 가능한 PacketId 목록:");
+    foreach (PacketId id in Enum.GetValues(typeof(PacketId)))
+    {
+      Console.WriteLine($"  - {id} ({(int)id})");
+    }
 
-    InitializeMessageTypes(parserBuilder, typeBuilder);
-    
-    _parsers = parserBuilder.ToImmutable();
-    _packetTypes = typeBuilder.ToImmutable();
-  }
-
-  // 모든 메시지 타입 초기화
-  private static void InitializeMessageTypes(
-    ImmutableDictionary<PacketId, MessageParser>.Builder parserBuilder,
-    ImmutableDictionary<Type, PacketId>.Builder typeBuilder)
-  {
     // 리플렉션으로 자동 등록
     var assembly = Assembly.GetExecutingAssembly();
     var messageTypes = assembly.GetTypes()
       .Where(t => t.Namespace == "HolyShitServer.Src.Network.Packets" 
-                  && typeof(IMessage).IsAssignableFrom(t) 
+                  && typeof(IMessage).IsAssignableFrom(t)
                   && !t.IsAbstract);
 
-    foreach(var type in messageTypes)
+    foreach (var type in messageTypes)
     {
-      if(Enum.TryParse<PacketId>(type.Name, out var packetId))
+      var parserProperty = type.GetProperty("Parser",
+        BindingFlags.Public | BindingFlags.Static);
+
+      if (parserProperty != null)
       {
-        // Parser 속성 가져오기
-        var parserProperty = type.GetProperty("Parser", BindingFlags.Public | BindingFlags.Static);
-        if(parserProperty != null)
+        var parser = parserProperty.GetValue(null) as MessageParser;
+        if (parser != null && Enum.TryParse<PacketId>(type.Name, out var packetId))
         {
-          var parser = parserProperty.GetValue(null) as MessageParser;
-          if(parser != null)
-          {
-            parserBuilder.Add(packetId, parser);
-            typeBuilder.Add(type, packetId);
-           Console.WriteLine($"Initialized packet: {type.Name}");
-          }
+          _parsers[packetId] = parser;
+          Console.WriteLine($"Registered parser for: {type.Name}");
         }
       }
+    }
+  }
 
-      Console.WriteLine($"Total message types: {parserBuilder.Count}");
+  public static IMessage? ParseMessage(PacketId packetId, ReadOnlySpan<byte> payload)
+  {
+    return _parsers.TryGetValue(packetId, out var parser)
+      ? parser.ParseFrom(payload)
+      : null;
+  }
+
+  public static async Task ProcessMessageAsync(PacketId id, uint sequence, IMessage message)
+  {
+    try 
+    {
+      Console.WriteLine($"메시지 처리 시작: ID={id}, Sequence={sequence}");
+      
+      // 등록된 핸들러 목록 출력
+      var handlers = HandlerManager.GetRegisteredHandlers();
+      Console.WriteLine($"등록된 핸들러 목록: {string.Join(", ", handlers)}");
+
+      // 핸들러 존재 여부 확인
+      var hasHandler = HandlerManager.HasHandler(id);
+      Console.WriteLine($"핸들러 존재 여부: {hasHandler} for {id}");
+
+      await HandlerManager.HandleMessageAsync(id, sequence, message);
+      Console.WriteLine($"메시지 처리 완료: ID={id}, Sequence={sequence}");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"메시지 처리 실패: ID={id}, Sequence={sequence}, Error={ex.Message}");
     }
   }
 
@@ -60,11 +77,5 @@ public class PacketManager
   public static uint GetNextSequence()
   {
     return Interlocked.Increment(ref _currentSequence);
-  }
-
-  // 메시지 처리
-  public static async Task ProcessMessageAsync(PacketId id, uint sequence, IMessage message)
-  {
-    await HandlerManager.HandleMessageAsync(id, sequence, message);
   }
 }
