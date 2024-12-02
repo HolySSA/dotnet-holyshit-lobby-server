@@ -8,6 +8,8 @@ namespace HolyShitServer.Src.Network.Protocol;
 public class PacketManager
 {
   private static readonly Dictionary<PacketId, MessageParser> _parsers = new();
+  private static readonly Dictionary<GamePacket.PayloadOneofCase, PropertyInfo> _propertyCache = new();
+
   private static uint _currentSequence = 0;
 
   static PacketManager()
@@ -67,48 +69,39 @@ public class PacketManager
       Console.WriteLine($"  - {parser.Key} ({(int)parser.Key}): {parser.Value.GetType().Name}");
     }
   }
-
+  
   public static IMessage? ParseMessage(PacketId packetId, ReadOnlySpan<byte> payload)
-  {
+{
     try
     {
-      // 먼저 GamePacket으로 파싱
       var gamePacket = GamePacket.Parser.ParseFrom(payload.ToArray());
-
-      // payload oneof case에 따라 실제 메시지 반환
-      switch (gamePacket.PayloadCase)
+      
+      // 캐시된 프로퍼티 정보 찾기
+      if (!_propertyCache.TryGetValue(gamePacket.PayloadCase, out var property))
       {
-        case GamePacket.PayloadOneofCase.RegisterRequest:
-          return gamePacket.RegisterRequest;
-        case GamePacket.PayloadOneofCase.LoginRequest:
-          return gamePacket.LoginRequest;
-        // ... 다른 케이스들
-        default:
+        property = typeof(GamePacket).GetProperty(gamePacket.PayloadCase.ToString());
+        if (property == null)
+        {
           Console.WriteLine($"알 수 없는 페이로드 타입: {gamePacket.PayloadCase}");
           return null;
+        }
+
+        _propertyCache[gamePacket.PayloadCase] = property;
       }
+      
+      return property.GetValue(gamePacket) as IMessage;
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"메시지 파싱 중 오류: {ex.Message}\n{ex.StackTrace}");
+      Console.WriteLine($"메시지 파싱 중 오류: {ex.Message}");
       return null;
     }
-  }
+}
 
   public static async Task ProcessMessageAsync(PacketId id, uint sequence, IMessage message)
   {
     try
     {
-      Console.WriteLine($"메시지 처리 시작: ID={id}, Sequence={sequence}");
-
-      // 등록된 핸들러 목록 출력
-      var handlers = HandlerManager.GetRegisteredHandlers();
-      Console.WriteLine($"등록된 핸들러 목록: {string.Join(", ", handlers)}");
-
-      // 핸들러 존재 여부 확인
-      var hasHandler = HandlerManager.HasHandler(id);
-      Console.WriteLine($"핸들러 존재 여부: {hasHandler} for {id}");
-
       await HandlerManager.HandleMessageAsync(id, sequence, message);
       Console.WriteLine($"메시지 처리 완료: ID={id}, Sequence={sequence}");
     }

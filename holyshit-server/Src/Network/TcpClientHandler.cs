@@ -76,9 +76,7 @@ public class TcpClientHandler : IDisposable
           var (id, sequence, message) = result.Value;
           if (message != null)
           {
-            Console.WriteLine($"패킷 처리 시작: ID={id}, Type={message.GetType().Name}");
             await PacketManager.ProcessMessageAsync(id, sequence, message);
-            Console.WriteLine($"패킷 처리 완료: ID={id}");
           }
           else
           {

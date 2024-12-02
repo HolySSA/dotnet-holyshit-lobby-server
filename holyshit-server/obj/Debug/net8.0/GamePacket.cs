@@ -29,17 +29,31 @@ namespace HolyShitServer.Src.Network.Packets {
             "c3RIABIxChFyZWdpc3Rlcl9yZXNwb25zZRgCIAEoCzIULlMyQ1JlZ2lzdGVy",
             "UmVzcG9uc2VIABIpCg1sb2dpbl9yZXF1ZXN0GAMgASgLMhAuQzJTTG9naW5S",
             "ZXF1ZXN0SAASKwoObG9naW5fcmVzcG9uc2UYBCABKAsyES5TMkNMb2dpblJl",
-            "c3BvbnNlSABCCQoHcGF5bG9hZEIlqgIiSG9seVNoaXRTZXJ2ZXIuU3JjLk5l",
-            "dHdvcmsuUGFja2V0c2IGcHJvdG8z"));
+            "c3BvbnNlSABCCQoHcGF5bG9hZCpzCghQYWNrZXRJZBILCgdVTktOT1dOEAAS",
+            "FgoSQzJTcmVnaXN0ZXJSZXF1ZXN0EAESFwoTUzJDcmVnaXN0ZXJSZXNwb25z",
+            "ZRACEhMKD0MyU2xvZ2luUmVxdWVzdBADEhQKEFMyQ2xvZ2luUmVzcG9uc2UQ",
+            "BEIlqgIiSG9seVNoaXRTZXJ2ZXIuU3JjLk5ldHdvcmsuUGFja2V0c2IGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::HolyShitServer.Src.Network.Packets.PacketId), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.GamePacket), global::HolyShitServer.Src.Network.Packets.GamePacket.Parser, new[]{ "RegisterRequest", "RegisterResponse", "LoginRequest", "LoginResponse" }, new[]{ "Payload" }, null, null, null)
           }));
     }
     #endregion
 
   }
+  #region Enums
+  public enum PacketId {
+    [pbr::OriginalName("UNKNOWN")] Unknown = 0,
+    [pbr::OriginalName("C2SregisterRequest")] C2SregisterRequest = 1,
+    [pbr::OriginalName("S2CregisterResponse")] S2CregisterResponse = 2,
+    [pbr::OriginalName("C2SloginRequest")] C2SloginRequest = 3,
+    [pbr::OriginalName("S2CloginResponse")] S2CloginResponse = 4,
+  }
+
+  #endregion
+
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class GamePacket : pb::IMessage<GamePacket>

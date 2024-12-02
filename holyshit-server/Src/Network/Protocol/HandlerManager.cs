@@ -21,9 +21,7 @@ public static class HandlerManager
     {
       try
       {
-        Console.WriteLine($"핸들러 실행 시작: {id}");
         await handler(sequence, message);
-        Console.WriteLine($"핸들러 실행 완료: {id}");
       }
       catch (Exception ex)
       {
