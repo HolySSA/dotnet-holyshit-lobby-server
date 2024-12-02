@@ -7,10 +7,38 @@ namespace HolyShitServer.Src.Network.Protocol;
 
 public class PacketManager
 {
-  private static readonly Dictionary<PacketId, MessageParser> _parsers = new();
   private static readonly Dictionary<GamePacket.PayloadOneofCase, PropertyInfo> _propertyCache = new();
-
+  private static readonly object _initLock = new object();
   private static uint _currentSequence = 0;
+  private static bool _isInitialized = false;
+
+  public static void Initialize()
+  {
+    // 중복 초기화 방지
+    if (_isInitialized) return;
+
+    lock (_initLock)
+    {
+      if (_isInitialized) return;
+
+      Console.WriteLine("PacketManager 초기화 시작...");
+      
+      // 프로퍼티 캐시 초기화
+      foreach (var payloadCase in Enum.GetValues<GamePacket.PayloadOneofCase>())
+      {
+        if (payloadCase == GamePacket.PayloadOneofCase.None) continue;
+        
+        var property = typeof(GamePacket).GetProperty(payloadCase.ToString());
+        if (property != null)
+        {
+          _propertyCache[payloadCase] = property;
+        }
+      }
+
+      _isInitialized = true;
+      Console.WriteLine("PacketManager 초기화 완료");
+    }
+  }
 
   static PacketManager()
   {
@@ -20,76 +48,24 @@ public class PacketManager
     {
       Console.WriteLine($"  - {id} ({(int)id})");
     }
-
-    // 리플렉션으로 자동 등록
-    var assembly = Assembly.GetExecutingAssembly();
-    var messageTypes = assembly.GetTypes()
-      .Where(t => t.Namespace == "HolyShitServer.Src.Network.Packets"
-                  && typeof(IMessage).IsAssignableFrom(t)
-                  && !t.IsAbstract);
-
-    foreach (var type in messageTypes)
-    {
-      // 타입 이름에서 PacketId enum 값 추출
-      var typeName = type.Name;
-      if (Enum.TryParse<PacketId>(typeName, true, out var packetId))
-      {
-        // Parser 프로퍼티 가져오기
-        var parserProperty = type.GetProperty("Parser",
-          BindingFlags.Public | BindingFlags.Static);
-
-        if (parserProperty != null)
-        {
-          var parser = parserProperty.GetValue(null) as MessageParser;
-          if (parser != null)
-          {
-            _parsers[packetId] = parser;
-            Console.WriteLine($"파서 등록 성공: {typeName} -> {packetId} ({(int)packetId})");
-          }
-          else
-          {
-            Console.WriteLine($"파서 가져오기 실패: {typeName}");
-          }
-        }
-        else
-        {
-          Console.WriteLine($"Parser 프로퍼티 없음: {typeName}");
-        }
-      }
-      else
-      {
-        Console.WriteLine($"PacketId enum 매칭 실패: {typeName}");
-      }
-    }
-
-    // 등록된 모든 파서 출력
-    Console.WriteLine("\n등록된 파서 목록:");
-    foreach (var parser in _parsers)
-    {
-      Console.WriteLine($"  - {parser.Key} ({(int)parser.Key}): {parser.Value.GetType().Name}");
-    }
-  }
   
   public static IMessage? ParseMessage(PacketId packetId, ReadOnlySpan<byte> payload)
-{
+  {
+    if (!_isInitialized)
+    {
+      throw new InvalidOperationException("PacketManager가 초기화되지 않았습니다.");
+    }
+
     try
     {
       var gamePacket = GamePacket.Parser.ParseFrom(payload.ToArray());
       
-      // 캐시된 프로퍼티 정보 찾기
-      if (!_propertyCache.TryGetValue(gamePacket.PayloadCase, out var property))
+      if (_propertyCache.TryGetValue(gamePacket.PayloadCase, out var property))
       {
-        property = typeof(GamePacket).GetProperty(gamePacket.PayloadCase.ToString());
-        if (property == null)
-        {
-          Console.WriteLine($"알 수 없는 페이로드 타입: {gamePacket.PayloadCase}");
-          return null;
-        }
-
-        _propertyCache[gamePacket.PayloadCase] = property;
+        return property.GetValue(gamePacket) as IMessage;
       }
       
-      return property.GetValue(gamePacket) as IMessage;
+      return null;
     }
     catch (Exception ex)
     {
@@ -100,6 +76,11 @@ public class PacketManager
 
   public static async Task ProcessMessageAsync(PacketId id, uint sequence, IMessage message)
   {
+    if (!_isInitialized)
+    {
+      throw new InvalidOperationException("PacketManager가 초기화되지 않았습니다.");
+    }
+    
     try
     {
       await HandlerManager.HandleMessageAsync(id, sequence, message);

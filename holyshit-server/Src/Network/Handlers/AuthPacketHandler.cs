@@ -19,7 +19,7 @@ public class AuthPacketHandler : IPacketHandler
     HandlerManager.RegisterHandler<C2SLoginRequest>(PacketId.C2SloginRequest, HandleLoginRequest);
   
     // 등록 후 핸들러 출력
-    handlers = HandlerManager.GetRegisteredHandlers();
+    var handlers = HandlerManager.GetRegisteredHandlers();
     Console.WriteLine($"등록 후 핸들러: {string.Join(", ", handlers)}");
   }
 
@@ -35,7 +35,7 @@ public class AuthPacketHandler : IPacketHandler
     {
       Console.WriteLine($"Login Request 원본: {request}"); // protobuf 객체 전체 출력
       Console.WriteLine($"Login Request 수신: Email='{request.Email}', Password='{request.Password}'");
-      
+
       // TODO: 실제 회원가입 로직 구현
       await Task.CompletedTask; // 임시로 비동기 작업 완료 표시
     }
