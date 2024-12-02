@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "HolyShitServer.Src.Network.Packets";
+
+import "Auth.proto";
+
+message GamePacket {
+  oneof payload {
+    C2SRegisterRequest register_request = 1;
+    S2CRegisterResponse register_response = 2;
+    C2SLoginRequest login_request = 3;
+    S2CLoginResponse login_response = 4;
+  }
+}

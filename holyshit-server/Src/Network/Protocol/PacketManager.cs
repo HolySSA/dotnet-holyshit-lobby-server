@@ -22,40 +22,85 @@ public class PacketManager
     // 리플렉션으로 자동 등록
     var assembly = Assembly.GetExecutingAssembly();
     var messageTypes = assembly.GetTypes()
-      .Where(t => t.Namespace == "HolyShitServer.Src.Network.Packets" 
+      .Where(t => t.Namespace == "HolyShitServer.Src.Network.Packets"
                   && typeof(IMessage).IsAssignableFrom(t)
                   && !t.IsAbstract);
 
     foreach (var type in messageTypes)
     {
-      var parserProperty = type.GetProperty("Parser",
-        BindingFlags.Public | BindingFlags.Static);
-
-      if (parserProperty != null)
+      // 타입 이름에서 PacketId enum 값 추출
+      var typeName = type.Name;
+      if (Enum.TryParse<PacketId>(typeName, true, out var packetId))
       {
-        var parser = parserProperty.GetValue(null) as MessageParser;
-        if (parser != null && Enum.TryParse<PacketId>(type.Name, out var packetId))
+        // Parser 프로퍼티 가져오기
+        var parserProperty = type.GetProperty("Parser",
+          BindingFlags.Public | BindingFlags.Static);
+
+        if (parserProperty != null)
         {
-          _parsers[packetId] = parser;
-          Console.WriteLine($"Registered parser for: {type.Name}");
+          var parser = parserProperty.GetValue(null) as MessageParser;
+          if (parser != null)
+          {
+            _parsers[packetId] = parser;
+            Console.WriteLine($"파서 등록 성공: {typeName} -> {packetId} ({(int)packetId})");
+          }
+          else
+          {
+            Console.WriteLine($"파서 가져오기 실패: {typeName}");
+          }
+        }
+        else
+        {
+          Console.WriteLine($"Parser 프로퍼티 없음: {typeName}");
         }
       }
+      else
+      {
+        Console.WriteLine($"PacketId enum 매칭 실패: {typeName}");
+      }
+    }
+
+    // 등록된 모든 파서 출력
+    Console.WriteLine("\n등록된 파서 목록:");
+    foreach (var parser in _parsers)
+    {
+      Console.WriteLine($"  - {parser.Key} ({(int)parser.Key}): {parser.Value.GetType().Name}");
     }
   }
 
   public static IMessage? ParseMessage(PacketId packetId, ReadOnlySpan<byte> payload)
   {
-    return _parsers.TryGetValue(packetId, out var parser)
-      ? parser.ParseFrom(payload)
-      : null;
+    try
+    {
+      // 먼저 GamePacket으로 파싱
+      var gamePacket = GamePacket.Parser.ParseFrom(payload.ToArray());
+
+      // payload oneof case에 따라 실제 메시지 반환
+      switch (gamePacket.PayloadCase)
+      {
+        case GamePacket.PayloadOneofCase.RegisterRequest:
+          return gamePacket.RegisterRequest;
+        case GamePacket.PayloadOneofCase.LoginRequest:
+          return gamePacket.LoginRequest;
+        // ... 다른 케이스들
+        default:
+          Console.WriteLine($"알 수 없는 페이로드 타입: {gamePacket.PayloadCase}");
+          return null;
+      }
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"메시지 파싱 중 오류: {ex.Message}\n{ex.StackTrace}");
+      return null;
+    }
   }
 
   public static async Task ProcessMessageAsync(PacketId id, uint sequence, IMessage message)
   {
-    try 
+    try
     {
       Console.WriteLine($"메시지 처리 시작: ID={id}, Sequence={sequence}");
-      
+
       // 등록된 핸들러 목록 출력
       var handlers = HandlerManager.GetRegisteredHandlers();
       Console.WriteLine($"등록된 핸들러 목록: {string.Join(", ", handlers)}");

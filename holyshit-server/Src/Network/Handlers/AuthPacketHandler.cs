@@ -43,8 +43,6 @@ public class AuthPacketHandler : IPacketHandler
   {
     try 
     {
-      Console.WriteLine($"Register Request 수신: Email={request.Email}, Password={request.Password}, Nickname={request.Nickname}");
-        
       // TODO: 실제 회원가입 로직 구현
       await Task.CompletedTask; // 임시로 비동기 작업 완료 표시
     }
@@ -58,7 +56,10 @@ public class AuthPacketHandler : IPacketHandler
   {
     try 
     {
-      Console.WriteLine($"Login Request 수신: Email={request.Email}, Password={request.Password}");
+      Console.WriteLine($"Login Request 원본: {request}"); // protobuf 객체 전체 출력
+      Console.WriteLine($"Login Request 수신: Email='{request.Email}', Password='{request.Password}'");
+      Console.WriteLine($"Request 타입: {request.GetType().FullName}");
+      Console.WriteLine($"Descriptor: {C2SLoginRequest.Descriptor}");
         
       // TODO: 실제 로그인 로직 구현
       await Task.CompletedTask; // 임시로 비동기 작업 완료 표시

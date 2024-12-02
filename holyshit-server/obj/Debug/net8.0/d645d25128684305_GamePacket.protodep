@@ -1,0 +1,3 @@
+obj\Debug\net8.0/GamePacket.cs: Src/Network/Packets/Common.proto\
+ Src/Network/Packets/Auth.proto\
+ Src/Network/Packets/GamePacket.proto

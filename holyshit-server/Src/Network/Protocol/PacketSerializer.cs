@@ -109,9 +109,9 @@ public class PacketSerializer
 
       // 시퀀스 (4 bytes)
       var sequence = (uint)(buffer[offset + 3] | 
-                            (buffer[offset + 2] << 8) | 
-                            (buffer[offset + 1] << 16) | 
-                            (buffer[offset] << 24));
+                     (buffer[offset + 2] << 8) | 
+                     (buffer[offset + 1] << 16) | 
+                     (buffer[offset] << 24));
       Console.WriteLine($"Sequence: {sequence}");
       offset += 4;
 
@@ -119,9 +119,9 @@ public class PacketSerializer
       // 페이로드 길이 바이트 출력
       Console.WriteLine($"Payload Length bytes: {BitConverter.ToString(buffer, offset, 4)}");
       var payloadLength = buffer[offset + 3] | 
-                          (buffer[offset + 2] << 8) | 
-                          (buffer[offset + 1] << 16) | 
-                          (buffer[offset] << 24);
+                   (buffer[offset + 2] << 8) | 
+                   (buffer[offset + 1] << 16) | 
+                   (buffer[offset] << 24);
       Console.WriteLine($"Calculated Payload Length: {payloadLength}");
       offset += 4;
 
