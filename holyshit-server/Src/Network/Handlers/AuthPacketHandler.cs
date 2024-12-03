@@ -24,9 +24,9 @@ public static class AuthPacketHandler
       // 임시 응답 (성공 케이스)
       var response = new S2CRegisterResponse
       {
-          Success = true,
-          Message = "회원가입이 완료되었습니다!",
-          FailCode = GlobalFailCode.NoneFailcode
+        Success = true,
+        Message = "회원가입이 완료되었습니다!",
+        FailCode = GlobalFailCode.NoneFailcode
       };
 
       await client.SendResponseAsync(PacketId.S2CregisterResponse, sequence, response);
