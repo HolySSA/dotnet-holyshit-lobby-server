@@ -133,7 +133,7 @@ public class PacketSerializer
       Console.WriteLine($"페이로드 데이터: {BitConverter.ToString(payload)}");
 
       // 메시지 파싱
-      var message = PacketManager.ParseMessage(packetId, payload);
+      var message = PacketManager.ParseMessage(payload);
       if (message == null)
       {
         Console.WriteLine($"메시지 파싱 실패: ID={packetId}");

@@ -8,20 +8,17 @@ namespace HolyShitServer.Src.Network.Protocol;
 public class PacketManager
 {
   private static readonly Dictionary<GamePacket.PayloadOneofCase, PropertyInfo> _propertyCache = new();
-  private static readonly object _initLock = new object();
   private static uint _currentSequence = 0;
-  private static bool _isInitialized = false;
+  private static bool _isInitialized = false; // 초기화 여부
+  private static readonly object _initLock = new object();
 
   public static void Initialize()
   {
-    // 중복 초기화 방지
     if (_isInitialized) return;
 
     lock (_initLock)
     {
       if (_isInitialized) return;
-
-      Console.WriteLine("PacketManager 초기화 시작...");
       
       // 프로퍼티 캐시 초기화
       foreach (var payloadCase in Enum.GetValues<GamePacket.PayloadOneofCase>())
@@ -39,17 +36,8 @@ public class PacketManager
       Console.WriteLine("PacketManager 초기화 완료");
     }
   }
-
-  static PacketManager()
-  {
-    // 사용 가능한 모든 PacketId 값 출력
-    Console.WriteLine("사용 가능한 PacketId 목록:");
-    foreach (PacketId id in Enum.GetValues(typeof(PacketId)))
-    {
-      Console.WriteLine($"  - {id} ({(int)id})");
-    }
   
-  public static IMessage? ParseMessage(PacketId packetId, ReadOnlySpan<byte> payload)
+  public static IMessage? ParseMessage(ReadOnlySpan<byte> payload)
   {
     if (!_isInitialized)
     {
@@ -74,7 +62,7 @@ public class PacketManager
     }
 }
 
-  public static async Task ProcessMessageAsync(PacketId id, uint sequence, IMessage message)
+  public static async Task ProcessMessageAsync(TcpClientHandler client, PacketId id, uint sequence, IMessage message)
   {
     if (!_isInitialized)
     {
@@ -83,7 +71,7 @@ public class PacketManager
     
     try
     {
-      await HandlerManager.HandleMessageAsync(id, sequence, message);
+      await HandlerManager.HandleMessageAsync(client, id, sequence, message);
       Console.WriteLine($"메시지 처리 완료: ID={id}, Sequence={sequence}");
     }
     catch (Exception ex)

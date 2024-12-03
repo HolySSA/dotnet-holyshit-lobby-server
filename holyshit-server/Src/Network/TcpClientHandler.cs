@@ -10,7 +10,6 @@ public class TcpClientHandler : IDisposable
 {
   private readonly TcpClient _client; // 현재 연결된 클라이언트
   private readonly NetworkStream _stream; // 클라이언트와의 네트워크 스트림
-  private readonly List<IPacketHandler> _packetHandlers; // 패킷 핸들러 목록
   private readonly byte[] _buffer = new byte[8192]; // 8KB 버퍼
   private bool _disposed = false; // 객체 해제 여부
 
@@ -19,29 +18,6 @@ public class TcpClientHandler : IDisposable
   {
     _client = client;
     _stream = client.GetStream();
-    _packetHandlers = new List<IPacketHandler>{
-      new AuthPacketHandler(this)
-
-      // 다른 핸들러 추가
-    };
-
-    RegisterAllHandlers();
-  }
-
-  private void RegisterAllHandlers()
-  {
-    foreach (var handler in _packetHandlers)
-    {
-      handler.RegisterHandlers();
-    }
-  }
-
-  private void UnregisterAllHandlers()
-  {
-    foreach (var handler in _packetHandlers)
-    {
-      handler.UnregisterHandlers();
-    }
   }
 
   // 클라이언트 통신 처리 비동기로 시작
@@ -76,7 +52,7 @@ public class TcpClientHandler : IDisposable
           var (id, sequence, message) = result.Value;
           if (message != null)
           {
-            await PacketManager.ProcessMessageAsync(id, sequence, message);
+            await PacketManager.ProcessMessageAsync(this, id, sequence, message);
           }
           else
           {
@@ -95,12 +71,22 @@ public class TcpClientHandler : IDisposable
     }
   }
 
+  // 응답 전송
+  public async Task SendResponseAsync<T>(PacketId packetId, uint sequence, T message) where T : IMessage
+  {
+    var serializedData = PacketSerializer.Serialize(packetId, message, sequence);
+    if (serializedData != null)
+    {
+      await _stream.WriteAsync(serializedData);
+      await _stream.FlushAsync();
+    }
+  }
+
   public void Dispose()
   {
     // 객체 해제 여부 확인
     if (_disposed) return;
 
-    UnregisterAllHandlers();
     _stream?.Dispose(); // 네트워크 스트림 해제
     _client.Dispose(); // TcpClient 객체 해제
     _disposed = true;

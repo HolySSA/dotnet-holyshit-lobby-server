@@ -1,13 +1,14 @@
 using Google.Protobuf;
+using HolyShitServer.Src.Network.Handlers;
 using HolyShitServer.Src.Network.Packets;
 
 namespace HolyShitServer.Src.Network.Protocol;
 
 public static class HandlerManager
 {
-  private static readonly Dictionary<PacketId, Func<uint, IMessage, Task>> _handlers = new();
-  private static bool _isInitialized = false;
-  private static readonly object _initLock = new object();
+  private static readonly Dictionary<PacketId, Func<TcpClientHandler, uint, IMessage, Task>> _handlers = new(); // 모든 핸들러
+  private static bool _isInitialized = false; // 초기화 여부
+  private static readonly object _initLock = new object(); // 초기화/동기화 관리 락 오브젝트
 
   public static void Initialize()
   {
@@ -20,8 +21,8 @@ public static class HandlerManager
       Console.WriteLine("HandlerManager 초기화 시작...");
       
       // 모든 핸들러 등록
-      var authHandler = new AuthPacketHandler();
-      authHandler.RegisterHandlers();
+      OnHandlers<C2SRegisterRequest>(PacketId.C2SregisterRequest, AuthPacketHandler.HandleRegisterRequest);
+      OnHandlers<C2SLoginRequest>(PacketId.C2SloginRequest, AuthPacketHandler.HandleLoginRequest);
       // 다른 핸들러들도 여기서 등록...
 
       _isInitialized = true;
@@ -30,14 +31,23 @@ public static class HandlerManager
   }
 
   // 핸들러 등록
-  public static void RegisterHandler<T>(PacketId packetId, Func<uint, T, Task> handler) where T : IMessage
+  public static void OnHandlers<T>(PacketId packetId, Func<TcpClientHandler, uint, T, Task> handler) where T : IMessage
   {
-    _handlers[packetId] = async (seq, message) => await handler(seq, (T)message);
+    _handlers[packetId] = async (client, seq, message) => await handler(client, seq, (T)message);
     Console.WriteLine($"핸들러 등록: {typeof(T).Name}");
   }
 
+  // 특정 메시지 타입 핸들러 제거
+  public static void OffHandlers(PacketId id)
+  {
+    if (_handlers.Remove(id))
+    {
+      Console.WriteLine($"핸들러 제거: {id}");
+    }
+  }
+
   // 메시지 처리
-  public static async Task HandleMessageAsync(PacketId id, uint sequence, IMessage message)
+  public static async Task HandleMessageAsync(TcpClientHandler client, PacketId id, uint sequence, IMessage message)
   {
     if (!_isInitialized)
     {
@@ -48,7 +58,7 @@ public static class HandlerManager
     {
       try
       {
-        await handler(sequence, message);
+        await handler(client, sequence, message);
       }
       catch (Exception ex)
       {
@@ -66,15 +76,6 @@ public static class HandlerManager
   public static bool HasHandler(PacketId id)
   {
     return _handlers.ContainsKey(id);
-  }
-
-  // 특정 메시지 타입 핸들러 제거
-  public static void UnregisterHandler(PacketId id)
-  {
-    if (_handlers.Remove(id))
-    {
-      Console.WriteLine($"핸들러 제거: {id}");
-    }
   }
 
   // 모든 핸들러 반환

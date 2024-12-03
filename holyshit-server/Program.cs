@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using HolyShitServer.Src.Constants;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network;
+using HolyShitServer.Src.Network.Protocol;
 
 namespace HolyShitServer;
 
@@ -42,6 +43,10 @@ class Program
       // 게임 데이터 로드
       var gameDataManager = new GameDataManager();
       await gameDataManager.InitializeDataAsync();
+
+      // 패킷매니저, 핸들러매니저 초기화
+      PacketManager.Initialize();
+      HandlerManager.Initialize();
     }
     catch (Exception ex)
     {
