@@ -1,9 +1,12 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using Holyshit.DB.Contexts;
 using HolyShitServer.Src.Constants;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network;
 using HolyShitServer.Src.Network.Protocol;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HolyShitServer;
 
@@ -13,6 +16,7 @@ class Program
   private static readonly CancellationTokenSource _serverCts = new(); // 서버 종료 토큰 (서버 관리)
   private static readonly List<TcpClientHandler> _activeClients = new(); // 연결된 클라이언트 목록
   private static readonly object _clientLock = new(); // 클라이언트 목록 동시 접근 제한 객체
+  private static IServiceProvider? _serviceProvider; // 서비스 프로바이더 객체
 
   public static async Task Main()
   {
@@ -40,6 +44,21 @@ class Program
 
     try
     {
+      // 설정 초기화
+      var configuration = new ConfigurationBuilder()
+          .SetBasePath(Directory.GetCurrentDirectory())
+          .AddJsonFile("appsettings.json")
+          .Build();
+
+      // 서비스 컬렉션 설정
+      var services = new ServiceCollection();
+      // 데이터베이스 서비스 등록
+      services.AddDatabaseServices(configuration);
+      // 서비스 프로바이더 빌드
+      _serviceProvider = services.BuildServiceProvider();
+      // 데이터베이스 초기화
+      await DatabaseConfig.InitializeDatabaseAsync(_serviceProvider);
+
       // 게임 데이터 로드
       var gameDataManager = new GameDataManager();
       await gameDataManager.InitializeDataAsync();
@@ -47,15 +66,15 @@ class Program
       // 패킷매니저, 핸들러매니저 초기화
       PacketManager.Initialize();
       HandlerManager.Initialize();
+
+      stopwatch.Stop();
+      Console.WriteLine($"초기화 완료: {stopwatch.ElapsedMilliseconds}ms");
     }
     catch (Exception ex)
     {
       Console.WriteLine($"서버 초기화 중 오류: {ex.Message}");
       throw;
     }
-
-    stopwatch.Stop();
-    Console.WriteLine($"초기화 완료: {stopwatch.ElapsedMilliseconds}ms");
   }
 
   private static async Task StartTcpServerAsync()
@@ -119,6 +138,18 @@ class Program
       
       Console.WriteLine($"클라이언트 연결 종료: {clientEndPoint}");
     }
+  }
+
+  // DB 컨텍스트를 가져오는 헬퍼 메서드
+  private static ApplicationDbContext GetDbContext()
+  {
+    if (_serviceProvider == null)
+    {
+      throw new InvalidOperationException("서비스 프로바이더가 초기화되지 않았습니다.");
+    }
+
+    using var scope = _serviceProvider.CreateScope();
+    return scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
   }
 
   private static void OnProcessExit(object? sender, EventArgs e)
