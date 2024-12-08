@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "7Kta4iMdY7zLieve6vlYTIBzq7k0FkK/0s8pLo5bVXXx4VHHS5jOX83FJL9OuvLlkpFJE54axarjLy43DxbvyQ==",
+  "dgSpecHash": "kH7ui7PEHmcl/7IdqVMYQsQi9ROBrZ4albPODDiRxcnbpzU2KEqbF50gACm8E2Ypj6BbaK/okvt9PQm/kD64dA==",
   "success": true,
   "projectFilePath": "C:\\Users\\SHIN\\Desktop\\git\\dotnet-holyshit\\holyshit-server\\holyshit-server.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\SHIN\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
+    "C:\\Users\\SHIN\\.nuget\\packages\\dotenv.net\\3.2.1\\dotenv.net.3.2.1.nupkg.sha512",
+    "C:\\Users\\SHIN\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
     "C:\\Users\\SHIN\\.nuget\\packages\\google.protobuf\\3.29.0\\google.protobuf.3.29.0.nupkg.sha512",
     "C:\\Users\\SHIN\\.nuget\\packages\\grpc.tools\\2.67.0\\grpc.tools.2.67.0.nupkg.sha512",
     "C:\\Users\\SHIN\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
@@ -25,6 +28,7 @@
     "C:\\Users\\SHIN\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.0\\microsoft.extensions.caching.memory.9.0.0.nupkg.sha512",
     "C:\\Users\\SHIN\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.0\\microsoft.extensions.configuration.9.0.0.nupkg.sha512",
     "C:\\Users\\SHIN\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.0\\microsoft.extensions.configuration.abstractions.9.0.0.nupkg.sha512",
+    "C:\\Users\\SHIN\\.nuget\\packages\\microsoft.extensions.configuration.environmentvariables\\9.0.0\\microsoft.extensions.configuration.environmentvariables.9.0.0.nupkg.sha512",
     "C:\\Users\\SHIN\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\9.0.0\\microsoft.extensions.configuration.fileextensions.9.0.0.nupkg.sha512",
     "C:\\Users\\SHIN\\.nuget\\packages\\microsoft.extensions.configuration.json\\9.0.0\\microsoft.extensions.configuration.json.9.0.0.nupkg.sha512",
     "C:\\Users\\SHIN\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\9.0.0\\microsoft.extensions.dependencyinjection.9.0.0.nupkg.sha512",

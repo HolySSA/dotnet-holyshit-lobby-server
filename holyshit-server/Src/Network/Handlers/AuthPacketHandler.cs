@@ -1,6 +1,11 @@
-using Google.Protobuf;
-using HolyShitServer.Src.Network.Protocol;
 using HolyShitServer.Src.Network.Packets;
+using Holyshit.DB.Contexts;
+using Microsoft.Extensions.DependencyInjection;
+using HolyShitServer.Src.Utils.FluentValidation;
+using Holyshit.DB.Entities;
+using HolyShitServer.Src.Utils.Decode;
+using Microsoft.EntityFrameworkCore;
+using BCrypt.Net;
 
 namespace HolyShitServer.Src.Network.Handlers;
 
@@ -10,41 +15,50 @@ public static class AuthPacketHandler
   {
     try
     {
-      Console.WriteLine($"Login Request 원본: {request}"); // protobuf 객체 전체 출력
-      Console.WriteLine($"Login Request 수신: Email='{request.Email}', Password='{request.Password}'");
+      var validator = new RegisterRequestValidator();
+      var validationResult = await validator.ValidateAsync(request);
 
-      // TODO: 실제 회원가입 로직 구현
-
-      // 1. 이메일 형식 검증
-      // 2. 이메일 중복 확인
-      // 3. 닉네임 중복 확인
-      // 4. 비밀번호 규칙 검증
-      // 5. DB에 저장
-
-      // 임시 응답 (성공 케이스)
-      var response = new S2CRegisterResponse
+      if (!validationResult.IsValid)
       {
-        Success = true,
-        Message = "회원가입이 완료되었습니다!",
-        FailCode = GlobalFailCode.NoneFailcode
+        var errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+        await ResponseHelper.SendRegisterResponse(client, sequence, false, errors, GlobalFailCode.InvalidRequest);
+        return;
+      }
+
+      using var scope = client.ServiceProvider.CreateScope();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+      // 중복 검사
+      if (await dbContext.Users.AnyAsync(u => u.Email == request.Email))
+      {
+        await ResponseHelper.SendRegisterResponse(client, sequence, false, "이미 사용 중인 이메일입니다.", GlobalFailCode.AuthenticationFailed);
+        return;
+      }
+
+      if (await dbContext.Users.AnyAsync(u => u.Nickname == request.Nickname))
+      {
+        await ResponseHelper.SendRegisterResponse(client, sequence, false, "이미 사용 중인 닉네임입니다.", GlobalFailCode.AuthenticationFailed);
+        return;
+      }
+      
+      // DB 저장
+      var user = new User
+      {
+          Email = request.Email,
+          Nickname = request.Nickname,
+          PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+          CreatedAt = DateTime.UtcNow
       };
 
-      await client.SendResponseAsync(PacketId.S2CregisterResponse, sequence, response);
-      Console.WriteLine($"Register Response 전송: Success={response.Success}, Message={response.Message}");
+      dbContext.Users.Add(user);
+      await dbContext.SaveChangesAsync();
+
+      await ResponseHelper.SendRegisterResponse(client, sequence, true, "회원가입이 완료되었습니다!", GlobalFailCode.NoneFailcode);
     }
     catch (Exception ex)
     {
       Console.WriteLine($"Register Request 처리 중 오류: {ex.Message}");
-
-      // 실패 응답
-      var errorResponse = new S2CRegisterResponse
-      {
-          Success = false,
-          Message = "회원가입 처리 중 오류가 발생했습니다",
-          FailCode = GlobalFailCode.RegisterFailed
-      };
-
-      await client.SendResponseAsync(PacketId.S2CregisterResponse, sequence, errorResponse);
+      await ResponseHelper.SendRegisterResponse(client, sequence, false, "회원가입 처리 중 오류가 발생했습니다", GlobalFailCode.UnknownError);
     }
   }
 
@@ -55,12 +69,82 @@ public static class AuthPacketHandler
       Console.WriteLine($"Login Request 원본: {request}"); // protobuf 객체 전체 출력
       Console.WriteLine($"Login Request 수신: Email='{request.Email}', Password='{request.Password}'");
         
-      // TODO: 실제 로그인 로직 구현
-      await Task.CompletedTask; // 임시로 비동기 작업 완료 표시
+      using var scope = client.ServiceProvider.CreateScope();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+      var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+      if (user == null)
+      {
+        await ResponseHelper.SendLoginResponse(
+          client, 
+          sequence, 
+          false, 
+          "이메일 또는 비밀번호가 일치하지 않습니다.", 
+          failCode: GlobalFailCode.AuthenticationFailed
+        );
+        return;
+      }
+
+      if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+      {
+        await ResponseHelper.SendLoginResponse(
+          client, 
+          sequence, 
+          false, 
+          "이메일 또는 비밀번호가 일치하지 않습니다.", 
+          failCode: GlobalFailCode.AuthenticationFailed
+        );
+        return;
+      }
+
+      // 기본 캐릭터 데이터 생성
+      var characterData = new CharacterData
+      {
+        CharacterType = CharacterType.NoneCharacter,
+        RoleType = RoleType.NoneRole,
+        Hp = 0,
+        Weapon = 0,
+        StateInfo = new CharacterStateInfoData
+        {
+          State = CharacterStateType.NoneCharacterState,
+          NextState = CharacterStateType.NoneCharacterState,
+          NextStateAt = 0,
+          StateTargetUserId = 0
+        },
+        BbangCount = 0,
+        HandCardsCount = 0
+      };
+
+      var userData = new UserData
+      {
+        Id = user.Id,
+        Nickname = user.Nickname,
+        Character = characterData
+      };
+
+      // 토큰 구현 필요
+      string token = "temp_token_" + user.Id;
+
+      await ResponseHelper.SendLoginResponse(
+        client,
+        sequence,
+        true,
+        "로그인이 완료되었습니다!",
+        token,
+        userData,
+        GlobalFailCode.NoneFailcode
+      );
     }
     catch (Exception ex)
     {
       Console.WriteLine($"Login Request 처리 중 오류: {ex.Message}");
+      await ResponseHelper.SendLoginResponse(
+        client,
+        sequence,
+        false,
+        "로그인 처리 중 오류가 발생했습니다",
+        failCode: GlobalFailCode.UnknownError
+      );
     }
   }
 }

@@ -1,10 +1,61 @@
 using System.Net.Sockets;
 using HolyShitServer.Src.Network;
 
+namespace HolyShitServer.Src.Core;
+
 public class ClientManager
 {
   private static readonly List<TcpClientHandler> _activeClients = new(); // 연결된 클라이언트 목록
   private static readonly object _clientLock = new(); // 클라이언트 목록 동시 접근 제한 객체
+  private static IServiceProvider? _serviceProvider;  // DI 컨테이너
+
+  // 초기화
+  public static void Initialize(IServiceProvider serviceProvider)
+  {
+    _serviceProvider = serviceProvider;
+  }
+
+  public static async Task HandleClientAsync(TcpClient client)
+  {
+    if (_serviceProvider == null)
+    {
+      throw new InvalidOperationException("ClientManager가 초기화되지 않았습니다.");
+    }
+
+    var clientEndPoint = client.Client.RemoteEndPoint?.ToString() ?? "unknown";
+    Console.WriteLine($"[Client] 새로운 클라이언트 접속: {clientEndPoint}");
+
+    var handler = new TcpClientHandler(client, _serviceProvider);
+
+    try
+    {
+      AddClient(handler);
+      Console.WriteLine($"[Client] 현재 접속자 수: {GetActiveClientCount()}");
+      await handler.StartHandlingClientAsync(); // 클라이언트 핸들러 처리 시작
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"클라이언트 처리 중 오류: {ex.Message}");
+    }
+    finally
+    {
+      if (handler != null)
+      {
+        RemoveClient(handler);
+        handler.Dispose(); // 클라이언트 핸들러 객체 해제
+        Console.WriteLine($"[Client] 클라이언트 접속 종료: {clientEndPoint}");
+        Console.WriteLine($"[Client] 남은 접속자 수: {GetActiveClientCount()}");
+      }
+    }
+  }
+
+  private static int GetActiveClientCount()
+  {
+    lock (_clientLock)
+    {
+      return _activeClients.Count;
+    }
+  }
 
   public static void AddClient(TcpClientHandler client)
   {
@@ -22,35 +73,7 @@ public class ClientManager
     }
   }
 
-  private static async Task HandleClientAsync(TcpClient client)
-  {
-    TcpClientHandler? handler = null; // 클라이언트 핸들러 객체 
-    var clientEndPoint = client.Client.RemoteEndPoint?.ToString() ?? "알 수 없는 클라이언트";
-    Console.WriteLine($"새로운 클라이언트 연결: {clientEndPoint}");
-
-    try
-    {
-      handler = new TcpClientHandler(client); // 클라이언트 핸들러 객체 생성
-      AddClient(handler);
-      await handler.StartHandlingClientAsync(); // 클라이언트 핸들러 처리 시작
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"클라이언트 처리 중 오류: {ex.Message}");
-    }
-    finally
-    {
-      if (handler != null)
-      {
-        RemoveClient(handler);
-        handler.Dispose(); // 클라이언트 핸들러 객체 해제
-      }
-      
-      Console.WriteLine($"클라이언트 연결 종료: {clientEndPoint}");
-    }
-  }
-
-  private static async Task CleanupAsync()
+  public static async Task CleanupClientsAsync()
   {
     try
     {

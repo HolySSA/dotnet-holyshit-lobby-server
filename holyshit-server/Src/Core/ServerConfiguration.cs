@@ -1,4 +1,5 @@
 using HolyShitServer.Src.Data;
+using HolyShitServer.Src.Network.Protocol;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,14 +17,13 @@ public static class ServerConfiguration
 
     // 서비스 컬렉션 설정
     var services = new ServiceCollection();
-
     // 데이터베이스 서비스 등록
     services.AddDatabaseServices(configuration);
 
     return services.BuildServiceProvider();
   }
 
-  private static async Task InitializeServerAsync(IServiceProvider serviceProvider)
+  public static async Task InitializeServicesAsync(IServiceProvider serviceProvider)
   {
     // 데이터베이스 초기화
     await DatabaseConfig.InitializeDatabaseAsync(serviceProvider);
@@ -33,7 +33,7 @@ public static class ServerConfiguration
     await gameDataManager.InitializeDataAsync();
 
     // 패킷매니저, 핸들러매니저 초기화
-    //PacketManager.Initialize();
-    //HandlerManager.Initialize();
+    PacketManager.Initialize();
+    HandlerManager.Initialize();
   }
 }

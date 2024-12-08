@@ -11,13 +11,18 @@ public class TcpClientHandler : IDisposable
   private readonly TcpClient _client; // 현재 연결된 클라이언트
   private readonly NetworkStream _stream; // 클라이언트와의 네트워크 스트림
   private readonly byte[] _buffer = new byte[8192]; // 8KB 버퍼
+
+  private readonly IServiceProvider _serviceProvider;  // DI 컨테이너
+  public IServiceProvider ServiceProvider => _serviceProvider;
+
   private bool _disposed = false; // 객체 해제 여부
 
   // 생성자 - 필드 초기화
-  public TcpClientHandler(TcpClient client)
+  public TcpClientHandler(TcpClient client, IServiceProvider serviceProvider)
   {
     _client = client;
     _stream = client.GetStream();
+    _serviceProvider = serviceProvider;
   }
 
   // 클라이언트 통신 처리 비동기로 시작
@@ -88,7 +93,7 @@ public class TcpClientHandler : IDisposable
     if (_disposed) return;
 
     _stream?.Dispose(); // 네트워크 스트림 해제
-    _client.Dispose(); // TcpClient 객체 해제
+    _client?.Dispose(); // TcpClient 객체 해제
     _disposed = true;
   }
 }

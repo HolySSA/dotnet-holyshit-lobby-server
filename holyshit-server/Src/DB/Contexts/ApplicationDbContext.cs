@@ -1,5 +1,6 @@
 using Holyshit.DB.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Holyshit.DB.Contexts;
 
@@ -10,6 +11,21 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
+    }
+
+    // 디자인 타임용 생성자
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseNpgsql(connectionString);
+        }
     }
 
     public DbSet<User> Users { get; set; } = null!; // null! - 프로퍼티가 null이 아님을 컴파일러에게 알림

@@ -1,0 +1,10 @@
+# 환경 변수 파일
+.env
+.env.production
+
+# 설정 파일
+appsettings.*.json       # 환경별 설정 파일
+appsettings.json        # 실제 설정 파일
+
+# 예제 파일 제외
+!appsettings.example.json
