@@ -19,10 +19,12 @@ public static class HandlerManager
       if (_isInitialized) return;
 
       Console.WriteLine("HandlerManager 초기화 시작...");
-      
+
       // 모든 핸들러 등록
-      OnHandlers<C2SRegisterRequest>(PacketId.C2SregisterRequest, AuthPacketHandler.HandleRegisterRequest);
-      OnHandlers<C2SLoginRequest>(PacketId.C2SloginRequest, AuthPacketHandler.HandleLoginRequest);
+      OnHandlers<C2SRegisterRequest>(PacketId.RegisterRequest, AuthPacketHandler.HandleRegisterRequest);
+      OnHandlers<C2SLoginRequest>(PacketId.LoginRequest, AuthPacketHandler.HandleLoginRequest);
+      OnHandlers<C2SGetRoomListRequest>(PacketId.GetRoomListRequest, LobbyPacketHandler.HandleGetRoomListRequest);
+      OnHandlers<C2SCreateRoomRequest>(PacketId.CreateRoomRequest, LobbyPacketHandler.HandleCreateRoomRequest);
       // 다른 핸들러들도 여기서 등록...
 
       _isInitialized = true;

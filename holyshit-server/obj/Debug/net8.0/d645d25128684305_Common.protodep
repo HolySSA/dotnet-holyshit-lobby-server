@@ -1,1 +1,1 @@
-obj\Debug\net8.0/Common.cs: Src/Network/Packets/Common.proto
+obj\Debug\net8.0\Src\Network\Packets/Common.cs: Src/Network/Packets/Common.proto

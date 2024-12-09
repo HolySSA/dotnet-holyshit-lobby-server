@@ -1,8 +1,8 @@
 using System.Net.Sockets;
 using Google.Protobuf;
 using HolyShitServer.Src.Network.Protocol;
-using HolyShitServer.Src.Network.Handlers;
 using HolyShitServer.Src.Network.Packets;
+using HolyShitServer.Src.Models;
 
 namespace HolyShitServer.Src.Network;
 
@@ -79,11 +79,44 @@ public class TcpClientHandler : IDisposable
   // 응답 전송
   public async Task SendResponseAsync<T>(PacketId packetId, uint sequence, T message) where T : IMessage
   {
-    var serializedData = PacketSerializer.Serialize(packetId, message, sequence);
-    if (serializedData != null)
+    try
     {
+      var gamePacket = new GamePacket();
+
+      // 패킷 ID에 따라 적절한 필드에 메시지 할당
+      switch (packetId)
+      {
+        case PacketId.RegisterResponse:
+          gamePacket.RegisterResponse = (S2CRegisterResponse)(object)message;
+          break;
+        case PacketId.LoginResponse:
+          gamePacket.LoginResponse = (S2CLoginResponse)(object)message;
+          break;
+        case PacketId.GetRoomListResponse:
+          gamePacket.GetRoomListResponse = (S2CGetRoomListResponse)(object)message;
+          break;
+        case PacketId.CreateRoomResponse:
+          gamePacket.CreateRoomResponse = (S2CCreateRoomResponse)(object)message;
+          break;
+        default:
+          throw new ArgumentException($"Unsupported packet ID: {packetId}");
+      }
+
+      var serializedData = PacketSerializer.Serialize(packetId, gamePacket, sequence);
+      if (serializedData == null)
+      {
+        throw new InvalidOperationException("Failed to serialize packet");
+      }
+
       await _stream.WriteAsync(serializedData);
       await _stream.FlushAsync();
+
+      Console.WriteLine($"[TCP] 패킷 전송 완료: ID={packetId}, Sequence={sequence}, Size={serializedData.Length}");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[TCP] 패킷 전송 중 오류: {ex}");
+      throw;
     }
   }
 
@@ -91,6 +124,13 @@ public class TcpClientHandler : IDisposable
   {
     // 객체 해제 여부 확인
     if (_disposed) return;
+
+    var userInfo = UserModel.Instance.GetAllUsers().FirstOrDefault(user => user.Client == this);
+    if (userInfo != null)
+    {
+      UserModel.Instance.RemoveUser(userInfo.UserId);
+      Console.WriteLine($"[TCP] 유저 제거: Id={userInfo.UserId}");
+    }
 
     _stream?.Dispose(); // 네트워크 스트림 해제
     _client?.Dispose(); // TcpClient 객체 해제
