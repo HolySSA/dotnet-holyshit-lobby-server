@@ -3,6 +3,7 @@ using Google.Protobuf;
 using HolyShitServer.Src.Network.Protocol;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Models;
+using HolyShitServer.Src.Utils.Socket;
 
 namespace HolyShitServer.Src.Network;
 
@@ -10,7 +11,7 @@ public class TcpClientHandler : IDisposable
 {
   private readonly TcpClient _client; // 현재 연결된 클라이언트
   private readonly NetworkStream _stream; // 클라이언트와의 네트워크 스트림
-  private readonly byte[] _buffer = new byte[8192]; // 8KB 버퍼
+  private readonly MessageQueue _messageQueue; // 메시지 큐
 
   private readonly IServiceProvider _serviceProvider;  // DI 컨테이너
   public IServiceProvider ServiceProvider => _serviceProvider;
@@ -23,6 +24,7 @@ public class TcpClientHandler : IDisposable
     _client = client;
     _stream = client.GetStream();
     _serviceProvider = serviceProvider;
+    _messageQueue = new MessageQueue(this);
   }
 
   // 클라이언트 통신 처리 비동기로 시작
@@ -57,16 +59,8 @@ public class TcpClientHandler : IDisposable
           var (id, sequence, message) = result.Value;
           if (message != null)
           {
-            await PacketManager.ProcessMessageAsync(this, id, sequence, message);
+            await _messageQueue.EnqueueReceive(id, sequence, message);
           }
-          else
-          {
-            Console.WriteLine($"메시지가 null입니다: ID={id}");
-          }
-        }
-        else
-        {
-          Console.WriteLine("패킷 역직렬화 실패");
         }
       }
     }
@@ -81,43 +75,22 @@ public class TcpClientHandler : IDisposable
   {
     try
     {
-      var gamePacket = new GamePacket();
-
-      // 패킷 ID에 따라 적절한 필드에 메시지 할당
-      switch (packetId)
-      {
-        case PacketId.RegisterResponse:
-          gamePacket.RegisterResponse = (S2CRegisterResponse)(object)message;
-          break;
-        case PacketId.LoginResponse:
-          gamePacket.LoginResponse = (S2CLoginResponse)(object)message;
-          break;
-        case PacketId.GetRoomListResponse:
-          gamePacket.GetRoomListResponse = (S2CGetRoomListResponse)(object)message;
-          break;
-        case PacketId.CreateRoomResponse:
-          gamePacket.CreateRoomResponse = (S2CCreateRoomResponse)(object)message;
-          break;
-        default:
-          throw new ArgumentException($"Unsupported packet ID: {packetId}");
-      }
-
-      var serializedData = PacketSerializer.Serialize(packetId, gamePacket, sequence);
-      if (serializedData == null)
-      {
-        throw new InvalidOperationException("Failed to serialize packet");
-      }
-
-      await _stream.WriteAsync(serializedData);
-      await _stream.FlushAsync();
-
-      Console.WriteLine($"[TCP] 패킷 전송 완료: ID={packetId}, Sequence={sequence}, Size={serializedData.Length}");
+      await _messageQueue.EnqueueSend(packetId, sequence, message);
     }
     catch (Exception ex)
     {
       Console.WriteLine($"[TCP] 패킷 전송 중 오류: {ex}");
       throw;
     }
+  }
+
+  // MessageQueue에서 사용할 메서드 추가
+  public async Task SendDataAsync(byte[] data)
+  {
+    if (_disposed) throw new ObjectDisposedException(nameof(TcpClientHandler));
+    
+    await _stream.WriteAsync(data);
+    await _stream.FlushAsync();
   }
 
   public void Dispose()

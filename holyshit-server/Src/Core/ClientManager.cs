@@ -5,7 +5,7 @@ namespace HolyShitServer.Src.Core;
 
 public class ClientManager
 {
-  private static readonly List<TcpClientHandler> _activeClients = new(); // 연결된 클라이언트 목록
+  private static readonly Dictionary<string, TcpClientHandler> _clients = new(); // 연결된 클라이언트
   private static readonly object _clientLock = new(); // 클라이언트 목록 동시 접근 제한 객체
   private static IServiceProvider? _serviceProvider;  // DI 컨테이너
 
@@ -26,10 +26,11 @@ public class ClientManager
     Console.WriteLine($"[Client] 새로운 클라이언트 접속: {clientEndPoint}");
 
     var handler = new TcpClientHandler(client, _serviceProvider);
+    var uuid = Guid.NewGuid().ToString(); // UUID 생성
 
     try
     {
-      AddClient(handler);
+      AddClient(handler, uuid);
       Console.WriteLine($"[Client] 현재 접속자 수: {GetActiveClientCount()}");
       await handler.StartHandlingClientAsync(); // 클라이언트 핸들러 처리 시작
     }
@@ -49,19 +50,18 @@ public class ClientManager
     }
   }
 
-  private static int GetActiveClientCount()
+  public static void AddClient(TcpClientHandler client, string uuid)
   {
     lock (_clientLock)
     {
-      return _activeClients.Count;
-    }
-  }
+      if (_clients.TryGetValue(uuid, out var existingClient))
+      {
+        existingClient.Dispose();
+        Console.WriteLine($"[Client] 기존 연결 종료: UUID={uuid}");
+      }
 
-  public static void AddClient(TcpClientHandler client)
-  {
-    lock (_clientLock)
-    {
-      _activeClients.Add(client);
+      _clients[uuid] = client;
+      Console.WriteLine($"[Client] 새로운 클라이언트 등록: UUID={uuid}");
     }
   }
 
@@ -69,7 +69,28 @@ public class ClientManager
   {
     lock (_clientLock)
     {
-      _activeClients.Remove(client);
+      var uuid = _clients.FirstOrDefault(x => x.Value == client).Key;
+      if (uuid != null)
+      {
+        _clients.Remove(uuid);
+        Console.WriteLine($"[Client] 클라이언트 제거: UUID={uuid}");
+      }
+    }
+  }
+
+  public static TcpClientHandler? GetClientByUUID(string uuid)
+  {
+    lock (_clientLock)
+    {
+      return _clients.TryGetValue(uuid, out var client) ? client : null;
+    }
+  }
+
+  public static int GetActiveClientCount()
+  {
+    lock (_clientLock)
+    {
+      return _clients.Count;
     }
   }
 
@@ -77,18 +98,15 @@ public class ClientManager
   {
     try
     {
-      // 연결된 클라이언트 정리
       List<TcpClientHandler> clientsToDispose;
-
       lock (_clientLock)
       {
-        clientsToDispose = new List<TcpClientHandler>(_activeClients);
-        _activeClients.Clear();
+        clientsToDispose = _clients.Values.ToList();
+        _clients.Clear();
       }
 
-      // 모든 클라이언트 핸들러 비동기로 해제
-      var disposeTasks = clientsToDispose.Select(client => Task.Run(() => client.Dispose())).ToList();
-      await Task.WhenAll(disposeTasks); // 모든 클라이언트 핸들러 해제 완료 대기
+      var disposeTasks = clientsToDispose.Select(client => Task.Run(() => client.Dispose()));
+      await Task.WhenAll(disposeTasks);
 
       Console.WriteLine("모든 리소스 정리 완료.");
     }
