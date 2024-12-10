@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using Google.Protobuf;
-using HolyShitServer.Src.Network;
 using HolyShitServer.Src.Network.Packets;
+using HolyShitServer.Src.Network.Socket;
 
 namespace HolyShitServer.Src.Models;
 
@@ -36,11 +36,11 @@ public class UserModel
     public long UserId { get; set; }
     public string Token { get; set; } = string.Empty;
     public UserData UserData { get; set; } = new UserData();
-    public TcpClientHandler Client { get; set; }
+    public ClientSession Client { get; set; }
     public DateTime LastActivityTime { get; set; }
     public bool IsOnline => (DateTime.UtcNow - LastActivityTime).TotalMinutes < 5;
 
-    public UserInfo(long userId, string token, UserData userData, TcpClientHandler client)
+    public UserInfo(long userId, string token, UserData userData, ClientSession client)
     {
       UserId = userId;
       Token = token;
@@ -55,7 +55,7 @@ public class UserModel
     }
   }
 
-  public bool AddUser(long userId, string token, UserData userData, TcpClientHandler client)
+  public bool AddUser(long userId, string token, UserData userData, ClientSession client)
   {
     var userInfo = new UserInfo(userId, token, userData, client);
     return _users.TryAdd(userId, userInfo);

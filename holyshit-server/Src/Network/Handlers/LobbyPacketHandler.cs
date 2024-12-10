@@ -1,21 +1,26 @@
 using HolyShitServer.Src.Models;
 using HolyShitServer.Src.Network.Packets;
+using HolyShitServer.Src.Network.Socket;
 using HolyShitServer.Src.Utils.Decode;
 
 namespace HolyShitServer.Src.Network.Handlers;
 
 public static class LobbyPacketHandler
 {
-  public static async Task HandleGetRoomListRequest(TcpClientHandler client, uint sequence, C2SGetRoomListRequest request)
+  public static async Task<GamePacketMessage> HandleGetRoomListRequest(ClientSession client, uint sequence, C2SGetRoomListRequest request)
   {
     try
     {
-      var roomList = GetRoomList();
-      await ResponseHelper.SendGetRoomListResponse(client, sequence, roomList);
+      var roomList = await Task.Run(() => GetRoomList());
+      return ResponseHelper.CreateGetRoomListResponse(sequence, roomList);
     }
     catch (Exception ex)
     {
       Console.WriteLine($"[Lobby] GetRoomList Request 처리 중 오류: {ex.Message}");
+      return ResponseHelper.CreateGetRoomListResponse(
+        sequence, 
+        null
+      );
     }
   }
 
@@ -71,52 +76,45 @@ public static class LobbyPacketHandler
     return rooms;
   }
 
-  public static async Task HandleCreateRoomRequest(TcpClientHandler client, uint sequence, C2SCreateRoomRequest request)
+  public static async Task<GamePacketMessage> HandleCreateRoomRequest(ClientSession client, uint sequence, C2SCreateRoomRequest request)
   {
     try
     {
-      var userInfo = UserModel.Instance.GetAllUsers().FirstOrDefault(u => u.Client == client);
+      var userInfo = await Task.Run(() => UserModel.Instance.GetAllUsers().FirstOrDefault(u => u.Client == client));
       if (userInfo == null)
       {
         Console.WriteLine("[Lobby] CreateRoom 실패: 인증되지 않은 사용자");
-        await ResponseHelper.SendCreateRoomResponse(
-          client, 
+        return ResponseHelper.CreateCreateRoomResponse(
           sequence, 
           false, 
           null, 
           GlobalFailCode.AuthenticationFailed
         );
-
-        return;
       }
 
       // 2. 이미 방에 있는지 확인
-      var existingRoom = RoomModel.Instance.GetUserRoom(userInfo.UserId);
+      var existingRoom = await Task.Run(() => RoomModel.Instance.GetUserRoom(userInfo.UserId));
       if (existingRoom != null)
       {
         Console.WriteLine($"[Lobby] CreateRoom 실패: 이미 방에 있는 사용자 - UserId={userInfo.UserId}, RoomId={existingRoom.Id}");
-        await ResponseHelper.SendCreateRoomResponse(
-          client, 
+        return ResponseHelper.CreateCreateRoomResponse(
           sequence, 
           false, 
           null, 
           GlobalFailCode.CreateRoomFailed
         );
-        return; 
       }
 
       // 3. 방 생성 요청 유효성 검사
       if (string.IsNullOrEmpty(request.Name) || request.MaxUserNum < 2 || request.MaxUserNum > 8)
       {
         Console.WriteLine($"[Lobby] CreateRoom 실패: 잘못된 요청 - Name='{request.Name}', MaxUserNum={request.MaxUserNum}");
-        await ResponseHelper.SendCreateRoomResponse(
-          client, 
+        return ResponseHelper.CreateCreateRoomResponse(
           sequence, 
           false, 
           null, 
           GlobalFailCode.InvalidRequest
         );
-        return;
       }
 
       // 4. 방 생성
@@ -130,29 +128,30 @@ public static class LobbyPacketHandler
       if (room != null)
       {
         Console.WriteLine($"[Lobby] CreateRoom 성공: RoomId={room.Id}, Name='{room.Name}', Owner={room.OwnerId}");
-        await ResponseHelper.SendCreateRoomResponse(
-          client,
+        return ResponseHelper.CreateCreateRoomResponse(
           sequence,
           true,
           room,
-          GlobalFailCode.NoneFailcode
-        );
+          GlobalFailCode.NoneFailcode);
       }
       else
       {
         Console.WriteLine("[Lobby] CreateRoom 실패: 방 생성 실패");
-        await ResponseHelper.SendCreateRoomResponse(
-          client,
+        return ResponseHelper.CreateCreateRoomResponse(
           sequence,
           false,
           null,
-          GlobalFailCode.CreateRoomFailed
-        );
+          GlobalFailCode.CreateRoomFailed);
       }
     }
     catch (Exception ex)
     {
       Console.WriteLine($"[Lobby] CreateRoom Request 처리 중 오류: {ex.Message}");
+      return ResponseHelper.CreateCreateRoomResponse(
+        sequence,
+        false,
+        null,
+        GlobalFailCode.UnknownError);
     }
   }
 }

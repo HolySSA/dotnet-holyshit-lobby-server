@@ -3,36 +3,54 @@ using Google.Protobuf;
 using HolyShitServer.Src.Network.Protocol;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Models;
-using HolyShitServer.Src.Utils.Socket;
 
-namespace HolyShitServer.Src.Network;
+namespace HolyShitServer.Src.Network.Socket;
 
-public class TcpClientHandler : IDisposable
+public class ClientSession : IDisposable
 {
   private readonly TcpClient _client; // 현재 연결된 클라이언트
   private readonly NetworkStream _stream; // 클라이언트와의 네트워크 스트림
-  private readonly MessageQueue _messageQueue; // 메시지 큐
-
   private readonly IServiceProvider _serviceProvider;  // DI 컨테이너
+  private bool _disposed; // 객체 해제 여부
+
+  public MessageQueue MessageQueue { get; } // 메시지 큐
+  public string SessionId { get; }
   public IServiceProvider ServiceProvider => _serviceProvider;
 
-  private bool _disposed = false; // 객체 해제 여부
-
   // 생성자 - 필드 초기화
-  public TcpClientHandler(TcpClient client, IServiceProvider serviceProvider)
+  public ClientSession(TcpClient client, IServiceProvider serviceProvider)
   {
     _client = client;
     _stream = client.GetStream();
     _serviceProvider = serviceProvider;
-    _messageQueue = new MessageQueue(this);
+    SessionId = Guid.NewGuid().ToString();
+    MessageQueue = new MessageQueue(this);
   }
 
-  // 클라이언트 통신 처리 비동기로 시작
-  public async Task StartHandlingClientAsync()
+  public async Task StartAsync()
   {
     try
     {
-      while (!_disposed)
+      Console.WriteLine($"[Session] 시작: {SessionId}");
+      await ProcessMessagesAsync();
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[Session] 오류 발생: {SessionId}, {ex.Message}");
+    }
+    finally
+    {
+      Dispose();
+    }
+  }
+  
+
+  // 클라이언트 통신 처리 비동기로 시작
+  public async Task ProcessMessagesAsync()
+  {
+    while (!_disposed)
+    {
+      try
       {
         // 헤더 읽기
         var headerBuffer = new byte[PacketSerializer.HEADER_SIZE];
@@ -59,27 +77,28 @@ public class TcpClientHandler : IDisposable
           var (id, sequence, message) = result.Value;
           if (message != null)
           {
-            await _messageQueue.EnqueueReceive(id, sequence, message);
+            await MessageQueue.EnqueueReceive(id, sequence, message);
           }
         }
       }
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"클라이언트 처리 중 오류: {ex.Message}");
+      catch (Exception ex)
+      {
+        Console.WriteLine($"[Session] 메시지 처리 오류: {SessionId}, {ex.Message}");
+        break;
+      }
     }
   }
 
   // 응답 전송
-  public async Task SendResponseAsync<T>(PacketId packetId, uint sequence, T message) where T : IMessage
+  public async Task SendMessageAsync<T>(PacketId packetId, uint sequence, T message) where T : IMessage
   {
     try
     {
-      await _messageQueue.EnqueueSend(packetId, sequence, message);
+      await MessageQueue.EnqueueSend(packetId, sequence, message);
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"[TCP] 패킷 전송 중 오류: {ex}");
+      Console.WriteLine($"[Session] 메시지 전송 오류: {SessionId}, {ex.Message}");
       throw;
     }
   }
@@ -87,7 +106,7 @@ public class TcpClientHandler : IDisposable
   // MessageQueue에서 사용할 메서드 추가
   public async Task SendDataAsync(byte[] data)
   {
-    if (_disposed) throw new ObjectDisposedException(nameof(TcpClientHandler));
+    if (_disposed) throw new ObjectDisposedException(nameof(ClientSession));
     
     await _stream.WriteAsync(data);
     await _stream.FlushAsync();
@@ -102,11 +121,13 @@ public class TcpClientHandler : IDisposable
     if (userInfo != null)
     {
       UserModel.Instance.RemoveUser(userInfo.UserId);
-      Console.WriteLine($"[TCP] 유저 제거: Id={userInfo.UserId}");
+      Console.WriteLine($"[Session] 유저 제거: Id={userInfo.UserId}");
     }
 
     _stream?.Dispose(); // 네트워크 스트림 해제
     _client?.Dispose(); // TcpClient 객체 해제
     _disposed = true;
+
+    Console.WriteLine($"[Session] 종료: {SessionId}");
   }
 }

@@ -2,16 +2,16 @@ using Google.Protobuf;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Network.Protocol;
 
-namespace HolyShitServer.Src.Utils.Socket;
+namespace HolyShitServer.Src.Network.Socket;
 
 public class GamePacketMessage
 {
   public PacketId PacketId { get; }
   public uint Sequence { get; }
   public IMessage Message { get; }
-  public List<string> TargetUUIDs { get; }
+  public List<string> TargetSessionIds { get; }
 
-  public GamePacketMessage(PacketId packetId, uint sequence, IMessage message, List<string>? targetUUIDs = null)
+  public GamePacketMessage(PacketId packetId, uint sequence, IMessage message, List<string>? targetSessionIds = null)
   {
     if (message == null)
     {
@@ -26,18 +26,18 @@ public class GamePacketMessage
     PacketId = packetId;
     Sequence = sequence;
     Message = message;
-    TargetUUIDs = targetUUIDs ?? new List<string>();
+    TargetSessionIds = targetSessionIds ?? new List<string>();
   }
 
   // 브로드캐스트 메시지 생성을 위한 팩토리 메서드
-  public static GamePacketMessage CreateBroadcast(PacketId packetId, IMessage message, List<string> targetUUIDs)
+  public static GamePacketMessage CreateBroadcast(PacketId packetId, IMessage message, List<string> targetSessionIds)
   {
-    return new GamePacketMessage(packetId, PacketManager.GetNextSequence(), message, targetUUIDs);
+    return new GamePacketMessage(packetId, PacketManager.GetNextSequence(), message, targetSessionIds);
   }
 
   // 단일 대상 메시지 생성을 위한 팩토리 메서드
-  public static GamePacketMessage CreateSingle(PacketId packetId, IMessage message, string targetUUID)
+  public static GamePacketMessage CreateSingle(PacketId packetId, IMessage message, string targetSessionId)
   {
-    return new GamePacketMessage(packetId, PacketManager.GetNextSequence(), message, new List<string> { targetUUID });
+    return new GamePacketMessage(packetId, PacketManager.GetNextSequence(), message, new List<string> { targetSessionId });
   }
 }

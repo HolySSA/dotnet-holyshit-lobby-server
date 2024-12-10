@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Reflection;
 using Google.Protobuf;
 using HolyShitServer.Src.Network.Packets;
+using HolyShitServer.Src.Network.Socket;
 
 namespace HolyShitServer.Src.Network.Protocol;
 
@@ -62,7 +63,7 @@ public class PacketManager
     }
 }
 
-  public static async Task ProcessMessageAsync(TcpClientHandler client, PacketId id, uint sequence, IMessage message)
+  public static async Task ProcessMessageAsync(ClientSession client, PacketId id, uint sequence, IMessage message)
   {
     if (!_isInitialized)
     {

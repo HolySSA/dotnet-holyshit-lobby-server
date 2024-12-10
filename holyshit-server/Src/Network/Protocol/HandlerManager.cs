@@ -1,12 +1,13 @@
 using Google.Protobuf;
 using HolyShitServer.Src.Network.Handlers;
 using HolyShitServer.Src.Network.Packets;
+using HolyShitServer.Src.Network.Socket;
 
 namespace HolyShitServer.Src.Network.Protocol;
 
 public static class HandlerManager
 {
-  private static readonly Dictionary<PacketId, Func<TcpClientHandler, uint, IMessage, Task>> _handlers = new(); // 모든 핸들러
+  private static readonly Dictionary<PacketId, Func<ClientSession, uint, IMessage, Task<GamePacketMessage>>> _handlers = new(); // 모든 핸들러
   private static bool _isInitialized = false; // 초기화 여부
   private static readonly object _initLock = new object(); // 초기화/동기화 관리 락 오브젝트
 
@@ -33,10 +34,11 @@ public static class HandlerManager
   }
 
   // 핸들러 등록
-  public static void OnHandlers<T>(PacketId packetId, Func<TcpClientHandler, uint, T, Task> handler) where T : IMessage
+  public static void OnHandlers<T>(
+        PacketId packetId, 
+        Func<ClientSession, uint, T, Task<GamePacketMessage>> handler) where T : IMessage
   {
     _handlers[packetId] = async (client, seq, message) => await handler(client, seq, (T)message);
-    Console.WriteLine($"핸들러 등록: {typeof(T).Name}");
   }
 
   // 특정 메시지 타입 핸들러 제거
@@ -49,18 +51,25 @@ public static class HandlerManager
   }
 
   // 메시지 처리
-  public static async Task HandleMessageAsync(TcpClientHandler client, PacketId id, uint sequence, IMessage message)
+  public static async Task HandleMessageAsync(ClientSession client, PacketId id, uint sequence, IMessage message)
   {
     if (!_isInitialized)
-    {
       throw new InvalidOperationException("HandlerManager가 초기화되지 않았습니다.");
-    }
 
     if (_handlers.TryGetValue(id, out var handler))
     {
       try
       {
-        await handler(client, sequence, message);
+        var result = await handler(client, sequence, message);
+        if (result != null)
+        {
+          // 핸들러의 결과를 자동으로 메시지 큐에 추가
+          await client.MessageQueue.EnqueueSend(
+              result.PacketId,
+              result.Sequence,
+              result.Message,
+              result.TargetSessionIds);
+        }
       }
       catch (Exception ex)
       {

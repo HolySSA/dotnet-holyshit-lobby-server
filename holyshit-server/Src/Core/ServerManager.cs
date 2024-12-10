@@ -1,8 +1,9 @@
 using System.Net;
 using System.Net.Sockets;
 using HolyShitServer.Src.Constants;
+using HolyShitServer.Src.Core.Client;
 
-namespace HolyShitServer.Src.Core;
+namespace HolyShitServer.Src.Core.Server;
 
 public class ServerManager
 {

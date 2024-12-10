@@ -1,23 +1,12 @@
 using Google.Protobuf;
-using HolyShitServer.Src.Network;
 using HolyShitServer.Src.Network.Packets;
+using HolyShitServer.Src.Network.Socket;
 
 namespace HolyShitServer.Src.Utils.Decode;
 
 public static class ResponseHelper
 {
-  public static async Task SendResponse<T>(
-    TcpClientHandler client,
-    PacketId packetId,
-    uint sequence,
-    T message) where T : IMessage
-  {
-    await client.SendResponseAsync(packetId, sequence, message);
-  }
-
-  // 회원가입 응답
-  public static async Task SendRegisterResponse(
-    TcpClientHandler client,
+  public static GamePacketMessage CreateRegisterResponse(
     uint sequence,
     bool success,
     string message,
@@ -31,14 +20,11 @@ public static class ResponseHelper
     };
 
     Console.WriteLine($"[Response] Register Response 생성: Success={success}, Message='{message}', FailCode={failCode}");
-    Console.WriteLine($"[Response] Register Response 객체: {response}");
-
-    await client.SendResponseAsync(PacketId.RegisterResponse, sequence, response);
+    
+    return new GamePacketMessage(PacketId.RegisterResponse, sequence, response);
   }
 
-  // 로그인 응답
-  public static async Task SendLoginResponse(
-    TcpClientHandler client,
+  public static GamePacketMessage CreateLoginResponse(
     uint sequence,
     bool success,
     string message,
@@ -56,38 +42,21 @@ public static class ResponseHelper
     };
 
     Console.WriteLine($"[Response] Login Response 생성: Success={success}, Message='{message}', Token='{token}', FailCode={failCode}");
-    Console.WriteLine($"[Response] Login Response UserData: {myInfo}");
-    Console.WriteLine($"[Response] Login Response 객체: {response}");
 
-    var gamePacket = new GamePacket();
-    gamePacket.LoginResponse = response;
-
-    Console.WriteLine($"[Response] GamePacket 생성: {gamePacket}");
-    Console.WriteLine($"[Response] Serialized Size: {gamePacket.CalculateSize()}");
-
-    await client.SendResponseAsync(PacketId.LoginResponse, sequence, response);
-
-    Console.WriteLine("[Response] Login Response 전송 완료");
+    return new GamePacketMessage(PacketId.LoginResponse, sequence, response);
   }
 
-  public static async Task SendGetRoomListResponse(
-    TcpClientHandler client,
+  public static GamePacketMessage CreateGetRoomListResponse(
     uint sequence,
     List<RoomData> rooms)
   {
     var response = new S2CGetRoomListResponse();
     response.Rooms.AddRange(rooms);
 
-    var gamePacket = new GamePacket();
-    gamePacket.GetRoomListResponse = response;
-
-    await client.SendResponseAsync(PacketId.GetRoomListResponse, sequence, response);
-
-    Console.WriteLine("[Response] GetRoomList Response 전송 완료");
+    return new GamePacketMessage(PacketId.GetRoomListResponse, sequence, response);
   }
 
-  public static async Task SendCreateRoomResponse(
-    TcpClientHandler client,
+  public static GamePacketMessage CreateCreateRoomResponse(
     uint sequence,
     bool success,
     RoomData? room,
@@ -106,13 +75,13 @@ public static class ResponseHelper
       Console.WriteLine($"[Response] Room 정보: Id={room.Id}, Name='{room.Name}', Owner={room.OwnerId}, Users={room.Users.Count}");
     }
 
-    await client.SendResponseAsync(PacketId.CreateRoomResponse, sequence, response);
+    return new GamePacketMessage(PacketId.CreateRoomResponse, sequence, response);
   }
 
   /*
     // 에러 응답
     public static async Task SendErrorResponse(
-        TcpClientHandler client,
+        ClientSession client,
         uint sequence,
         string message,
         GlobalFailCode failCode)

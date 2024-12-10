@@ -1,24 +1,22 @@
 using System.Collections.Concurrent;
 using Google.Protobuf;
-using HolyShitServer.Src.Core;
-using HolyShitServer.Src.Network;
+using HolyShitServer.Src.Core.Client;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Network.Protocol;
 
-namespace HolyShitServer.Src.Utils.Socket;
+namespace HolyShitServer.Src.Network.Socket;
 
 public class MessageQueue
 {
   private readonly ConcurrentQueue<GamePacketMessage> _receiveQueue = new();
   private readonly ConcurrentQueue<GamePacketMessage> _sendQueue = new();
-
   private volatile bool _processingReceive;
   private volatile bool _processingSend;
-  private readonly TcpClientHandler _client;
+  private readonly ClientSession _session;
 
-  public MessageQueue(TcpClientHandler client)
+  public MessageQueue(ClientSession session)
   {
-    _client = client;
+    _session = session;
   }
 
   public async Task EnqueueReceive(PacketId packetId, uint sequence, IMessage message)
@@ -27,9 +25,9 @@ public class MessageQueue
     await ProcessReceiveQueue();
   }
 
-  public async Task EnqueueSend(PacketId packetId, uint sequence, IMessage message)
+  public async Task EnqueueSend(PacketId packetId, uint sequence, IMessage message, List<string>? targetSessionIds = null)
   {
-    _sendQueue.Enqueue(new GamePacketMessage(packetId, sequence, message));
+    _sendQueue.Enqueue(new GamePacketMessage(packetId, sequence, message, targetSessionIds));
     await ProcessSendQueue();
   }
 
@@ -44,12 +42,12 @@ public class MessageQueue
       {
         try
         {
-          await PacketManager.ProcessMessageAsync(_client, message.PacketId, message.Sequence, message.Message);
+          await HandlerManager.HandleMessageAsync(_session, message.PacketId, message.Sequence, message.Message);
         }
         catch (Exception ex)
         {
-          Console.WriteLine($"메시지 처리 중 오류: {ex.Message}");
-        } 
+          Console.WriteLine($"[MessageQueue] 수신 처리 오류: {_session.SessionId}, {ex.Message}");
+        }
       }
     }
     finally
@@ -69,35 +67,36 @@ public class MessageQueue
       {
         try
         {
-          var gamePacket = new GamePacket();
           // ... 패킷 타입에 따른 메시지 할당 ...
           var serializedData = PacketSerializer.Serialize(
               message.PacketId, 
-              gamePacket, 
+              message.Message, 
               message.Sequence);
 
           if (serializedData != null)
           {
-            if (message.TargetUUIDs.Count > 0)
+            if (message.TargetSessionIds.Count > 0)
             {
-              foreach (var uuid in message.TargetUUIDs)
+              // 브로드 캐스트
+              foreach (var sessionId in message.TargetSessionIds)
               {
-                var targetClient = ClientManager.GetClientByUUID(uuid);
-                if (targetClient != null)
+                var targetSession = ClientManager.GetSession(sessionId);
+                if (targetSession != null)
                 {
-                  await targetClient.SendDataAsync(serializedData);
+                  await targetSession.SendDataAsync(serializedData);
                 }
               }
             }
             else
             {
-              await _client.SendDataAsync(serializedData);
+              // 단일 대상
+              await _session.SendDataAsync(serializedData);
             }
           }
         }
         catch (Exception ex)
         {
-          Console.WriteLine($"메시지 전송 중 오류: {ex.Message}");
+          Console.WriteLine($"[MessageQueue] 송신 처리 오류: {_session.SessionId}, {ex.Message}");
         }
       }
     }
