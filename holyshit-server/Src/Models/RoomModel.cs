@@ -78,14 +78,14 @@ public class RoomModel
       {
         room.Users.Remove(user);
         
-        // 방에 아무도 없으면 방 삭제
         if (room.Users.Count == 0)
         {
+          // 방에 아무도 없으면 방 삭제
           _rooms.TryRemove(roomId, out _);
         }
-        // 방장이 나가면 다음 사람에게 방장 위임
         else if (room.OwnerId == userId && room.Users.Any())
         {
+          // 방장이 나가면 다음 사람에게 방장 위임
           room.OwnerId = room.Users[0].Id;
         }
 

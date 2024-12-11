@@ -19,8 +19,6 @@ public static class HandlerManager
     {
       if (_isInitialized) return;
 
-      Console.WriteLine("HandlerManager 초기화 시작...");
-
       // 모든 핸들러 등록
       OnHandlers<C2SRegisterRequest>(PacketId.RegisterRequest, AuthPacketHandler.HandleRegisterRequest);
       OnHandlers<C2SLoginRequest>(PacketId.LoginRequest, AuthPacketHandler.HandleLoginRequest);
@@ -63,7 +61,7 @@ public static class HandlerManager
         var result = await handler(client, sequence, message);
         if (result != null)
         {
-          // 핸들러의 결과를 자동으로 메시지 큐에 추가
+          // 핸들러 결과 메시지 큐에 자동으로 추가
           await client.MessageQueue.EnqueueSend(
               result.PacketId,
               result.Sequence,

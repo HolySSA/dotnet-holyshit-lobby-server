@@ -21,7 +21,10 @@ public static class ResponseHelper
 
     Console.WriteLine($"[Response] Register Response 생성: Success={success}, Message='{message}', FailCode={failCode}");
     
-    return new GamePacketMessage(PacketId.RegisterResponse, sequence, response);
+    var gamePacket = new GamePacket();
+    gamePacket.RegisterResponse = response;
+
+    return new GamePacketMessage(PacketId.RegisterResponse, sequence, gamePacket);
   }
 
   public static GamePacketMessage CreateLoginResponse(
@@ -43,7 +46,10 @@ public static class ResponseHelper
 
     Console.WriteLine($"[Response] Login Response 생성: Success={success}, Message='{message}', Token='{token}', FailCode={failCode}");
 
-    return new GamePacketMessage(PacketId.LoginResponse, sequence, response);
+    var gamePacket = new GamePacket();
+    gamePacket.LoginResponse = response;
+
+    return new GamePacketMessage(PacketId.LoginResponse, sequence, gamePacket);
   }
 
   public static GamePacketMessage CreateGetRoomListResponse(
@@ -53,7 +59,10 @@ public static class ResponseHelper
     var response = new S2CGetRoomListResponse();
     response.Rooms.AddRange(rooms);
 
-    return new GamePacketMessage(PacketId.GetRoomListResponse, sequence, response);
+    var gamePacket = new GamePacket();
+    gamePacket.GetRoomListResponse = response;
+
+    return new GamePacketMessage(PacketId.GetRoomListResponse, sequence, gamePacket);
   }
 
   public static GamePacketMessage CreateCreateRoomResponse(
@@ -75,7 +84,35 @@ public static class ResponseHelper
       Console.WriteLine($"[Response] Room 정보: Id={room.Id}, Name='{room.Name}', Owner={room.OwnerId}, Users={room.Users.Count}");
     }
 
-    return new GamePacketMessage(PacketId.CreateRoomResponse, sequence, response);
+    var gamePacket = new GamePacket();
+    gamePacket.CreateRoomResponse = response;
+
+    return new GamePacketMessage(PacketId.CreateRoomResponse, sequence, gamePacket);
+  }
+
+  public static GamePacketMessage CreateJoinRoomResponse(
+    uint sequence,
+    bool success,
+    RoomData? room,
+    GlobalFailCode failCode)
+  {
+    var response = new S2CJoinRoomResponse
+    {
+      Success = success,
+      FailCode = failCode,
+      Room = room,
+    };
+
+    Console.WriteLine($"[Response] JoinRoom Response 생성: Success={success}, FailCode={failCode}");
+    if (room != null)
+    {
+      Console.WriteLine($"[Response] Room 정보: Id={room.Id}, Name='{room.Name}', Owner={room.OwnerId}, Users={room.Users.Count}");
+    }
+
+    var gamePacket = new GamePacket();
+    gamePacket.JoinRoomResponse = response;
+
+    return new GamePacketMessage(PacketId.JoinRoomResponse, sequence, gamePacket);
   }
 
   /*
