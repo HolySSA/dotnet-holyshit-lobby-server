@@ -54,7 +54,7 @@ public static class ResponseHelper
 
   public static GamePacketMessage CreateGetRoomListResponse(
     uint sequence,
-    List<RoomData> rooms)
+    List<RoomData>? rooms)
   {
     var response = new S2CGetRoomListResponse();
     response.Rooms.AddRange(rooms);
@@ -113,6 +113,42 @@ public static class ResponseHelper
     gamePacket.JoinRoomResponse = response;
 
     return new GamePacketMessage(PacketId.JoinRoomResponse, sequence, gamePacket);
+  }
+
+  public static GamePacketMessage CreateJoinRandomRoomResponse(
+    uint sequence,
+    bool success,
+    RoomData? room,
+    GlobalFailCode failCode)
+  {
+    var response = new S2CJoinRandomRoomResponse
+    {
+      Success = success,
+      FailCode = failCode,
+      Room = room,
+    };
+
+    var gamePacket = new GamePacket();
+    gamePacket.JoinRandomRoomResponse = response;
+
+    return new GamePacketMessage(PacketId.JoinRandomRoomResponse, sequence, gamePacket);
+  }
+
+  public static GamePacketMessage CreateLeaveRoomResponse(
+    uint sequence,
+    bool success,
+    GlobalFailCode failCode)
+  {
+    var response = new S2CLeaveRoomResponse
+    {
+      Success = success,
+      FailCode = failCode,
+    };
+
+    var gamePacket = new GamePacket();
+    gamePacket.LeaveRoomResponse = response;
+
+    return new GamePacketMessage(PacketId.LeaveRoomResponse, sequence, gamePacket);
   }
 
   /*

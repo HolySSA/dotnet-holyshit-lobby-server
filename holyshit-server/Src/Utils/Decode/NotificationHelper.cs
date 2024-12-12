@@ -24,4 +24,24 @@ public static class NotificationHelper
       targetSessionIds
     );
   }
+
+  public static GamePacketMessage CreateLeaveRoomNotification(
+    long userId,
+    List<string> targetSessionIds
+  )
+  {
+    var notification = new S2CLeaveRoomNotification
+    {
+      UserId = userId
+    };
+
+    var gamePacket = new GamePacket();
+    gamePacket.LeaveRoomNotification = notification;
+
+    return GamePacketMessage.CreateBroadcast(
+      PacketId.LeaveRoomNotification,
+      gamePacket,
+      targetSessionIds
+    );
+  }
 }

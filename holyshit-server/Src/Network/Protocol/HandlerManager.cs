@@ -24,6 +24,9 @@ public static class HandlerManager
       OnHandlers<C2SLoginRequest>(PacketId.LoginRequest, AuthPacketHandler.HandleLoginRequest);
       OnHandlers<C2SGetRoomListRequest>(PacketId.GetRoomListRequest, LobbyPacketHandler.HandleGetRoomListRequest);
       OnHandlers<C2SCreateRoomRequest>(PacketId.CreateRoomRequest, LobbyPacketHandler.HandleCreateRoomRequest);
+      OnHandlers<C2SJoinRoomRequest>(PacketId.JoinRoomRequest, LobbyPacketHandler.HandleJoinRoomRequest);
+      OnHandlers<C2SJoinRandomRoomRequest>(PacketId.JoinRandomRoomRequest, LobbyPacketHandler.HandleJoinRandomRoomRequest);
+      OnHandlers<C2SLeaveRoomRequest>(PacketId.LeaveRoomRequest, LobbyPacketHandler.HandleLeaveRoomRequest);
       // 다른 핸들러들도 여기서 등록...
 
       _isInitialized = true;

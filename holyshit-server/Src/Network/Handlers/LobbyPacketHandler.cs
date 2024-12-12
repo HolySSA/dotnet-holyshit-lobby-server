@@ -11,8 +11,12 @@ public static class LobbyPacketHandler
   {
     try
     {
-      var roomList = await Task.Run(() => GetRoomList());
-      return ResponseHelper.CreateGetRoomListResponse(sequence, roomList);
+      var roomList = await Task.FromResult(RoomModel.Instance.GetRoomList());
+        
+      return ResponseHelper.CreateGetRoomListResponse(
+        sequence,
+        roomList
+      );
     }
     catch (Exception ex)
     {
@@ -22,58 +26,6 @@ public static class LobbyPacketHandler
         null
       );
     }
-  }
-
-  // 임시 테스트용 방 목록 생성 메서드
-  private static List<RoomData> GetRoomList()
-  {
-    var rooms = new List<RoomData>();
-
-    // 테스트용 방 데이터 생성
-    var testRoom1 = new RoomData
-    {
-      Id = 1,
-      OwnerId = 1001,
-      Name = "테스트 방 1",
-      MaxUserNum = 4,
-      State = RoomStateType.Wait,
-      Users = { new UserData
-      {
-        Id = 1001,
-        Nickname = "테스트유저1",
-        Character = new CharacterData
-        {
-          CharacterType = CharacterType.Red,
-          RoleType = RoleType.Target,
-          Hp = 100
-        }
-      }}
-    };
-
-    var testRoom2 = new RoomData
-    {
-      Id = 2,
-      OwnerId = 1002,
-      Name = "테스트 방 2",
-      MaxUserNum = 6,
-      State = RoomStateType.Wait,
-      Users = { new UserData
-      {
-        Id = 1002,
-        Nickname = "테스트유저2",
-        Character = new CharacterData
-        {
-          CharacterType = CharacterType.Shark,
-          RoleType = RoleType.Hitman,
-          Hp = 100
-        }
-      }}
-    };
-
-    rooms.Add(testRoom1);
-    rooms.Add(testRoom2);
-
-    return rooms;
   }
 
   public static async Task<GamePacketMessage> HandleCreateRoomRequest(ClientSession client, uint sequence, C2SCreateRoomRequest request)
@@ -225,18 +177,13 @@ public static class LobbyPacketHandler
       if (RoomModel.Instance.JoinRoom(request.RoomId, userInfo.UserData))
       {
         Console.WriteLine($"[Lobby] JoinRoom 성공: UserId={userInfo.UserId}, RoomId={request.RoomId}");
-        
+
         // 7. 방에 있는 다른 유저들에게 새 유저 입장 알림
         var updatedRoom = RoomModel.Instance.GetRoom(request.RoomId);
         if (updatedRoom != null)
         {
           // 방의 모든 유저의 세션 ID를 가져옴 (입장한 유저 제외)
-          var targetSessionIds = updatedRoom.Users
-            .Where(u => u.Id != userInfo.UserId)
-            .Select(u => UserModel.Instance.GetUser(u.Id)?.Client.SessionId)
-            .Where(sessionId => sessionId != null)
-            .ToList()!;
-
+          var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(updatedRoom, userInfo.UserId);
           if (targetSessionIds.Any())
           {
             // 입장 알림 생성 및 전송
@@ -246,10 +193,10 @@ public static class LobbyPacketHandler
             );
 
             await client.MessageQueue.EnqueueSend(
-            notification.PacketId,
-            notification.Sequence,
-            notification.Message,
-            notification.TargetSessionIds
+              notification.PacketId,
+              notification.Sequence,
+              notification.Message,
+              notification.TargetSessionIds
             );
           }
         }
@@ -280,6 +227,187 @@ public static class LobbyPacketHandler
         sequence,
         false,
         null,
+        GlobalFailCode.UnknownError
+      );
+    }
+  }
+
+  public static async Task<GamePacketMessage> HandleJoinRandomRoomRequest(ClientSession client, uint sequence, C2SJoinRandomRoomRequest request)
+  {
+    try
+    {
+      // 1. 유저 정보 확인
+      var userInfo = UserModel.Instance.GetAllUsers().FirstOrDefault(u => u.Client == client);
+      if (userInfo == null)
+      {
+        Console.WriteLine("[Lobby] JoinRandomRoom 실패: 인증되지 않은 사용자");
+        return ResponseHelper.CreateJoinRandomRoomResponse(
+          sequence,
+          false,
+          null,
+          GlobalFailCode.AuthenticationFailed
+        );
+      }
+
+      // 2. 이미 방에 있는지 확인
+      var existingRoom = RoomModel.Instance.GetUserRoom(userInfo.UserId);
+      if (existingRoom != null)
+      {
+        Console.WriteLine($"[Lobby] JoinRandomRoom 실패: 이미 방에 있는 사용자 - UserId={userInfo.UserId}");
+        return ResponseHelper.CreateJoinRandomRoomResponse(
+          sequence,
+          false,
+          null,
+          GlobalFailCode.JoinRoomFailed
+        );
+      }
+
+      // 3. 입장 가능한 방 목록 필터링
+      var availableRooms = RoomModel.Instance.GetRoomList()
+        .Where(r => r.Users.Count < r.MaxUserNum && r.State == RoomStateType.Wait)
+        .ToList();
+
+      if (!availableRooms.Any())
+      {
+        Console.WriteLine("[Lobby] JoinRandomRoom 실패: 입장 가능한 방이 없음");
+        return ResponseHelper.CreateJoinRandomRoomResponse(
+          sequence,
+          false,
+          null,
+          GlobalFailCode.RoomNotFound
+        );
+      }
+
+      // 4. 랜덤하게 방 선택
+      var random = new Random();
+      var selectedRoom = availableRooms[random.Next(availableRooms.Count)];
+
+      // 5. 선택된 방 입장
+      if (RoomModel.Instance.JoinRoom(selectedRoom.Id, userInfo.UserData))
+      {
+        Console.WriteLine($"[Lobby] JoinRandomRoom 성공: UserId={userInfo.UserId}, RoomId={selectedRoom.Id}");
+
+        // 6. 방에 있는 다른 유저들에게 새 유저 입장 알림
+        var updatedRoom = RoomModel.Instance.GetRoom(selectedRoom.Id);
+        if (updatedRoom != null)
+        {
+          var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(updatedRoom, userInfo.UserId);
+          if (targetSessionIds.Any())
+          {
+            var notification = NotificationHelper.CreateJoinRoomNotification(
+              userInfo.UserData,
+              targetSessionIds
+            );
+
+            await client.MessageQueue.EnqueueSend(
+              notification.PacketId,
+              notification.Sequence,
+              notification.Message,
+              notification.TargetSessionIds
+            );
+          }
+        }
+
+        return ResponseHelper.CreateJoinRandomRoomResponse(
+          sequence,
+          true,
+          updatedRoom,
+          GlobalFailCode.NoneFailcode
+        );
+      }
+
+      Console.WriteLine($"[Lobby] JoinRandomRoom 실패: 방 입장 실패 - RoomId={selectedRoom.Id}");
+      return ResponseHelper.CreateJoinRandomRoomResponse(
+        sequence,
+        false,
+        null,
+        GlobalFailCode.JoinRoomFailed
+      );
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[Lobby] JoinRandomRoom Request 처리 중 오류: {ex.Message}");
+      return ResponseHelper.CreateJoinRandomRoomResponse(
+        sequence,
+        false,
+        null,
+        GlobalFailCode.UnknownError
+      );
+    }
+  }
+
+  public static async Task<GamePacketMessage> HandleLeaveRoomRequest(ClientSession client, uint sequence, C2SLeaveRoomRequest request)
+  {
+    try
+    {
+      // 1. 유저 정보 확인
+      var userInfo = UserModel.Instance.GetAllUsers().FirstOrDefault(u => u.Client == client);
+      if (userInfo == null)
+      {
+        Console.WriteLine("[Lobby] LeaveRoom 실패: 인증되지 않은 사용자");
+        return ResponseHelper.CreateLeaveRoomResponse(
+          sequence,
+          false,
+          GlobalFailCode.AuthenticationFailed
+        );
+      }
+
+      // 2. 현재 있는 방 확인
+      var currentRoom = RoomModel.Instance.GetUserRoom(userInfo.UserId);
+      if (currentRoom == null)
+      {
+        Console.WriteLine($"[Lobby] LeaveRoom 실패: 방에 없는 사용자 - UserId={userInfo.UserId}");
+        return ResponseHelper.CreateLeaveRoomResponse(
+          sequence,
+          false,
+          GlobalFailCode.RoomNotFound
+        );
+      }
+
+      // 3. 방에 있는 다른 유저들에게 알림을 보내기 위해 세션 ID 목록 미리 가져오기
+      var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(currentRoom, userInfo.UserId);
+
+      // 4. 방 나가기 처리
+      if (RoomModel.Instance.LeaveRoom(userInfo.UserId))
+      {
+        Console.WriteLine($"[Lobby] LeaveRoom 성공: UserId={userInfo.UserId}, RoomId={currentRoom.Id}");
+
+        // 5. 방에 있는 다른 유저들에게 나간 유저 알림
+        if (targetSessionIds.Any())
+        {
+          var notification = NotificationHelper.CreateLeaveRoomNotification(
+            userInfo.UserId,
+            targetSessionIds
+          );
+
+          await client.MessageQueue.EnqueueSend(
+            notification.PacketId,
+            notification.Sequence,
+            notification.Message,
+            notification.TargetSessionIds
+          );
+        }
+
+        return ResponseHelper.CreateLeaveRoomResponse(
+          sequence,
+          true,
+          GlobalFailCode.NoneFailcode
+        );
+      }
+
+      Console.WriteLine($"[Lobby] LeaveRoom 실패: 방 나가기 실패 - UserId={userInfo.UserId}, RoomId={currentRoom.Id}");
+      return ResponseHelper.CreateLeaveRoomResponse(
+        sequence,
+        false,
+        GlobalFailCode.LeaveRoomFailed
+      );
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[Lobby] LeaveRoom Request 처리 중 오류: {ex.Message}");
+      return ResponseHelper.CreateLeaveRoomResponse(
+        sequence,
+        false,
         GlobalFailCode.UnknownError
       );
     }

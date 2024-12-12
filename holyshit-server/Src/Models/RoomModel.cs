@@ -116,4 +116,14 @@ public class RoomModel
 
     return null;
   }
+
+  public List<string> GetRoomTargetSessionIds(RoomData room, long excludeUserId)
+  {
+    return room.Users
+      .Where(u => u.Id != excludeUserId)
+      .Select(u => UserModel.Instance.GetUser(u.Id)?.Client.SessionId)
+      .Where(sessionId => sessionId != null)
+      .Select(sessionId => sessionId!)
+      .ToList();
+  }
 }
