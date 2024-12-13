@@ -61,28 +61,49 @@ public class RoomService : IRoomService
 
     public async Task<ServiceResult<RoomData>> JoinRoom(ClientSession client, int roomId)
     {
-      // 1. 유저 정보 확인
-      var userInfo = _userModel.GetAllUsers().FirstOrDefault(u => u.Client == client);
-      if (userInfo == null)
-        return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
+      try 
+      {
+        // 1. 유저 정보 확인
+        var userInfo = _userModel.GetAllUsers().FirstOrDefault(u => u.Client == client);
+        if (userInfo == null)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
 
-      // 2. 이미 방에 있는지 확인
-      var existingRoom = _roomModel.GetUserRoom(userInfo.UserId);
-      if (existingRoom != null)
-        return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+        // 2. 이미 방에 있는지 확인
+        var existingRoom = _roomModel.GetUserRoom(userInfo.UserId);
+        if (existingRoom != null)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
 
-      // 3. 방 입장 처리
-      if (!_roomModel.JoinRoom(roomId, userInfo.UserData))
-        return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+        // 3. 요청한 방이 존재하는지 확인
+        var targetRoom = _roomModel.GetRoom(roomId);
+        if (targetRoom == null)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
 
-      var updatedRoom = _roomModel.GetRoom(roomId);
-      if (updatedRoom == null)
-        return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
+        // 4. 인원 수 체크
+        if (targetRoom.Users.Count >= targetRoom.MaxUserNum)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
 
-      // 4. 다른 유저들에게 알림
-      await NotifyRoomMembers(client, updatedRoom, userInfo);
+        // 5. 상태 체크
+        if (targetRoom.State != RoomStateType.Wait)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.InvalidRoomState);
 
-      return ServiceResult<RoomData>.Ok(updatedRoom);
+        // 6. 방 입장 처리
+        if (!_roomModel.JoinRoom(roomId, userInfo.UserData))
+          return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+
+        var updatedRoom = _roomModel.GetRoom(roomId);
+        if (updatedRoom == null)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
+
+        // 7. 다른 유저들에게 알림
+        await NotifyRoomMembers(client, updatedRoom, userInfo);
+
+        return ServiceResult<RoomData>.Ok(updatedRoom);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"[RoomService] JoinRoom 실패: {ex.Message}");
+        return ServiceResult<RoomData>.Error(GlobalFailCode.UnknownError);
+      }
     }
 
     public async Task<ServiceResult<RoomData>> JoinRandomRoom(ClientSession client)
