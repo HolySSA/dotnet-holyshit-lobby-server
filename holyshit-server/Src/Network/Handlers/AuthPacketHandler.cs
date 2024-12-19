@@ -19,11 +19,10 @@ public static class AuthPacketHandler
     {
       var validator = new RegisterRequestValidator();
       var validationResult = await validator.ValidateAsync(request);
-
+      // 유효성 검사
       if (!validationResult.IsValid)
       {
         var errors = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
-        Console.WriteLine($"[Auth] Register 유효성 검사 실패: {errors}");
         return ResponseHelper.CreateRegisterResponse(sequence, false, errors, GlobalFailCode.InvalidRequest);
       }
 
@@ -33,14 +32,12 @@ public static class AuthPacketHandler
       // 중복 검사
       if (await dbContext.Users.AnyAsync(u => u.Email == request.Email))
       {
-        Console.WriteLine($"[Auth] Register 이메일 중복: {request.Email}");
         return ResponseHelper.CreateRegisterResponse(sequence, false, "이미 사용 중인 이메일입니다.", GlobalFailCode.AuthenticationFailed);
       }
 
       if (await dbContext.Users.AnyAsync(u => u.Nickname == request.Nickname))
       {
-        Console.WriteLine($"[Auth] Register 닉네임 중복: {request.Nickname}");
-        return ResponseHelper.CreateRegisterResponse(sequence, true, "이미 사용 중인 닉네임입니다.", GlobalFailCode.AuthenticationFailed);
+        return ResponseHelper.CreateRegisterResponse(sequence, false, "이미 사용 중인 닉네임입니다.", GlobalFailCode.AuthenticationFailed);
       }
 
       // DB 저장
@@ -75,24 +72,20 @@ public static class AuthPacketHandler
       var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
       if (user == null)
       {
-        Console.WriteLine($"[Auth] Login 실패: 사용자 없음 - Email='{request.Email}'");
-
         return ResponseHelper.CreateLoginResponse(
           sequence,
           false,
-          "이메일 또는 비밀번호가 일치하지 않습니다.",
+          "",
           failCode: GlobalFailCode.AuthenticationFailed
         );
       }
 
       if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
       {
-        Console.WriteLine($"[Auth] Login 실패: 비밀번호 불일치 - Email='{request.Email}'");
-
         return ResponseHelper.CreateLoginResponse(
           sequence,
           false,
-          "이메일 또는 비밀번호가 일치하지 않습니다.",
+          "",
           failCode: GlobalFailCode.AuthenticationFailed
         );
       }
@@ -100,7 +93,6 @@ public static class AuthPacketHandler
       var existingUser = UserModel.Instance.GetUser(user.Id);
       if (existingUser != null)
       {
-        Console.WriteLine($"[Auth] Login 실패: 이미 로그인된 사용자 - Email='{request.Email}', Id={user.Id}");
         // 기존 연결 종료
         existingUser.Client.Dispose();
         UserModel.Instance.RemoveUser(user.Id);
@@ -137,11 +129,10 @@ public static class AuthPacketHandler
       // UserModel에 유저 추가
       if (!UserModel.Instance.AddUser(user.Id, token, userData, client))
       {
-        Console.WriteLine($"[Auth] Login 실패: UserModel 추가 실패 - Email='{request.Email}', Id={user.Id}");
         return ResponseHelper.CreateLoginResponse(
           sequence,
           false,
-          "로그인 처리 중 오류가 발생했습니다",
+          "",
           failCode: GlobalFailCode.UnknownError
         );
       }
@@ -150,7 +141,7 @@ public static class AuthPacketHandler
       return ResponseHelper.CreateLoginResponse(
         sequence,
         true,
-        "로그인이 완료되었습니다!",
+        "로그인 완료!",
         token,
         userData,
         GlobalFailCode.NoneFailcode
@@ -162,7 +153,7 @@ public static class AuthPacketHandler
       return ResponseHelper.CreateLoginResponse(
         sequence,
         false,
-        "로그인 처리 중 오류가 발생했습니다",
+        "",
         failCode: GlobalFailCode.UnknownError
       );
     }
