@@ -1,17 +1,20 @@
 using Google.Protobuf;
+using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Network.Handlers;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Network.Socket;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HolyShitServer.Src.Network.Protocol;
 
 public static class HandlerManager
 {
+  private static IServiceProvider? _serviceProvider;
   private static readonly Dictionary<PacketId, Func<ClientSession, uint, IMessage, Task<GamePacketMessage>>> _handlers = new(); // 모든 핸들러
   private static bool _isInitialized = false; // 초기화 여부
   private static readonly object _initLock = new object(); // 초기화/동기화 관리 락 오브젝트
 
-  public static void Initialize()
+  public static void Initialize(IServiceProvider serviceProvider)
   {
     if (_isInitialized) return;
 
@@ -19,19 +22,26 @@ public static class HandlerManager
     {
       if (_isInitialized) return;
 
+      _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
       // 모든 핸들러 등록
-      OnHandlers<C2SRegisterRequest>(PacketId.RegisterRequest, AuthPacketHandler.HandleRegisterRequest);
-      OnHandlers<C2SLoginRequest>(PacketId.LoginRequest, AuthPacketHandler.HandleLoginRequest);
-      OnHandlers<C2SGetRoomListRequest>(PacketId.GetRoomListRequest, LobbyPacketHandler.HandleGetRoomListRequest);
-      OnHandlers<C2SCreateRoomRequest>(PacketId.CreateRoomRequest, LobbyPacketHandler.HandleCreateRoomRequest);
-      OnHandlers<C2SJoinRoomRequest>(PacketId.JoinRoomRequest, LobbyPacketHandler.HandleJoinRoomRequest);
-      OnHandlers<C2SJoinRandomRoomRequest>(PacketId.JoinRandomRoomRequest, LobbyPacketHandler.HandleJoinRandomRoomRequest);
-      OnHandlers<C2SLeaveRoomRequest>(PacketId.LeaveRoomRequest, LobbyPacketHandler.HandleLeaveRoomRequest);
-      // 다른 핸들러들도 여기서 등록...
+      RegisterHandlers();
 
       _isInitialized = true;
       Console.WriteLine("HandlerManager 초기화 완료");
     }
+  }
+
+  private static void RegisterHandlers()
+  {
+    OnHandlers<C2SRegisterRequest>(PacketId.RegisterRequest, AuthPacketHandler.HandleRegisterRequest);
+    OnHandlers<C2SLoginRequest>(PacketId.LoginRequest, AuthPacketHandler.HandleLoginRequest);
+    OnHandlers<C2SGetRoomListRequest>(PacketId.GetRoomListRequest, LobbyPacketHandler.HandleGetRoomListRequest);
+    OnHandlers<C2SCreateRoomRequest>(PacketId.CreateRoomRequest, LobbyPacketHandler.HandleCreateRoomRequest);
+    OnHandlers<C2SJoinRoomRequest>(PacketId.JoinRoomRequest, LobbyPacketHandler.HandleJoinRoomRequest);
+    OnHandlers<C2SJoinRandomRoomRequest>(PacketId.JoinRandomRoomRequest, LobbyPacketHandler.HandleJoinRandomRoomRequest);
+    OnHandlers<C2SLeaveRoomRequest>(PacketId.LeaveRoomRequest, LobbyPacketHandler.HandleLeaveRoomRequest);
+    // 다른 핸들러들도 여기서 등록...
   }
 
   // 핸들러 등록
@@ -54,13 +64,15 @@ public static class HandlerManager
   // 메시지 처리
   public static async Task HandleMessageAsync(ClientSession client, PacketId id, uint sequence, IMessage message)
   {
-    if (!_isInitialized)
+    if (!_isInitialized || _serviceProvider == null)
       throw new InvalidOperationException("HandlerManager가 초기화되지 않았습니다.");
 
+    using var scope = _serviceProvider.CreateScope();
     if (_handlers.TryGetValue(id, out var handler))
     {
       try
       {
+        client.ServiceScope = scope; // 클라이언트 세션에 현재 스코프 저장
         var result = await handler(client, sequence, message);
         if (result != null)
         {
@@ -76,6 +88,10 @@ public static class HandlerManager
       {
         Console.WriteLine($"핸들러 에러: {id} / seq:{sequence} - {ex.Message}");
         throw;
+      }
+      finally
+      {
+        client.ServiceScope = null;
       }
     }
     else

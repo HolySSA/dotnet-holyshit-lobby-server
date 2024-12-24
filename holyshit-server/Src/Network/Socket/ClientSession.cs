@@ -3,6 +3,7 @@ using Google.Protobuf;
 using HolyShitServer.Src.Network.Protocol;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HolyShitServer.Src.Network.Socket;
 
@@ -16,6 +17,7 @@ public class ClientSession : IDisposable
   public MessageQueue MessageQueue { get; } // 메시지 큐
   public string SessionId { get; }
   public IServiceProvider ServiceProvider => _serviceProvider;
+  public IServiceScope? ServiceScope { get; set; }
 
   // 생성자 - 필드 초기화
   public ClientSession(TcpClient client, IServiceProvider serviceProvider)

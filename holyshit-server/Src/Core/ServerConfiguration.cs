@@ -1,5 +1,7 @@
+using HolyShitServer.DB.Configuration;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network.Protocol;
+using HolyShitServer.Src.Services.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,7 @@ public static class ServerConfiguration
     var services = new ServiceCollection();
     // 데이터베이스 서비스 등록
     services.AddDatabaseServices(configuration);
+    services.AddGameServices();
 
     return services.BuildServiceProvider();
   }
@@ -34,6 +37,6 @@ public static class ServerConfiguration
 
     // 패킷매니저, 핸들러매니저 초기화
     PacketManager.Initialize();
-    HandlerManager.Initialize();
+    HandlerManager.Initialize(serviceProvider);
   }
 }

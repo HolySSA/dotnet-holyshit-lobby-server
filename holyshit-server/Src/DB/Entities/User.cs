@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Holyshit.DB.Entities;
+namespace HolyShitServer.DB.Entities;
 
 public class User
 {

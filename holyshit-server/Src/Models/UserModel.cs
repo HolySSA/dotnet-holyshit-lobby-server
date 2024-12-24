@@ -10,7 +10,7 @@ public class UserModel
   private static UserModel? _instance;
   private static readonly object _lock = new object();
 
-  // 동시성을 고려하여 ConcurrentDictionary 사용
+  // 동시성을 고려하여 ConcurrentDictionary 컬렉션 사용
   private readonly ConcurrentDictionary<long, UserInfo> _users = new();
 
   public static UserModel Instance

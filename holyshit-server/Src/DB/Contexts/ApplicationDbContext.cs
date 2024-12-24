@@ -1,8 +1,8 @@
-using Holyshit.DB.Entities;
+using HolyShitServer.DB.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Holyshit.DB.Contexts;
+namespace HolyShitServer.DB.Contexts;
 
 // DbContext 상속, 데이터베이스 컨텍스트 클래스 생성
 public class ApplicationDbContext : DbContext

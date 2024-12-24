@@ -9,7 +9,7 @@ public class RoomModel
   private static readonly object _lock = new object();
   private int _nextRoomId = 1;
 
-  // 동시성을 고려하여 ConcurrentDictionary 사용
+  // 동시성을 고려하여 ConcurrentDictionary 컬렉션 사용
   private readonly ConcurrentDictionary<int, RoomData> _rooms = new();
   private readonly ConcurrentDictionary<long, int> _userRoomMap = new();
 

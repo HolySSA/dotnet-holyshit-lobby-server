@@ -1,7 +1,9 @@
-using Holyshit.DB.Contexts;
+using HolyShitServer.DB.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+namespace HolyShitServer.DB.Configuration;
 
 public static class DatabaseConfig
 {
