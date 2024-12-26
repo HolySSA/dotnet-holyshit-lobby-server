@@ -44,4 +44,57 @@ public static class NotificationHelper
       targetSessionIds
     );
   }
+
+  public static GamePacketMessage CreateGameReadyNotification(long userId, bool isReady, List<string> targetSessionIds)
+  {
+    var notification = new S2CGameReadyNotification
+    {
+      UserId = userId,
+      IsReady = isReady
+    };
+
+    var gamePacket = new GamePacket();
+    gamePacket.GameReadyNotification = notification;
+
+    return GamePacketMessage.CreateBroadcast(
+      PacketId.GameReadyNotification,
+      gamePacket,
+      targetSessionIds
+    );
+  }
+
+  public static GamePacketMessage CreateGamePrepareNotification(RoomData room, List<string> targetSessionIds)
+  {
+    var gamePacket = new GamePacket();
+    gamePacket.GamePrepareNotification = new S2CGamePrepareNotification
+    {
+      Room = room
+    };
+
+    return GamePacketMessage.CreateBroadcast(
+      PacketId.GamePrepareNotification,
+      gamePacket,
+      targetSessionIds
+    );
+  }
+
+  public static GamePacketMessage CreateGameStartNotification(GameStateData gameState, List<UserData> users, List<CharacterPositionData> characterPositions, List<string> targetSessionIds)
+  {
+    var notification = new S2CGameStartNotification
+    {
+      GameState = gameState
+    };
+    
+    notification.Users.AddRange(users);
+    notification.CharacterPositions.AddRange(characterPositions);
+
+    var gamePacket = new GamePacket();
+    gamePacket.GameStartNotification = notification;
+
+    return GamePacketMessage.CreateBroadcast(
+      PacketId.GameStartNotification,
+      gamePacket,
+      targetSessionIds
+    );
+  }
 }

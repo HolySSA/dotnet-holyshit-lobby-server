@@ -134,10 +134,7 @@ public static class ResponseHelper
     return new GamePacketMessage(PacketId.JoinRandomRoomResponse, sequence, gamePacket);
   }
 
-  public static GamePacketMessage CreateLeaveRoomResponse(
-    uint sequence,
-    bool success,
-    GlobalFailCode failCode)
+  public static GamePacketMessage CreateLeaveRoomResponse(uint sequence, bool success, GlobalFailCode failCode)
   {
     var response = new S2CLeaveRoomResponse
     {
@@ -149,6 +146,42 @@ public static class ResponseHelper
     gamePacket.LeaveRoomResponse = response;
 
     return new GamePacketMessage(PacketId.LeaveRoomResponse, sequence, gamePacket);
+  }
+
+  public static GamePacketMessage CreateGameReadyResponse(uint sequence, bool success, GlobalFailCode failCode)
+  {
+    var gamePacket = new GamePacket();
+    gamePacket.GameReadyResponse = new S2CGameReadyResponse
+    {
+      Success = success,
+      FailCode = failCode
+    };
+
+    return new GamePacketMessage(PacketId.GameReadyResponse, sequence, gamePacket);
+  }
+
+  public static GamePacketMessage CreateGamePrepareResponse(uint sequence, bool success, GlobalFailCode failCode)
+  {
+    var gamePacket = new GamePacket();
+    gamePacket.GamePrepareResponse = new S2CGamePrepareResponse
+    {
+      Success = success,
+      FailCode = failCode
+    };
+
+    return new GamePacketMessage(PacketId.GamePrepareResponse, sequence, gamePacket);
+  }
+
+  public static GamePacketMessage CreateGameStartResponse(uint sequence, bool success, GlobalFailCode failCode)
+  {
+    var gamePacket = new GamePacket();
+    gamePacket.GameStartResponse = new S2CGameStartResponse
+    {
+      Success = success,
+      FailCode = failCode
+    };
+
+    return new GamePacketMessage(PacketId.GameStartResponse, sequence, gamePacket);
   }
 
   /*

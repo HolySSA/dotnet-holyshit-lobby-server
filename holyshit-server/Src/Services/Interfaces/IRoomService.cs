@@ -11,4 +11,7 @@ public interface IRoomService
   Task<ServiceResult<RoomData>> JoinRandomRoom(ClientSession client);
   Task<ServiceResult> LeaveRoom(ClientSession client);
   Task<ServiceResult<List<RoomData>>> GetRoomList(ClientSession client);
+  Task<ServiceResult> GameReady(ClientSession client, bool isReady);
+  Task<ServiceResult> GamePrepare(ClientSession client);
+  Task<ServiceResult> GameStart(ClientSession client);
 }

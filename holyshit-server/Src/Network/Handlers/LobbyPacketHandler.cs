@@ -61,4 +61,34 @@ public static class LobbyPacketHandler
       result.FailCode
     );
   }
+
+  public static async Task<GamePacketMessage> HandleGameReadyRequest(ClientSession client, uint sequence, C2SGameReadyRequest request)
+  {
+    var result = await _roomService.GameReady(client, request.IsReady);
+    return ResponseHelper.CreateGameReadyResponse(
+      sequence,
+      result.Success,
+      result.FailCode
+    );
+  }
+
+  public static async Task<GamePacketMessage> HandleGamePrepareRequest(ClientSession client, uint sequence, C2SGamePrepareRequest request)
+  {
+    var result = await _roomService.GamePrepare(client);
+    return ResponseHelper.CreateGamePrepareResponse(
+      sequence,
+      result.Success,
+      result.FailCode
+    );
+  }
+
+  public static async Task<GamePacketMessage> HandleGameStartRequest(ClientSession client, uint sequence, C2SGameStartRequest request)
+  {
+    var result = await _roomService.GameStart(client);
+    return ResponseHelper.CreateGameStartResponse(
+      sequence,
+      result.Success,
+      result.FailCode
+    );
+  }
 }

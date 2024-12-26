@@ -41,12 +41,15 @@ public static class HandlerManager
     OnHandlers<C2SJoinRoomRequest>(PacketId.JoinRoomRequest, LobbyPacketHandler.HandleJoinRoomRequest);
     OnHandlers<C2SJoinRandomRoomRequest>(PacketId.JoinRandomRoomRequest, LobbyPacketHandler.HandleJoinRandomRoomRequest);
     OnHandlers<C2SLeaveRoomRequest>(PacketId.LeaveRoomRequest, LobbyPacketHandler.HandleLeaveRoomRequest);
+    OnHandlers<C2SGameReadyRequest>(PacketId.GameReadyRequest, LobbyPacketHandler.HandleGameReadyRequest);
+    OnHandlers<C2SGamePrepareRequest>(PacketId.GamePrepareRequest, LobbyPacketHandler.HandleGamePrepareRequest);
+    OnHandlers<C2SGameStartRequest>(PacketId.GameStartRequest, LobbyPacketHandler.HandleGameStartRequest);
     // 다른 핸들러들도 여기서 등록...
   }
 
   // 핸들러 등록
   public static void OnHandlers<T>(
-        PacketId packetId, 
+        PacketId packetId,
         Func<ClientSession, uint, T, Task<GamePacketMessage>> handler) where T : IMessage
   {
     _handlers[packetId] = async (client, seq, message) => await handler(client, seq, (T)message);

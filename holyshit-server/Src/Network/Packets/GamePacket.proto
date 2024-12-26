@@ -26,6 +26,15 @@ message GamePacket {
     C2SLeaveRoomRequest leave_room_request = 14;
     S2CLeaveRoomResponse leave_room_response = 15;
     S2CLeaveRoomNotification leave_room_notification = 16;
+    C2SGameReadyRequest game_ready_request = 17;
+    S2CGameReadyResponse game_ready_response = 18;
+    S2CGameReadyNotification game_ready_notification = 19;
+    C2SGamePrepareRequest game_prepare_request = 20;
+    S2CGamePrepareResponse game_prepare_response = 21;
+    S2CGamePrepareNotification game_prepare_notification = 22;
+    C2SGameStartRequest game_start_request = 23;
+    S2CGameStartResponse game_start_response = 24;
+    S2CGameStartNotification game_start_notification = 25;
   }
 }
 
@@ -50,4 +59,13 @@ enum PacketId {
   LeaveRoomRequest = 14;
   LeaveRoomResponse = 15;
   LeaveRoomNotification = 16;
+  GameReadyRequest = 17;  
+  GameReadyResponse = 18;
+  GameReadyNotification = 19;
+  GamePrepareRequest = 20;
+  GamePrepareResponse = 21;
+  GamePrepareNotification = 22;
+  GameStartRequest = 23;
+  GameStartResponse = 24;
+  GameStartNotification = 25;
 }

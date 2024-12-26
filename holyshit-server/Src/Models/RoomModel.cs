@@ -24,7 +24,7 @@ public class RoomModel
           _instance ??= new RoomModel();
         }
       }
-      
+
       return _instance;
     }
   }
@@ -77,7 +77,7 @@ public class RoomModel
       if (user != null)
       {
         room.Users.Remove(user);
-        
+
         if (room.Users.Count == 0)
         {
           // 방에 아무도 없으면 방 삭제
@@ -92,7 +92,7 @@ public class RoomModel
         return true;
       }
     }
-    
+
     return false;
   }
 
@@ -126,4 +126,42 @@ public class RoomModel
       .Select(sessionId => sessionId!)
       .ToList();
   }
+
+  public bool ToggleUserReady(int roomId, long userId)
+  {
+    if (!_rooms.TryGetValue(roomId, out var room))
+      return false;
+
+    var user = room.Users.FirstOrDefault(u => u.Id == userId);
+    if (user == null)
+      return false;
+
+    // 방장은 준비 상태를 변경할 수 없음
+    if (room.OwnerId == userId)
+      return false;
+
+    /*
+        // 준비 상태 토글 (StateInfo의 State를 이용)
+        if (user.Character.StateInfo.State == CharacterStateType.Wait)
+            user.Character.StateInfo.State = CharacterStateType.NoneCharacterState;
+        else
+            user.Character.StateInfo.State = CharacterStateType.Wait;
+    */
+    return true;
+  }
+
+  /*
+    // 방의 모든 유저가 준비되었는지 확인하는 메서드 추가
+    public bool AreAllUsersReady(int roomId)
+    {
+      if (!_rooms.TryGetValue(roomId, out var room))
+        return false;
+
+
+      // 방장을 제외한 모든 유저가 준비 상태인지 확인
+      return room.Users
+          .Where(u => u.Id != room.OwnerId)
+          .All(u => u.Character.StateInfo.State == CharacterStateType.Wait);
+    }
+    */
 }
