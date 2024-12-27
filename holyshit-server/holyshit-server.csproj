@@ -50,6 +50,10 @@
               ProtoRoot="Src\Network\Packets"
               Access="Public"
               GrpcServices="None" />
+    <Protobuf Include="Src\Network\Packets\Game.proto" 
+              ProtoRoot="Src\Network\Packets"
+              Access="Public"
+              GrpcServices="None" />
               
     <!-- 마지막으로 GamePacket.proto -->
     <Protobuf Include="Src\Network\Packets\GamePacket.proto" 

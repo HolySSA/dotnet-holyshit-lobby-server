@@ -119,17 +119,49 @@ public class ClientSession : IDisposable
     // 객체 해제 여부 확인
     if (_disposed) return;
 
-    var userInfo = UserModel.Instance.GetAllUsers().FirstOrDefault(user => user.Client == this);
-    if (userInfo != null)
+    try
     {
-      UserModel.Instance.RemoveUser(userInfo.UserId);
-      Console.WriteLine($"[Session] 유저 제거: Id={userInfo.UserId}");
+      var userInfo = UserModel.Instance.GetAllUsers().FirstOrDefault(user => user.Client == this);
+      if (userInfo != null)
+      {
+        // 방에서 나가기
+        var roomModel = RoomModel.Instance;
+        var currentRoom = roomModel.GetUserRoom(userInfo.UserId);
+        if (currentRoom != null)
+        {
+          // 방의 다른 유저들에게 알림 보내기
+          var targetSessionIds = roomModel.GetRoomTargetSessionIds(currentRoom, userInfo.UserId);
+          if (targetSessionIds.Any())
+          {
+            var notification = NotificationHelper.CreateLeaveRoomNotification(
+                userInfo.UserId,
+                targetSessionIds
+            );
+
+            MessageQueue.EnqueueSend(
+              notification.PacketId,
+              notification.Sequence,
+              notification.Message,
+              notification.TargetSessionIds
+            ).GetAwaiter().GetResult();
+          }
+
+          roomModel.LeaveRoom(userInfo.UserId);
+        }
+
+        UserModel.Instance.RemoveUser(userInfo.UserId);
+        Console.WriteLine($"[Session] 유저 제거: Id={userInfo.UserId}");
+      }
+
+      _stream?.Dispose();
+      _client?.Dispose();
+      _disposed = true;
+
+      Console.WriteLine($"[Session] 종료: {SessionId}");
     }
-
-    _stream?.Dispose(); // 네트워크 스트림 해제
-    _client?.Dispose(); // TcpClient 객체 해제
-    _disposed = true;
-
-    Console.WriteLine($"[Session] 종료: {SessionId}");
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[Session] Dispose 중 오류 발생: {ex.Message}");
+    }
   }
 }

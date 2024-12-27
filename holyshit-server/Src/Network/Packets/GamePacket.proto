@@ -2,8 +2,10 @@ syntax = "proto3";
 
 option csharp_namespace = "HolyShitServer.Src.Network.Packets";
 
+import "Common.proto";
 import "Auth.proto";
 import "Lobby.proto";
+import "Game.proto";
 
 message GamePacket {
   oneof payload {
@@ -35,6 +37,10 @@ message GamePacket {
     C2SGameStartRequest game_start_request = 23;
     S2CGameStartResponse game_start_response = 24;
     S2CGameStartNotification game_start_notification = 25;
+
+    // Game messages
+    C2SPositionUpdateRequest position_update_request = 26;
+    S2CPositionUpdateNotification position_update_notification = 27;
   }
 }
 
@@ -59,7 +65,7 @@ enum PacketId {
   LeaveRoomRequest = 14;
   LeaveRoomResponse = 15;
   LeaveRoomNotification = 16;
-  GameReadyRequest = 17;  
+  GameReadyRequest = 17;
   GameReadyResponse = 18;
   GameReadyNotification = 19;
   GamePrepareRequest = 20;
@@ -68,4 +74,8 @@ enum PacketId {
   GameStartRequest = 23;
   GameStartResponse = 24;
   GameStartNotification = 25;
+
+  // Game messages
+  PositionUpdateRequest = 26;
+  PositionUpdateNotification = 27;
 }

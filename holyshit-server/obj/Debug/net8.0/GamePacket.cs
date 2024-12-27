@@ -24,58 +24,63 @@ namespace HolyShitServer.Src.Network.Packets {
     static GamePacketReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChBHYW1lUGFja2V0LnByb3RvGgpBdXRoLnByb3RvGgtMb2JieS5wcm90byKD",
-            "CwoKR2FtZVBhY2tldBIvChByZWdpc3Rlcl9yZXF1ZXN0GAEgASgLMhMuQzJT",
-            "UmVnaXN0ZXJSZXF1ZXN0SAASMQoRcmVnaXN0ZXJfcmVzcG9uc2UYAiABKAsy",
-            "FC5TMkNSZWdpc3RlclJlc3BvbnNlSAASKQoNbG9naW5fcmVxdWVzdBgDIAEo",
-            "CzIQLkMyU0xvZ2luUmVxdWVzdEgAEisKDmxvZ2luX3Jlc3BvbnNlGAQgASgL",
-            "MhEuUzJDTG9naW5SZXNwb25zZUgAEjQKE2NyZWF0ZV9yb29tX3JlcXVlc3QY",
-            "BSABKAsyFS5DMlNDcmVhdGVSb29tUmVxdWVzdEgAEjYKFGNyZWF0ZV9yb29t",
-            "X3Jlc3BvbnNlGAYgASgLMhYuUzJDQ3JlYXRlUm9vbVJlc3BvbnNlSAASNwoV",
-            "Z2V0X3Jvb21fbGlzdF9yZXF1ZXN0GAcgASgLMhYuQzJTR2V0Um9vbUxpc3RS",
-            "ZXF1ZXN0SAASOQoWZ2V0X3Jvb21fbGlzdF9yZXNwb25zZRgIIAEoCzIXLlMy",
-            "Q0dldFJvb21MaXN0UmVzcG9uc2VIABIwChFqb2luX3Jvb21fcmVxdWVzdBgJ",
-            "IAEoCzITLkMyU0pvaW5Sb29tUmVxdWVzdEgAEjIKEmpvaW5fcm9vbV9yZXNw",
-            "b25zZRgKIAEoCzIULlMyQ0pvaW5Sb29tUmVzcG9uc2VIABI9Chhqb2luX3Jh",
-            "bmRvbV9yb29tX3JlcXVlc3QYCyABKAsyGS5DMlNKb2luUmFuZG9tUm9vbVJl",
-            "cXVlc3RIABI/Chlqb2luX3JhbmRvbV9yb29tX3Jlc3BvbnNlGAwgASgLMhou",
-            "UzJDSm9pblJhbmRvbVJvb21SZXNwb25zZUgAEjoKFmpvaW5fcm9vbV9ub3Rp",
-            "ZmljYXRpb24YDSABKAsyGC5TMkNKb2luUm9vbU5vdGlmaWNhdGlvbkgAEjIK",
-            "EmxlYXZlX3Jvb21fcmVxdWVzdBgOIAEoCzIULkMyU0xlYXZlUm9vbVJlcXVl",
-            "c3RIABI0ChNsZWF2ZV9yb29tX3Jlc3BvbnNlGA8gASgLMhUuUzJDTGVhdmVS",
-            "b29tUmVzcG9uc2VIABI8ChdsZWF2ZV9yb29tX25vdGlmaWNhdGlvbhgQIAEo",
-            "CzIZLlMyQ0xlYXZlUm9vbU5vdGlmaWNhdGlvbkgAEjIKEmdhbWVfcmVhZHlf",
-            "cmVxdWVzdBgRIAEoCzIULkMyU0dhbWVSZWFkeVJlcXVlc3RIABI0ChNnYW1l",
-            "X3JlYWR5X3Jlc3BvbnNlGBIgASgLMhUuUzJDR2FtZVJlYWR5UmVzcG9uc2VI",
-            "ABI8ChdnYW1lX3JlYWR5X25vdGlmaWNhdGlvbhgTIAEoCzIZLlMyQ0dhbWVS",
-            "ZWFkeU5vdGlmaWNhdGlvbkgAEjYKFGdhbWVfcHJlcGFyZV9yZXF1ZXN0GBQg",
-            "ASgLMhYuQzJTR2FtZVByZXBhcmVSZXF1ZXN0SAASOAoVZ2FtZV9wcmVwYXJl",
-            "X3Jlc3BvbnNlGBUgASgLMhcuUzJDR2FtZVByZXBhcmVSZXNwb25zZUgAEkAK",
-            "GWdhbWVfcHJlcGFyZV9ub3RpZmljYXRpb24YFiABKAsyGy5TMkNHYW1lUHJl",
-            "cGFyZU5vdGlmaWNhdGlvbkgAEjIKEmdhbWVfc3RhcnRfcmVxdWVzdBgXIAEo",
-            "CzIULkMyU0dhbWVTdGFydFJlcXVlc3RIABI0ChNnYW1lX3N0YXJ0X3Jlc3Bv",
-            "bnNlGBggASgLMhUuUzJDR2FtZVN0YXJ0UmVzcG9uc2VIABI8ChdnYW1lX3N0",
-            "YXJ0X25vdGlmaWNhdGlvbhgZIAEoCzIZLlMyQ0dhbWVTdGFydE5vdGlmaWNh",
-            "dGlvbkgAQgkKB3BheWxvYWQq6QQKCFBhY2tldElkEgsKB1Vua25vd24QABIT",
-            "Cg9SZWdpc3RlclJlcXVlc3QQARIUChBSZWdpc3RlclJlc3BvbnNlEAISEAoM",
-            "TG9naW5SZXF1ZXN0EAMSEQoNTG9naW5SZXNwb25zZRAEEhUKEUNyZWF0ZVJv",
-            "b21SZXF1ZXN0EAUSFgoSQ3JlYXRlUm9vbVJlc3BvbnNlEAYSFgoSR2V0Um9v",
-            "bUxpc3RSZXF1ZXN0EAcSFwoTR2V0Um9vbUxpc3RSZXNwb25zZRAIEhMKD0pv",
-            "aW5Sb29tUmVxdWVzdBAJEhQKEEpvaW5Sb29tUmVzcG9uc2UQChIZChVKb2lu",
-            "UmFuZG9tUm9vbVJlcXVlc3QQCxIaChZKb2luUmFuZG9tUm9vbVJlc3BvbnNl",
-            "EAwSGAoUSm9pblJvb21Ob3RpZmljYXRpb24QDRIUChBMZWF2ZVJvb21SZXF1",
-            "ZXN0EA4SFQoRTGVhdmVSb29tUmVzcG9uc2UQDxIZChVMZWF2ZVJvb21Ob3Rp",
-            "ZmljYXRpb24QEBIUChBHYW1lUmVhZHlSZXF1ZXN0EBESFQoRR2FtZVJlYWR5",
-            "UmVzcG9uc2UQEhIZChVHYW1lUmVhZHlOb3RpZmljYXRpb24QExIWChJHYW1l",
-            "UHJlcGFyZVJlcXVlc3QQFBIXChNHYW1lUHJlcGFyZVJlc3BvbnNlEBUSGwoX",
-            "R2FtZVByZXBhcmVOb3RpZmljYXRpb24QFhIUChBHYW1lU3RhcnRSZXF1ZXN0",
-            "EBcSFQoRR2FtZVN0YXJ0UmVzcG9uc2UQGBIZChVHYW1lU3RhcnROb3RpZmlj",
-            "YXRpb24QGUIlqgIiSG9seVNoaXRTZXJ2ZXIuU3JjLk5ldHdvcmsuUGFja2V0",
-            "c2IGcHJvdG8z"));
+            "ChBHYW1lUGFja2V0LnByb3RvGgxDb21tb24ucHJvdG8aCkF1dGgucHJvdG8a",
+            "C0xvYmJ5LnByb3RvGgpHYW1lLnByb3RvIokMCgpHYW1lUGFja2V0Ei8KEHJl",
+            "Z2lzdGVyX3JlcXVlc3QYASABKAsyEy5DMlNSZWdpc3RlclJlcXVlc3RIABIx",
+            "ChFyZWdpc3Rlcl9yZXNwb25zZRgCIAEoCzIULlMyQ1JlZ2lzdGVyUmVzcG9u",
+            "c2VIABIpCg1sb2dpbl9yZXF1ZXN0GAMgASgLMhAuQzJTTG9naW5SZXF1ZXN0",
+            "SAASKwoObG9naW5fcmVzcG9uc2UYBCABKAsyES5TMkNMb2dpblJlc3BvbnNl",
+            "SAASNAoTY3JlYXRlX3Jvb21fcmVxdWVzdBgFIAEoCzIVLkMyU0NyZWF0ZVJv",
+            "b21SZXF1ZXN0SAASNgoUY3JlYXRlX3Jvb21fcmVzcG9uc2UYBiABKAsyFi5T",
+            "MkNDcmVhdGVSb29tUmVzcG9uc2VIABI3ChVnZXRfcm9vbV9saXN0X3JlcXVl",
+            "c3QYByABKAsyFi5DMlNHZXRSb29tTGlzdFJlcXVlc3RIABI5ChZnZXRfcm9v",
+            "bV9saXN0X3Jlc3BvbnNlGAggASgLMhcuUzJDR2V0Um9vbUxpc3RSZXNwb25z",
+            "ZUgAEjAKEWpvaW5fcm9vbV9yZXF1ZXN0GAkgASgLMhMuQzJTSm9pblJvb21S",
+            "ZXF1ZXN0SAASMgoSam9pbl9yb29tX3Jlc3BvbnNlGAogASgLMhQuUzJDSm9p",
+            "blJvb21SZXNwb25zZUgAEj0KGGpvaW5fcmFuZG9tX3Jvb21fcmVxdWVzdBgL",
+            "IAEoCzIZLkMyU0pvaW5SYW5kb21Sb29tUmVxdWVzdEgAEj8KGWpvaW5fcmFu",
+            "ZG9tX3Jvb21fcmVzcG9uc2UYDCABKAsyGi5TMkNKb2luUmFuZG9tUm9vbVJl",
+            "c3BvbnNlSAASOgoWam9pbl9yb29tX25vdGlmaWNhdGlvbhgNIAEoCzIYLlMy",
+            "Q0pvaW5Sb29tTm90aWZpY2F0aW9uSAASMgoSbGVhdmVfcm9vbV9yZXF1ZXN0",
+            "GA4gASgLMhQuQzJTTGVhdmVSb29tUmVxdWVzdEgAEjQKE2xlYXZlX3Jvb21f",
+            "cmVzcG9uc2UYDyABKAsyFS5TMkNMZWF2ZVJvb21SZXNwb25zZUgAEjwKF2xl",
+            "YXZlX3Jvb21fbm90aWZpY2F0aW9uGBAgASgLMhkuUzJDTGVhdmVSb29tTm90",
+            "aWZpY2F0aW9uSAASMgoSZ2FtZV9yZWFkeV9yZXF1ZXN0GBEgASgLMhQuQzJT",
+            "R2FtZVJlYWR5UmVxdWVzdEgAEjQKE2dhbWVfcmVhZHlfcmVzcG9uc2UYEiAB",
+            "KAsyFS5TMkNHYW1lUmVhZHlSZXNwb25zZUgAEjwKF2dhbWVfcmVhZHlfbm90",
+            "aWZpY2F0aW9uGBMgASgLMhkuUzJDR2FtZVJlYWR5Tm90aWZpY2F0aW9uSAAS",
+            "NgoUZ2FtZV9wcmVwYXJlX3JlcXVlc3QYFCABKAsyFi5DMlNHYW1lUHJlcGFy",
+            "ZVJlcXVlc3RIABI4ChVnYW1lX3ByZXBhcmVfcmVzcG9uc2UYFSABKAsyFy5T",
+            "MkNHYW1lUHJlcGFyZVJlc3BvbnNlSAASQAoZZ2FtZV9wcmVwYXJlX25vdGlm",
+            "aWNhdGlvbhgWIAEoCzIbLlMyQ0dhbWVQcmVwYXJlTm90aWZpY2F0aW9uSAAS",
+            "MgoSZ2FtZV9zdGFydF9yZXF1ZXN0GBcgASgLMhQuQzJTR2FtZVN0YXJ0UmVx",
+            "dWVzdEgAEjQKE2dhbWVfc3RhcnRfcmVzcG9uc2UYGCABKAsyFS5TMkNHYW1l",
+            "U3RhcnRSZXNwb25zZUgAEjwKF2dhbWVfc3RhcnRfbm90aWZpY2F0aW9uGBkg",
+            "ASgLMhkuUzJDR2FtZVN0YXJ0Tm90aWZpY2F0aW9uSAASPAoXcG9zaXRpb25f",
+            "dXBkYXRlX3JlcXVlc3QYGiABKAsyGS5DMlNQb3NpdGlvblVwZGF0ZVJlcXVl",
+            "c3RIABJGChxwb3NpdGlvbl91cGRhdGVfbm90aWZpY2F0aW9uGBsgASgLMh4u",
+            "UzJDUG9zaXRpb25VcGRhdGVOb3RpZmljYXRpb25IAEIJCgdwYXlsb2FkKqQF",
+            "CghQYWNrZXRJZBILCgdVbmtub3duEAASEwoPUmVnaXN0ZXJSZXF1ZXN0EAES",
+            "FAoQUmVnaXN0ZXJSZXNwb25zZRACEhAKDExvZ2luUmVxdWVzdBADEhEKDUxv",
+            "Z2luUmVzcG9uc2UQBBIVChFDcmVhdGVSb29tUmVxdWVzdBAFEhYKEkNyZWF0",
+            "ZVJvb21SZXNwb25zZRAGEhYKEkdldFJvb21MaXN0UmVxdWVzdBAHEhcKE0dl",
+            "dFJvb21MaXN0UmVzcG9uc2UQCBITCg9Kb2luUm9vbVJlcXVlc3QQCRIUChBK",
+            "b2luUm9vbVJlc3BvbnNlEAoSGQoVSm9pblJhbmRvbVJvb21SZXF1ZXN0EAsS",
+            "GgoWSm9pblJhbmRvbVJvb21SZXNwb25zZRAMEhgKFEpvaW5Sb29tTm90aWZp",
+            "Y2F0aW9uEA0SFAoQTGVhdmVSb29tUmVxdWVzdBAOEhUKEUxlYXZlUm9vbVJl",
+            "c3BvbnNlEA8SGQoVTGVhdmVSb29tTm90aWZpY2F0aW9uEBASFAoQR2FtZVJl",
+            "YWR5UmVxdWVzdBAREhUKEUdhbWVSZWFkeVJlc3BvbnNlEBISGQoVR2FtZVJl",
+            "YWR5Tm90aWZpY2F0aW9uEBMSFgoSR2FtZVByZXBhcmVSZXF1ZXN0EBQSFwoT",
+            "R2FtZVByZXBhcmVSZXNwb25zZRAVEhsKF0dhbWVQcmVwYXJlTm90aWZpY2F0",
+            "aW9uEBYSFAoQR2FtZVN0YXJ0UmVxdWVzdBAXEhUKEUdhbWVTdGFydFJlc3Bv",
+            "bnNlEBgSGQoVR2FtZVN0YXJ0Tm90aWZpY2F0aW9uEBkSGQoVUG9zaXRpb25V",
+            "cGRhdGVSZXF1ZXN0EBoSHgoaUG9zaXRpb25VcGRhdGVOb3RpZmljYXRpb24Q",
+            "G0IlqgIiSG9seVNoaXRTZXJ2ZXIuU3JjLk5ldHdvcmsuUGFja2V0c2IGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor, global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::HolyShitServer.Src.Network.Packets.CommonReflection.Descriptor, global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor, global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor, global::HolyShitServer.Src.Network.Packets.GameReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::HolyShitServer.Src.Network.Packets.PacketId), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.GamePacket), global::HolyShitServer.Src.Network.Packets.GamePacket.Parser, new[]{ "RegisterRequest", "RegisterResponse", "LoginRequest", "LoginResponse", "CreateRoomRequest", "CreateRoomResponse", "GetRoomListRequest", "GetRoomListResponse", "JoinRoomRequest", "JoinRoomResponse", "JoinRandomRoomRequest", "JoinRandomRoomResponse", "JoinRoomNotification", "LeaveRoomRequest", "LeaveRoomResponse", "LeaveRoomNotification", "GameReadyRequest", "GameReadyResponse", "GameReadyNotification", "GamePrepareRequest", "GamePrepareResponse", "GamePrepareNotification", "GameStartRequest", "GameStartResponse", "GameStartNotification" }, new[]{ "Payload" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.GamePacket), global::HolyShitServer.Src.Network.Packets.GamePacket.Parser, new[]{ "RegisterRequest", "RegisterResponse", "LoginRequest", "LoginResponse", "CreateRoomRequest", "CreateRoomResponse", "GetRoomListRequest", "GetRoomListResponse", "JoinRoomRequest", "JoinRoomResponse", "JoinRandomRoomRequest", "JoinRandomRoomResponse", "JoinRoomNotification", "LeaveRoomRequest", "LeaveRoomResponse", "LeaveRoomNotification", "GameReadyRequest", "GameReadyResponse", "GameReadyNotification", "GamePrepareRequest", "GamePrepareResponse", "GamePrepareNotification", "GameStartRequest", "GameStartResponse", "GameStartNotification", "PositionUpdateRequest", "PositionUpdateNotification" }, new[]{ "Payload" }, null, null, null)
           }));
     }
     #endregion
@@ -115,6 +120,11 @@ namespace HolyShitServer.Src.Network.Packets {
     [pbr::OriginalName("GameStartRequest")] GameStartRequest = 23,
     [pbr::OriginalName("GameStartResponse")] GameStartResponse = 24,
     [pbr::OriginalName("GameStartNotification")] GameStartNotification = 25,
+    /// <summary>
+    /// Game messages
+    /// </summary>
+    [pbr::OriginalName("PositionUpdateRequest")] PositionUpdateRequest = 26,
+    [pbr::OriginalName("PositionUpdateNotification")] PositionUpdateNotification = 27,
   }
 
   #endregion
@@ -230,6 +240,12 @@ namespace HolyShitServer.Src.Network.Packets {
           break;
         case PayloadOneofCase.GameStartNotification:
           GameStartNotification = other.GameStartNotification.Clone();
+          break;
+        case PayloadOneofCase.PositionUpdateRequest:
+          PositionUpdateRequest = other.PositionUpdateRequest.Clone();
+          break;
+        case PayloadOneofCase.PositionUpdateNotification:
+          PositionUpdateNotification = other.PositionUpdateNotification.Clone();
           break;
       }
 
@@ -548,6 +564,33 @@ namespace HolyShitServer.Src.Network.Packets {
       }
     }
 
+    /// <summary>Field number for the "position_update_request" field.</summary>
+    public const int PositionUpdateRequestFieldNumber = 26;
+    /// <summary>
+    /// Game messages
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest PositionUpdateRequest {
+      get { return payloadCase_ == PayloadOneofCase.PositionUpdateRequest ? (global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest) payload_ : null; }
+      set {
+        payload_ = value;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.PositionUpdateRequest;
+      }
+    }
+
+    /// <summary>Field number for the "position_update_notification" field.</summary>
+    public const int PositionUpdateNotificationFieldNumber = 27;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification PositionUpdateNotification {
+      get { return payloadCase_ == PayloadOneofCase.PositionUpdateNotification ? (global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification) payload_ : null; }
+      set {
+        payload_ = value;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.PositionUpdateNotification;
+      }
+    }
+
     private object payload_;
     /// <summary>Enum of possible cases for the "payload" oneof.</summary>
     public enum PayloadOneofCase {
@@ -577,6 +620,8 @@ namespace HolyShitServer.Src.Network.Packets {
       GameStartRequest = 23,
       GameStartResponse = 24,
       GameStartNotification = 25,
+      PositionUpdateRequest = 26,
+      PositionUpdateNotification = 27,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -632,6 +677,8 @@ namespace HolyShitServer.Src.Network.Packets {
       if (!object.Equals(GameStartRequest, other.GameStartRequest)) return false;
       if (!object.Equals(GameStartResponse, other.GameStartResponse)) return false;
       if (!object.Equals(GameStartNotification, other.GameStartNotification)) return false;
+      if (!object.Equals(PositionUpdateRequest, other.PositionUpdateRequest)) return false;
+      if (!object.Equals(PositionUpdateNotification, other.PositionUpdateNotification)) return false;
       if (PayloadCase != other.PayloadCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -665,6 +712,8 @@ namespace HolyShitServer.Src.Network.Packets {
       if (payloadCase_ == PayloadOneofCase.GameStartRequest) hash ^= GameStartRequest.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.GameStartResponse) hash ^= GameStartResponse.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.GameStartNotification) hash ^= GameStartNotification.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) hash ^= PositionUpdateRequest.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) hash ^= PositionUpdateNotification.GetHashCode();
       hash ^= (int) payloadCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -784,6 +833,14 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(202, 1);
         output.WriteMessage(GameStartNotification);
       }
+      if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
+        output.WriteRawTag(210, 1);
+        output.WriteMessage(PositionUpdateRequest);
+      }
+      if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
+        output.WriteRawTag(218, 1);
+        output.WriteMessage(PositionUpdateNotification);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -894,6 +951,14 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(202, 1);
         output.WriteMessage(GameStartNotification);
       }
+      if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
+        output.WriteRawTag(210, 1);
+        output.WriteMessage(PositionUpdateRequest);
+      }
+      if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
+        output.WriteRawTag(218, 1);
+        output.WriteMessage(PositionUpdateNotification);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -978,6 +1043,12 @@ namespace HolyShitServer.Src.Network.Packets {
       }
       if (payloadCase_ == PayloadOneofCase.GameStartNotification) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(GameStartNotification);
+      }
+      if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(PositionUpdateRequest);
+      }
+      if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(PositionUpdateNotification);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1141,6 +1212,18 @@ namespace HolyShitServer.Src.Network.Packets {
             GameStartNotification = new global::HolyShitServer.Src.Network.Packets.S2CGameStartNotification();
           }
           GameStartNotification.MergeFrom(other.GameStartNotification);
+          break;
+        case PayloadOneofCase.PositionUpdateRequest:
+          if (PositionUpdateRequest == null) {
+            PositionUpdateRequest = new global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest();
+          }
+          PositionUpdateRequest.MergeFrom(other.PositionUpdateRequest);
+          break;
+        case PayloadOneofCase.PositionUpdateNotification:
+          if (PositionUpdateNotification == null) {
+            PositionUpdateNotification = new global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification();
+          }
+          PositionUpdateNotification.MergeFrom(other.PositionUpdateNotification);
           break;
       }
 
@@ -1388,6 +1471,24 @@ namespace HolyShitServer.Src.Network.Packets {
             GameStartNotification = subBuilder;
             break;
           }
+          case 210: {
+            global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest();
+            if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
+              subBuilder.MergeFrom(PositionUpdateRequest);
+            }
+            input.ReadMessage(subBuilder);
+            PositionUpdateRequest = subBuilder;
+            break;
+          }
+          case 218: {
+            global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification();
+            if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
+              subBuilder.MergeFrom(PositionUpdateNotification);
+            }
+            input.ReadMessage(subBuilder);
+            PositionUpdateNotification = subBuilder;
+            break;
+          }
         }
       }
     #endif
@@ -1630,6 +1731,24 @@ namespace HolyShitServer.Src.Network.Packets {
             }
             input.ReadMessage(subBuilder);
             GameStartNotification = subBuilder;
+            break;
+          }
+          case 210: {
+            global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest();
+            if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
+              subBuilder.MergeFrom(PositionUpdateRequest);
+            }
+            input.ReadMessage(subBuilder);
+            PositionUpdateRequest = subBuilder;
+            break;
+          }
+          case 218: {
+            global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification();
+            if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
+              subBuilder.MergeFrom(PositionUpdateNotification);
+            }
+            input.ReadMessage(subBuilder);
+            PositionUpdateNotification = subBuilder;
             break;
           }
         }

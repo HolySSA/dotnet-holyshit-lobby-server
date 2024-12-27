@@ -13,58 +13,67 @@ public class RoomService : IRoomService
 
   public RoomService()
   {
-      _userModel = UserModel.Instance;
-      _roomModel = RoomModel.Instance;
+    _userModel = UserModel.Instance;
+    _roomModel = RoomModel.Instance;
   }
 
+  /// <summary>
+  /// 현재 존재하는 모든 방 목록을 반환
+  /// </summary>
   public async Task<ServiceResult<List<RoomData>>> GetRoomList(ClientSession client)
   {
-      try
-      {
-          var roomList = _roomModel.GetRoomList();
-          return await Task.FromResult(ServiceResult<List<RoomData>>.Ok(roomList));
-      }
-      catch (Exception ex)
-      {
-          Console.WriteLine($"[RoomService] GetRoomList 실패: {ex.Message}");
-          return ServiceResult<List<RoomData>>.Error(GlobalFailCode.UnknownError);
-      }
+    try
+    {
+      var roomList = _roomModel.GetRoomList();
+      return await Task.FromResult(ServiceResult<List<RoomData>>.Ok(roomList));
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[RoomService] GetRoomList 실패: {ex.Message}");
+      return ServiceResult<List<RoomData>>.Error(GlobalFailCode.UnknownError);
+    }
   }
 
+  /// <summary>
+  /// 방 생성
+  /// </summary>
   public async Task<ServiceResult<RoomData>> CreateRoom(ClientSession client, string name, int maxUserNum)
   {
-      try
+    try
+    {
+      return await Task.Run(() =>
       {
-          return await Task.Run(() =>
-          {
-              var userInfo = _userModel.GetAllUsers().FirstOrDefault(u => u.Client == client);
-              if (userInfo == null)
-                  return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
+        var userInfo = _userModel.GetAllUsers().FirstOrDefault(u => u.Client == client);
+        if (userInfo == null)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
 
-              var existingRoom = _roomModel.GetUserRoom(userInfo.UserId);
-              if (existingRoom != null)
-                  return ServiceResult<RoomData>.Error(GlobalFailCode.CreateRoomFailed);
+        var existingRoom = _roomModel.GetUserRoom(userInfo.UserId);
+        if (existingRoom != null)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.CreateRoomFailed);
 
-              if (string.IsNullOrEmpty(name) || maxUserNum < 2 || maxUserNum > 8)
-                  return ServiceResult<RoomData>.Error(GlobalFailCode.InvalidRequest);
+        if (string.IsNullOrEmpty(name) || maxUserNum < 2 || maxUserNum > 8)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.InvalidRequest);
 
-              var room = _roomModel.CreateRoom(name, maxUserNum, userInfo.UserId, userInfo.UserData);
-              if (room == null)
-                  return ServiceResult<RoomData>.Error(GlobalFailCode.CreateRoomFailed);
+        var room = _roomModel.CreateRoom(name, maxUserNum, userInfo.UserId, userInfo.UserData);
+        if (room == null)
+          return ServiceResult<RoomData>.Error(GlobalFailCode.CreateRoomFailed);
 
-              return ServiceResult<RoomData>.Ok(room);
-          });
-      }
-      catch (Exception ex)
-      {
-          Console.WriteLine($"[RoomService] CreateRoom 실패: {ex.Message}");
-          return ServiceResult<RoomData>.Error(GlobalFailCode.UnknownError);
-      }
+        return ServiceResult<RoomData>.Ok(room);
+      });
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[RoomService] CreateRoom 실패: {ex.Message}");
+      return ServiceResult<RoomData>.Error(GlobalFailCode.UnknownError);
+    }
   }
 
+  /// <summary>
+  /// 방 입장
+  /// </summary>
   public async Task<ServiceResult<RoomData>> JoinRoom(ClientSession client, int roomId)
   {
-    try 
+    try
     {
       // 유저 정보 확인
       var userInfo = _userModel.GetAllUsers().FirstOrDefault(u => u.Client == client);
@@ -109,6 +118,9 @@ public class RoomService : IRoomService
     }
   }
 
+  /// <summary>
+  /// 랜덤 방 입장
+  /// </summary>
   public async Task<ServiceResult<RoomData>> JoinRandomRoom(ClientSession client)
   {
     try
@@ -148,6 +160,9 @@ public class RoomService : IRoomService
     }
   }
 
+  /// <summary>
+  /// 방 퇴장
+  /// </summary>
   public async Task<ServiceResult> LeaveRoom(ClientSession client)
   {
     try
@@ -189,41 +204,29 @@ public class RoomService : IRoomService
     }
   }
 
+  /// <summary>
+  /// 게임 레디 토글
+  /// </summary>
   public async Task<ServiceResult> GameReady(ClientSession client, bool isReady)
   {
     try
     {
-      var userInfo = _userModel.GetAllUsers().FirstOrDefault(u => u.Client == client);
-      if (userInfo == null)
-        return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
+      var (userInfo, room, error) = ValidateUserAndRoom(client);
+      if (error != null)
+        return error;
 
-      var currentRoom = _roomModel.GetUserRoom(userInfo.UserId);
-      if (currentRoom == null)
-        return ServiceResult.Error(GlobalFailCode.RoomNotFound);
-
-      // 현재 유저 찾기
-      var user = currentRoom.Users.FirstOrDefault(u => u.Id == userInfo.UserId);
-      
-      // 토글된 상태 (클라이언트가 보낸 값의 반대)
       bool toggledReady = !isReady;
 
-      // 방의 모든 유저에게 알림
-      var targetSessionIds = _roomModel.GetRoomTargetSessionIds(currentRoom, 0);
-      if (targetSessionIds.Any())
-      {
-        var notification = NotificationHelper.CreateGameReadyNotification(
-          userInfo.UserId,
-          toggledReady,
-          targetSessionIds
-        );
-
-        await client.MessageQueue.EnqueueSend(
-          notification.PacketId,
-          notification.Sequence,
-          notification.Message,
-          notification.TargetSessionIds
-        );
-      }
+      await SendNotificationToRoom(
+          client,
+          room!,
+          0,
+          targetSessionIds => NotificationHelper.CreateGameReadyNotification(
+            userInfo!.UserId,
+            toggledReady,
+            targetSessionIds
+          )
+      );
 
       return ServiceResult.Ok();
     }
@@ -234,6 +237,9 @@ public class RoomService : IRoomService
     }
   }
 
+  /// <summary>
+  /// 게임 준비 단계 시작
+  /// </summary>
   public async Task<ServiceResult> GamePrepare(ClientSession client)
   {
     try
@@ -283,54 +289,71 @@ public class RoomService : IRoomService
     }
   }
 
+  /// <summary>
+  /// 게임 시작
+  /// </summary>
   public async Task<ServiceResult> GameStart(ClientSession client)
   {
     try
     {
-      var userInfo = _userModel.GetAllUsers().FirstOrDefault(u => u.Client == client);
-      if (userInfo == null)
-        return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
+      var (userInfo, room, error) = ValidateUserAndRoom(client);
+      if (error != null)
+        return error;
 
-      var currentRoom = _roomModel.GetUserRoom(userInfo.UserId);
-      if (currentRoom == null)
-        return ServiceResult.Error(GlobalFailCode.RoomNotFound);
+      room!.State = RoomStateType.Ingame;
 
-      // 방 상태 변경
-      currentRoom.State = RoomStateType.Ingame;
+      // 역할 분배
+      var roles = GetRoleDistribution(room.Users.Count);
+      if (!roles.Any())
+        return ServiceResult.Error(GlobalFailCode.InvalidRequest, "유효하지 않은 인원수입니다.");
 
-      // 게임 상태 초기화
+      // 역할 목록 생성
+      var roleList = new List<RoleType>();
+      foreach (var (role, count) in roles)
+      {
+        for (int i = 0; i < count; i++)
+        {
+          roleList.Add(role);
+        }
+      }
+
+      // 역할 랜덤 할당
+      var random = new Random();
+      var shuffledRoles = roleList.OrderBy(_ => random.Next()).ToList();
+
+      // 각 유저에게 역할 할당 및 스탯 설정
+      for (int i = 0; i < room.Users.Count; i++)
+      {
+        var user = room.Users[i];
+        var assignedRole = shuffledRoles[i];
+        SetInitialStats(user.Character, assignedRole);
+        Console.WriteLine($"[GameStart] 유저 {user.Id}에게 역할 {assignedRole} 할당");
+      }
+
       var gameState = new GameStateData
       {
-        PhaseType = PhaseType.Day,  // 낮부터 시작
-        NextPhaseAt = DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeMilliseconds()  // 5분 후 다음 페이즈
+        PhaseType = PhaseType.Day, // 낮부터 시작
+        NextPhaseAt = DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeMilliseconds() // 5분 후 다음 페이즈
       };
 
-      // 캐릭터 위치 정보 초기화
-      var characterPositions = currentRoom.Users.Select(user => new CharacterPositionData
+      var characterPositions = room.Users.Select(user => new CharacterPositionData
       {
         Id = user.Id,
-        X = 0,  // 시작 위치 X
-        Y = 0   // 시작 위치 Y
+        X = 0,
+        Y = 0
       }).ToList();
 
-      // 방의 모든 유저에게 알림
-      var targetSessionIds = _roomModel.GetRoomTargetSessionIds(currentRoom, 0);
-      if (targetSessionIds.Any())
-      {
-        var notification = NotificationHelper.CreateGameStartNotification(
+      await SendNotificationToRoom(
+        client,
+        room,
+        0,
+        targetSessionIds => NotificationHelper.CreateGameStartNotification(
           gameState,
-          currentRoom.Users.ToList(),
+          room.Users.ToList(),
           characterPositions,
           targetSessionIds
-        );
-
-        await client.MessageQueue.EnqueueSend(
-          notification.PacketId,
-          notification.Sequence,
-          notification.Message,
-          notification.TargetSessionIds
-        );
-      }
+        )
+      );
 
       return ServiceResult.Ok();
     }
@@ -341,6 +364,9 @@ public class RoomService : IRoomService
     }
   }
 
+  /// <summary>
+  /// 방 멤버들에게 알림을 전송
+  /// </summary>
   private async Task NotifyRoomMembers(ClientSession client, RoomData room, UserModel.UserInfo userInfo)
   {
     var targetSessionIds = _roomModel.GetRoomTargetSessionIds(room, userInfo.UserId);
@@ -357,5 +383,143 @@ public class RoomService : IRoomService
       notification.Message,
       notification.TargetSessionIds
     );
+  }
+
+  /// <summary>
+  /// 유저, 방 정보 검증
+  /// </summary>
+  private (UserModel.UserInfo? userInfo, RoomData? room, ServiceResult? error) ValidateUserAndRoom(ClientSession client)
+  {
+    var userInfo = _userModel.GetAllUsers().FirstOrDefault(u => u.Client == client);
+    if (userInfo == null)
+      return (null, null, ServiceResult.Error(GlobalFailCode.AuthenticationFailed));
+
+    var currentRoom = _roomModel.GetUserRoom(userInfo.UserId);
+    if (currentRoom == null)
+      return (userInfo, null, ServiceResult.Error(GlobalFailCode.RoomNotFound));
+
+    return (userInfo, currentRoom, null);
+  }
+
+  /// <summary>
+  /// 방의 모든 유저에게 알림 전송
+  /// </summary>
+  /// <param name="excludeUserId">알림을 받지 않을 유저 ID (0이면 모두에게 전송)</param>
+  /// <param name="createNotification">알림 메시지 생성 함수</param>
+  private async Task SendNotificationToRoom(
+    ClientSession client,
+    RoomData room,
+    long excludeUserId,
+    Func<List<string>, GamePacketMessage> createNotification)
+  {
+    var targetSessionIds = _roomModel.GetRoomTargetSessionIds(room, excludeUserId);
+    if (!targetSessionIds.Any()) return;
+
+    var notification = createNotification(targetSessionIds);
+    await client.MessageQueue.EnqueueSend(
+      notification.PacketId,
+      notification.Sequence,
+      notification.Message,
+      notification.TargetSessionIds
+    );
+  }
+
+  /// <summary>
+  /// 인원 수에 따른 역할 분배 규칙을 반환
+  /// </summary>
+  private Dictionary<RoleType, int> GetRoleDistribution(int playerCount)
+  {
+    return playerCount switch
+    {
+      2 => new Dictionary<RoleType, int>
+        {
+            { RoleType.Target, 1 },
+            { RoleType.Hitman, 1 }
+        },
+      3 => new Dictionary<RoleType, int>
+        {
+            { RoleType.Target, 1 },
+            { RoleType.Hitman, 1 },
+            { RoleType.Psychopath, 1 }
+        },
+      4 => new Dictionary<RoleType, int>
+        {
+            { RoleType.Target, 1 },
+            { RoleType.Hitman, 2 },
+            { RoleType.Psychopath, 1 }
+        },
+      5 => new Dictionary<RoleType, int>
+        {
+            { RoleType.Target, 1 },
+            { RoleType.Bodyguard, 1 },
+            { RoleType.Hitman, 2 },
+            { RoleType.Psychopath, 1 }
+        },
+      6 => new Dictionary<RoleType, int>
+        {
+            { RoleType.Target, 1 },
+            { RoleType.Bodyguard, 1 },
+            { RoleType.Hitman, 3 },
+            { RoleType.Psychopath, 1 }
+        },
+      7 => new Dictionary<RoleType, int>
+        {
+            { RoleType.Target, 1 },
+            { RoleType.Bodyguard, 2 },
+            { RoleType.Hitman, 3 },
+            { RoleType.Psychopath, 1 }
+        },
+      _ => new Dictionary<RoleType, int>()
+    };
+  }
+
+  /// <summary>
+  /// 역할에 따른 초기 스탯 설정
+  /// </summary>
+  private void SetInitialStats(CharacterData character, RoleType role)
+  {
+    // 기존 캐릭터 데이터 초기화 필요
+    character.StateInfo = new CharacterStateInfoData
+    {
+        State = CharacterStateType.NoneCharacterState,
+        NextState = CharacterStateType.NoneCharacterState,
+        NextStateAt = 0,
+        StateTargetUserId = 0
+    };
+    
+    // 카드 초기화
+    character.HandCards.Clear();
+    character.Equips.Clear();
+    character.Debuffs.Clear();
+
+    character.RoleType = role;
+    character.Hp = 3;
+    character.BbangCount = 1;
+    character.HandCardsCount = 4;
+    character.Weapon = 0;
+
+    character.RoleType = role;
+
+    // 기본 스탯
+    character.Hp = 3;
+    character.BbangCount = 1;
+    character.HandCardsCount = 4;
+
+    // 역할별 추가 스탯
+    switch (role)
+    {
+      case RoleType.Target:
+        character.Hp = 4;  // 타겟은 체력 +1
+        break;
+      case RoleType.Bodyguard:
+        character.Weapon = 1;  // 보디가드는 기본 무기 장착
+        break;
+      case RoleType.Hitman:
+        character.HandCardsCount = 5;  // 히트맨은 카드 +1
+        break;
+      case RoleType.Psychopath:
+        character.BbangCount = 2;  // 싸이코패스는 빵야 +1
+        break;
+    }
   }
 }
