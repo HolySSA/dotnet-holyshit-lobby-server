@@ -44,6 +44,7 @@ public static class HandlerManager
     OnHandlers<C2SGameReadyRequest>(PacketId.GameReadyRequest, LobbyPacketHandler.HandleGameReadyRequest);
     OnHandlers<C2SGamePrepareRequest>(PacketId.GamePrepareRequest, LobbyPacketHandler.HandleGamePrepareRequest);
     OnHandlers<C2SGameStartRequest>(PacketId.GameStartRequest, LobbyPacketHandler.HandleGameStartRequest);
+    OnHandlers<C2SPositionUpdateRequest>(PacketId.PositionUpdateRequest, GamePacketHandler.HandlePositionUpdateRequest);
     // 다른 핸들러들도 여기서 등록...
   }
 
@@ -81,10 +82,10 @@ public static class HandlerManager
         {
           // 핸들러 결과 메시지 큐에 자동으로 추가
           await client.MessageQueue.EnqueueSend(
-              result.PacketId,
-              result.Sequence,
-              result.Message,
-              result.TargetSessionIds);
+            result.PacketId,
+            result.Sequence,
+            result.Message,
+            result.TargetSessionIds);
         }
       }
       catch (Exception ex)

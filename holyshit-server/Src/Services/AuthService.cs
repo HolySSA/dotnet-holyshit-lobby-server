@@ -77,6 +77,9 @@ public class AuthService : IAuthService
                 existingUser.Client.Dispose();
                 UserModel.Instance.RemoveUser(user.Id);
             }
+            
+            // ClientSession에 UserId 설정
+            client.SetUserId(user.Id);
 
             var userData = new UserData
             {

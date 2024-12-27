@@ -40,4 +40,11 @@ public class GamePacketMessage
   {
     return new GamePacketMessage(packetId, PacketManager.GetNextSequence(), message, new List<string> { targetSessionId });
   }
+
+  // 빈 메시지 생성을 위한 팩토리 메서드
+  public static GamePacketMessage CreateEmpty(PacketId packetId, uint sequence)
+  {
+    var emptyPacket = new GamePacket();  // 빈 GamePacket 생성
+    return new GamePacketMessage(packetId, sequence, emptyPacket);
+  }
 }

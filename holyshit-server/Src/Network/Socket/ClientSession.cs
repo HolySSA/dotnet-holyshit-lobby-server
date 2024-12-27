@@ -16,10 +16,13 @@ public class ClientSession : IDisposable
 
   public MessageQueue MessageQueue { get; } // 메시지 큐
   public string SessionId { get; }
+  public long UserId { get; private set; } // 유저 ID
   public IServiceProvider ServiceProvider => _serviceProvider;
   public IServiceScope? ServiceScope { get; set; }
 
-  // 생성자 - 필드 초기화
+  /// <summary>
+  /// 생성자 - 필드 초기화
+  /// </summary>
   public ClientSession(TcpClient client, IServiceProvider serviceProvider)
   {
     _client = client;
@@ -27,6 +30,14 @@ public class ClientSession : IDisposable
     _serviceProvider = serviceProvider;
     SessionId = Guid.NewGuid().ToString();
     MessageQueue = new MessageQueue(this);
+  }
+
+  /// <summary>
+  /// 유저 ID 설정
+  /// </summary>
+  public void SetUserId(long userId)
+  {
+    UserId = userId;
   }
 
   public async Task StartAsync()
@@ -130,7 +141,7 @@ public class ClientSession : IDisposable
         if (currentRoom != null)
         {
           // 방의 다른 유저들에게 알림 보내기
-          var targetSessionIds = roomModel.GetRoomTargetSessionIds(currentRoom, userInfo.UserId);
+          var targetSessionIds = roomModel.GetRoomTargetSessionIds(currentRoom.Id, userInfo.UserId);
           if (targetSessionIds.Any())
           {
             var notification = NotificationHelper.CreateLeaveRoomNotification(

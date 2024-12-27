@@ -3,10 +3,7 @@ using HolyShitServer.Src.Network.Socket;
 
 public static class NotificationHelper
 {
-  public static GamePacketMessage CreateJoinRoomNotification(
-    UserData joinUser,
-    List<string> targetSessionIds
-  )
+  public static GamePacketMessage CreateJoinRoomNotification(UserData joinUser, List<string> targetSessionIds)
   {
     var notification = new S2CJoinRoomNotification
     {
@@ -25,10 +22,7 @@ public static class NotificationHelper
     );
   }
 
-  public static GamePacketMessage CreateLeaveRoomNotification(
-    long userId,
-    List<string> targetSessionIds
-  )
+  public static GamePacketMessage CreateLeaveRoomNotification(long userId, List<string> targetSessionIds)
   {
     var notification = new S2CLeaveRoomNotification
     {
@@ -91,10 +85,17 @@ public static class NotificationHelper
     var gamePacket = new GamePacket();
     gamePacket.GameStartNotification = notification;
 
-    return GamePacketMessage.CreateBroadcast(
-      PacketId.GameStartNotification,
-      gamePacket,
-      targetSessionIds
-    );
+    return GamePacketMessage.CreateBroadcast(PacketId.GameStartNotification, gamePacket, targetSessionIds);
+  }
+
+  public static GamePacketMessage CreatePositionUpdateNotification(List<CharacterPositionData> characterPositions, List<string> targetSessionIds)
+  {
+    var notification = new S2CPositionUpdateNotification();
+    notification.CharacterPositions.AddRange(characterPositions);
+
+    var gamePacket = new GamePacket();
+    gamePacket.PositionUpdateNotification = notification;
+
+    return GamePacketMessage.CreateBroadcast(PacketId.PositionUpdateNotification, gamePacket, targetSessionIds);
   }
 }

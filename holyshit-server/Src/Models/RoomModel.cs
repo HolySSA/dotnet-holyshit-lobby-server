@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network.Packets;
 
 namespace HolyShitServer.Src.Models;
@@ -10,7 +11,7 @@ public class RoomModel
   private int _nextRoomId = 1;
 
   // 동시성을 고려하여 ConcurrentDictionary 컬렉션 사용
-  private readonly ConcurrentDictionary<int, RoomData> _rooms = new();
+  private readonly ConcurrentDictionary<int, Room> _rooms = new();
   private readonly ConcurrentDictionary<long, int> _userRoomMap = new();
 
   public static RoomModel Instance
@@ -31,95 +32,86 @@ public class RoomModel
 
   private RoomModel() { }
 
-  public RoomData? CreateRoom(string name, int maxUserNum, long ownerId, UserData ownerData)
-  {
-    var roomId = Interlocked.Increment(ref _nextRoomId) - 1;
-    var room = new RoomData
+  public Room? CreateRoom(string name, int maxUserNum, long ownerId, UserData ownerData)
     {
-      Id = roomId,
-      Name = name,
-      MaxUserNum = maxUserNum,
-      OwnerId = ownerId,
-      State = RoomStateType.Wait
-    };
+      var roomId = Interlocked.Increment(ref _nextRoomId) - 1;
+      var room = new Room
+      {
+        Id = roomId,
+        Name = name,
+        MaxUserNum = maxUserNum,
+        OwnerId = ownerId,
+        State = RoomStateType.Wait
+      };
 
-    room.Users.Add(ownerData);
+      if (room.AddUser(ownerData) && _rooms.TryAdd(roomId, room))
+      {
+        _userRoomMap.TryAdd(ownerId, roomId);
+        return room;
+      }
 
-    if (_rooms.TryAdd(roomId, room))
-    {
-      _userRoomMap.TryAdd(ownerId, roomId);
-      return room;
+      return null;
     }
-
-    return null;
-  }
 
   public bool JoinRoom(int roomId, UserData userData)
-  {
-    if (_rooms.TryGetValue(roomId, out var room))
     {
-      if (room.Users.Count >= room.MaxUserNum)
-        return false;
+      if (_rooms.TryGetValue(roomId, out var room))
+      {
+        if (room.GetAllUsers().Count >= room.MaxUserNum)
+          return false;
 
-      room.Users.Add(userData);
-      _userRoomMap.TryAdd(userData.Id, roomId);
-      return true;
+        if (room.AddUser(userData))
+        {
+          _userRoomMap.TryAdd(userData.Id, roomId);
+          return true;
+        }
+      }
+      return false;
     }
-
-    return false;
-  }
 
   public bool LeaveRoom(long userId)
   {
     if (_userRoomMap.TryRemove(userId, out var roomId) && _rooms.TryGetValue(roomId, out var room))
     {
-      var user = room.Users.FirstOrDefault(u => u.Id == userId);
-      if (user != null)
-      {
-        room.Users.Remove(user);
+      room.RemoveUser(userId);
 
-        if (room.Users.Count == 0)
-        {
-          // 방에 아무도 없으면 방 삭제
-          _rooms.TryRemove(roomId, out _);
-        }
-        else if (room.OwnerId == userId && room.Users.Any())
-        {
-          // 방장이 나가면 다음 사람에게 방장 위임
-          room.OwnerId = room.Users[0].Id;
-        }
+      if (room.GetAllUsers().Count == 0)
+        _rooms.TryRemove(roomId, out _);
+      else if (room.OwnerId == userId && room.GetAllUsers().Any())
+        room.OwnerId = room.GetAllUsers()[0].Id;
 
-        return true;
-      }
+      return true;
     }
-
     return false;
   }
 
   public List<RoomData> GetRoomList()
   {
-    return _rooms.Values.ToList();
+    return _rooms.Values.Select(r => r.ToProto()).ToList();
   }
 
-  public RoomData? GetRoom(int roomId)
+  public Room? GetRoom(int roomId)
   {
     _rooms.TryGetValue(roomId, out var room);
     return room;
   }
 
-  public RoomData? GetUserRoom(long userId)
+  public Room? GetUserRoom(long userId)
   {
     if (_userRoomMap.TryGetValue(userId, out var roomId))
     {
       return GetRoom(roomId);
     }
-
     return null;
   }
 
-  public List<string> GetRoomTargetSessionIds(RoomData room, long excludeUserId)
+  public List<string> GetRoomTargetSessionIds(int roomId, long excludeUserId)
   {
-    return room.Users
+    var room = GetRoom(roomId);
+    if (room == null)
+      return new List<string>();
+
+    return room.GetAllUsers()
       .Where(u => u.Id != excludeUserId)
       .Select(u => UserModel.Instance.GetUser(u.Id)?.Client.SessionId)
       .Where(sessionId => sessionId != null)
@@ -127,27 +119,14 @@ public class RoomModel
       .ToList();
   }
 
-  public bool ToggleUserReady(int roomId, long userId)
+  public bool SetRoomState(int roomId, RoomStateType newState)
   {
-    if (!_rooms.TryGetValue(roomId, out var room))
-      return false;
-
-    var user = room.Users.FirstOrDefault(u => u.Id == userId);
-    if (user == null)
-      return false;
-
-    // 방장은 준비 상태를 변경할 수 없음
-    if (room.OwnerId == userId)
-      return false;
-
-    /*
-        // 준비 상태 토글 (StateInfo의 State를 이용)
-        if (user.Character.StateInfo.State == CharacterStateType.Wait)
-            user.Character.StateInfo.State = CharacterStateType.NoneCharacterState;
-        else
-            user.Character.StateInfo.State = CharacterStateType.Wait;
-    */
-    return true;
+    if (_rooms.TryGetValue(roomId, out var room))
+    {
+      return room.SetState(newState);
+    }
+    
+    return false;
   }
 
   /*
