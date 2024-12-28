@@ -104,18 +104,36 @@ public class PacketSerializer
       }
       offset += versionLength;
 
-      // 시퀀스 (4 bytes)
-      var sequence = (uint)(buffer[offset + 3] |
-                     (buffer[offset + 2] << 8) |
-                     (buffer[offset + 1] << 16) |
-                     (buffer[offset] << 24));
+      // 시퀀스 (4 bytes) - 오버플로우 방지
+      uint sequence;
+      try 
+      {
+        sequence = (uint)(buffer[offset + 3] |
+                  (buffer[offset + 2] << 8) |
+                  (buffer[offset + 1] << 16) |
+                  (buffer[offset] << 24));
+      }
+      catch (OverflowException)
+      {
+        Console.WriteLine("시퀀스 번호 변환 중 오버플로우 발생");
+        return (PacketId.Unknown, 0, null);
+      }
       offset += 4;
 
-      // Payload Length (4 bytes)
-      var payloadLength = buffer[offset + 3] |
-                   (buffer[offset + 2] << 8) |
-                   (buffer[offset + 1] << 16) |
-                   (buffer[offset] << 24);
+      // Payload Length (4 bytes) - 오버플로우 방지
+      int payloadLength;
+      try 
+      {
+        payloadLength = buffer[offset + 3] |
+                (buffer[offset + 2] << 8) |
+                (buffer[offset + 1] << 16) |
+                (buffer[offset] << 24);
+      }
+      catch (OverflowException)
+      {
+        Console.WriteLine("페이로드 길이 변환 중 오버플로우 발생");
+        return (PacketId.Unknown, 0, null);
+      }
       offset += 4;
 
       // 페이로드 길이 유효성 검사

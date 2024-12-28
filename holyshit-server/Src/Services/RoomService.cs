@@ -51,6 +51,7 @@ public class RoomService : IRoomService
   {
     try
     {
+      // CPU-bound 작업이므로 Task.Run으로 래핑
       return await Task.Run(() =>
       {
         // 유저 검증
@@ -281,6 +282,25 @@ public class RoomService : IRoomService
         if (currentRoom.OwnerId != userId)
           return ServiceResult.Error(GlobalFailCode.InvalidRequest, "방장만 게임을 시작할 수 있습니다.");
 
+        // 역할 분배
+        var roles = GetRoleDistribution(currentRoom.GetAllUsers().Count);
+        if (!roles.Any())
+          return ServiceResult.Error(GlobalFailCode.InvalidRequest, "유효하지 않은 인원수입니다.");
+
+        // 역할 목록 생성 및 섞기
+        var roleList = roles.SelectMany(pair => Enumerable.Repeat(pair.Key, pair.Value)).ToList();
+        var random = new Random();
+        var shuffledRoles = roleList.OrderBy(_ => random.Next()).ToList();
+
+        // 각 유저에게 역할 할당
+        var users = currentRoom.GetAllUsers();
+        for (int i = 0; i < users.Count; i++)
+        {
+          var user = users[i];
+          var assignedRole = shuffledRoles[i];
+          SetInitialStats(user.Character, assignedRole);
+        }
+
         // 게임 준비 상태로 변경
         if (!_roomModel.SetRoomState(currentRoom.Id, RoomStateType.Prepare))
           return ServiceResult.Error(GlobalFailCode.UnknownError);
@@ -324,25 +344,6 @@ public class RoomService : IRoomService
         // 게임 시작 상태로 변경
         if (!_roomModel.SetRoomState(currentRoom.Id, RoomStateType.Ingame))
           return ServiceResult.Error(GlobalFailCode.UnknownError);
-
-        // 역할 분배
-        var roles = GetRoleDistribution(currentRoom.GetAllUsers().Count);
-        if (!roles.Any())
-          return ServiceResult.Error(GlobalFailCode.InvalidRequest, "유효하지 않은 인원수입니다.");
-
-        // 역할 목록 생성 및 섞기
-        var roleList = roles.SelectMany(pair => Enumerable.Repeat(pair.Key, pair.Value)).ToList();
-        var random = new Random();
-        var shuffledRoles = roleList.OrderBy(_ => random.Next()).ToList();
-
-        // 각 유저에게 역할 할당
-        var users = currentRoom.GetAllUsers();
-        for (int i = 0; i < users.Count; i++)
-        {
-          var user = users[i];
-          var assignedRole = shuffledRoles[i];
-          SetInitialStats(user.Character, assignedRole);
-        }
 
         return ServiceResult.Ok();
       });

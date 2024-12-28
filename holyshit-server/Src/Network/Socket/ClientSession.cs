@@ -90,14 +90,41 @@ public class ClientSession : IDisposable
           var (id, sequence, message) = result.Value;
           if (message != null)
           {
-            await MessageQueue.EnqueueReceive(id, sequence, message);
+            try 
+            {
+              await MessageQueue.EnqueueReceive(id, sequence, message);
+            }
+            catch (OverflowException ex)
+            {
+              Console.WriteLine($"[Session] 메시지 처리 중 오버플로우 발생: {SessionId}, {ex.Message}");
+              continue;  // 다음 메시지 처리 계속
+            }
+            catch (Exception ex)
+            {
+              Console.WriteLine($"[Session] 메시지 처리 중 오류 발생: {SessionId}, {ex.Message}");
+              continue;  // 다음 메시지 처리 계속
+            }
           }
         }
+        else
+        {
+          Console.WriteLine($"[Session] 패킷 역직렬화 실패: {SessionId}");
+          continue;  // 다음 메시지 처리 계속
+        }
+      }
+      catch (IOException ex)
+      {
+        Console.WriteLine($"[Session] 네트워크 오류 발생: {SessionId}, {ex.Message}");
+        break;  // 네트워크 오류는 연결 종료
+      }
+      catch (ObjectDisposedException)
+      {
+        break;  // 정상적인 종료
       }
       catch (Exception ex)
       {
-        Console.WriteLine($"[Session] 메시지 처리 오류: {SessionId}, {ex.Message}");
-        break;
+        Console.WriteLine($"[Session] 예상치 못한 오류 발생: {SessionId}, {ex.Message}");
+        continue;  // 다른 예외는 계속 처리
       }
     }
   }

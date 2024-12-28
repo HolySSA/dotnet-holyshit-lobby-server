@@ -13,6 +13,11 @@ public static class GamePacketHandler
 
   public static async Task<GamePacketMessage> HandlePositionUpdateRequest(ClientSession client, uint sequence, C2SPositionUpdateRequest request)
   {
+
+    Console.WriteLine($"[PositionUpdate] Raw X bytes: {BitConverter.ToString(BitConverter.GetBytes(request.X))}");
+    Console.WriteLine($"[PositionUpdate] Raw Y bytes: {BitConverter.ToString(BitConverter.GetBytes(request.Y))}");
+    Console.WriteLine($"[PositionUpdate] Decoded position: X={request.X}, Y={request.Y}");
+
     // 위치 업데이트 요청 처리
     var result = await _gameService.UpdatePosition(client.UserId, request.X, request.Y);
 
@@ -23,7 +28,7 @@ public static class GamePacketHandler
       if (currentRoom != null)
       {
         // 게임 내 모든 유저에게 알림
-        var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(currentRoom.Id, 0);
+        var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(currentRoom.Id, client.UserId);
         if (targetSessionIds.Any())
         {
           var notification = NotificationHelper.CreatePositionUpdateNotification(
