@@ -44,12 +44,16 @@ public static class DatabaseConfig
       using var scope = serviceProvider.CreateScope();
       var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+      /*
       // 마이그레이션 적용
       if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
       {
         await dbContext.Database.MigrateAsync();
         Console.WriteLine("마이그레이션 적용 완료");
       }
+      */
+      // 데이터베이스가 존재하는지 확인하고 없으면 생성
+      await dbContext.Database.EnsureCreatedAsync();
 
       Console.WriteLine("데이터베이스 초기화 완료");
     }

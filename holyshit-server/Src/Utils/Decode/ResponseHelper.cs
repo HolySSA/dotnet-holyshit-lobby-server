@@ -6,45 +6,20 @@ namespace HolyShitServer.Src.Utils.Decode;
 
 public static class ResponseHelper
 {
-  public static GamePacketMessage CreateRegisterResponse(
-    uint sequence,
-    bool success,
-    string message,
-    GlobalFailCode failCode)
-  {
-    var response = new S2CRegisterResponse
-    {
-      Success = success,
-      Message = message,
-      FailCode = failCode
-    };
-
-    Console.WriteLine($"[Response] Register Response 생성: Success={success}, Message='{message}', FailCode={failCode}");
-    
-    var gamePacket = new GamePacket();
-    gamePacket.RegisterResponse = response;
-
-    return new GamePacketMessage(PacketId.RegisterResponse, sequence, gamePacket);
-  }
-
   public static GamePacketMessage CreateLoginResponse(
     uint sequence,
     bool success,
-    string message,
-    string? token = null,
-    UserData? myInfo = null,
+    UserInfoData userInfo,
     GlobalFailCode failCode = GlobalFailCode.NoneFailcode)
   {
     var response = new S2CLoginResponse
     {
       Success = success,
-      Message = message,
-      Token = token ?? string.Empty,
-      MyInfo = myInfo,
+      UserInfo = userInfo,
       FailCode = failCode,
     };
 
-    Console.WriteLine($"[Response] Login Response 생성: Success={success}, Message='{message}', Token='{token}', FailCode={failCode}");
+    Console.WriteLine($"[Response] Login Response 생성: Success={success}, FailCode={failCode}");
 
     var gamePacket = new GamePacket();
     gamePacket.LoginResponse = response;

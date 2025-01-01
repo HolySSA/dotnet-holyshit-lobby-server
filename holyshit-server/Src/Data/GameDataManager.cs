@@ -8,6 +8,7 @@ public class GameDataManager
 {
   private readonly JsonFileLoader _jsonLoader;
   private MonsterInfo? _monsterInfo;
+  private CharacterInfo? _characterInfo;
 
   public GameDataManager()
   {
@@ -16,7 +17,10 @@ public class GameDataManager
 
   public async Task InitializeDataAsync()
   {
-    await LoadMonsterInfoAsync();
+    await Task.WhenAll(
+      LoadMonsterInfoAsync(),
+      LoadCharacterInfoAsync()
+    );
   }
 
   private async Task LoadMonsterInfoAsync()
@@ -39,5 +43,32 @@ public class GameDataManager
   public MonsterData? GetMonsterById(string id)
   {
     return _monsterInfo?.Data.FirstOrDefault(m => m.Id == id);
+  }
+
+  private async Task LoadCharacterInfoAsync()
+  {
+    try
+    {
+      _characterInfo = await Task.Run(() =>
+        _jsonLoader.LoadFromAssets<CharacterInfo>(PathConstants.Assets.DataFiles.CHARACTER_INFO)
+      );
+      
+      Console.WriteLine($"캐릭터 데이터 로드 성공: {_characterInfo.Data.Count}개");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"캐릭터 데이터 로드 실패: {ex.Message}");
+      throw;
+    }
+  }
+
+  public CharacterStaticData? GetCharacterByType(string type)
+  {
+    return _characterInfo?.Data.FirstOrDefault(c => c.Type == type);
+  }
+  
+  public List<CharacterStaticData> GetAllCharacters()
+  {
+    return _characterInfo?.Data ?? new List<CharacterStaticData>();
   }
 }

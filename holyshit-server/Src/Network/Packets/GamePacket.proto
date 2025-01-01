@@ -10,27 +10,25 @@ import "Game.proto";
 message GamePacket {
   oneof payload {
     // Auth messages
-    C2SRegisterRequest register_request = 1;
-    S2CRegisterResponse register_response = 2;
-    C2SLoginRequest login_request = 3;
-    S2CLoginResponse login_response = 4;
+    C2SLoginRequest login_request = 1;
+    S2CLoginResponse login_response = 2;
     
     // Lobby messages
-    C2SCreateRoomRequest create_room_request = 5;
-    S2CCreateRoomResponse create_room_response = 6;
-    C2SGetRoomListRequest get_room_list_request = 7;
-    S2CGetRoomListResponse get_room_list_response = 8;
-    C2SJoinRoomRequest join_room_request = 9;
-    S2CJoinRoomResponse join_room_response = 10;
-    C2SJoinRandomRoomRequest join_random_room_request = 11;
-    S2CJoinRandomRoomResponse join_random_room_response = 12;
-    S2CJoinRoomNotification join_room_notification = 13;
-    C2SLeaveRoomRequest leave_room_request = 14;
-    S2CLeaveRoomResponse leave_room_response = 15;
-    S2CLeaveRoomNotification leave_room_notification = 16;
-    C2SGameReadyRequest game_ready_request = 17;
-    S2CGameReadyResponse game_ready_response = 18;
-    S2CGameReadyNotification game_ready_notification = 19;
+    C2SCreateRoomRequest create_room_request = 3;
+    S2CCreateRoomResponse create_room_response = 4;
+    C2SGetRoomListRequest get_room_list_request = 5;
+    S2CGetRoomListResponse get_room_list_response = 6;
+    C2SJoinRoomRequest join_room_request = 7;
+    S2CJoinRoomResponse join_room_response = 8;
+    C2SJoinRandomRoomRequest join_random_room_request = 9;
+    S2CJoinRandomRoomResponse join_random_room_response = 10;
+    S2CJoinRoomNotification join_room_notification = 11;
+    C2SLeaveRoomRequest leave_room_request = 12;
+    S2CLeaveRoomResponse leave_room_response = 13;
+    S2CLeaveRoomNotification leave_room_notification = 14;
+    C2SGameReadyRequest game_ready_request = 15;
+    S2CGameReadyResponse game_ready_response = 16;
+    S2CGameReadyNotification game_ready_notification = 17;
     C2SGamePrepareRequest game_prepare_request = 20;
     S2CGamePrepareResponse game_prepare_response = 21;
     S2CGamePrepareNotification game_prepare_notification = 22;
@@ -47,35 +45,33 @@ message GamePacket {
 enum PacketId {
   Unknown = 0;
   // Auth packets
-  RegisterRequest = 1;
-  RegisterResponse = 2;
-  LoginRequest = 3;
-  LoginResponse = 4;
+  LoginRequest = 1;
+  LoginResponse = 2;
   
   // Lobby packets
-  CreateRoomRequest = 5;
-  CreateRoomResponse = 6;
-  GetRoomListRequest = 7;
-  GetRoomListResponse = 8;
-  JoinRoomRequest = 9;
-  JoinRoomResponse = 10;
-  JoinRandomRoomRequest = 11;
-  JoinRandomRoomResponse = 12;
-  JoinRoomNotification = 13;
-  LeaveRoomRequest = 14;
-  LeaveRoomResponse = 15;
-  LeaveRoomNotification = 16;
-  GameReadyRequest = 17;
-  GameReadyResponse = 18;
-  GameReadyNotification = 19;
-  GamePrepareRequest = 20;
-  GamePrepareResponse = 21;
-  GamePrepareNotification = 22;
-  GameStartRequest = 23;
-  GameStartResponse = 24;
-  GameStartNotification = 25;
+  CreateRoomRequest = 3;
+  CreateRoomResponse = 4;
+  GetRoomListRequest = 5;
+  GetRoomListResponse = 6;
+  JoinRoomRequest = 7;
+  JoinRoomResponse = 8;
+  JoinRandomRoomRequest = 9;
+  JoinRandomRoomResponse = 10;
+  JoinRoomNotification = 11;
+  LeaveRoomRequest = 12;
+  LeaveRoomResponse = 13;
+  LeaveRoomNotification = 14;
+  GameReadyRequest = 15;
+  GameReadyResponse = 16;
+  GameReadyNotification = 17;
+  GamePrepareRequest = 18;
+  GamePrepareResponse = 19;
+  GamePrepareNotification = 20;
+  GameStartRequest = 21;
+  GameStartResponse = 22;
+  GameStartNotification = 23;
 
   // Game messages
-  PositionUpdateRequest = 26;
-  PositionUpdateNotification = 27;
+  PositionUpdateRequest = 24;
+  PositionUpdateNotification = 25;
 }

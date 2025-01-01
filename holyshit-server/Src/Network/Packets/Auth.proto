@@ -4,27 +4,29 @@ option csharp_namespace = "HolyShitServer.Src.Network.Packets";
 
 import "Common.proto";
 
-message C2SRegisterRequest {
-    string email = 1;
-    string nickname = 2;
-    string password = 3;
-}
-
-message S2CRegisterResponse {
-    bool success = 1;
-    string message = 2;
-    GlobalFailCode failCode = 3;
-}
-
 message C2SLoginRequest {
     string email = 1;
-    string password = 2;
+    string token = 2;
 }
 
 message S2CLoginResponse {
     bool success = 1;
-    string message = 2;
-    string token = 3;
-    UserData myInfo = 4;
-    GlobalFailCode failCode = 5;
+    UserInfoData userInfo = 2;
+    GlobalFailCode failCode = 3;
+}
+
+message UserInfoData {
+    int64 id = 1;
+    string nickname = 2;
+    repeated CharacterInfoData characters = 3;
+}
+
+message CharacterInfoData {
+    CharacterType characterType = 1;
+    string name = 2;
+    int32 hp = 3;
+    string description = 4;
+    bool owned = 5;  // 보유 여부
+    int32 playCount = 6;  // 플레이 횟수
+    int32 winCount = 7;   // 승리 횟수
 }

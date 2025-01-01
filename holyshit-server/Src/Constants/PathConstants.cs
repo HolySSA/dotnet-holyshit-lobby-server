@@ -14,6 +14,7 @@ public static class PathConstants
     public static class DataFiles
     {
       public static readonly string MONSTER_INFO = "monsterInfo.json";
+      public static readonly string CHARACTER_INFO = "characterInfo.json";
     }
   }
 
