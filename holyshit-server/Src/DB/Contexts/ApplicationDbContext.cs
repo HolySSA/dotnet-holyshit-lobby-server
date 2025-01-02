@@ -37,6 +37,12 @@ public class ApplicationDbContext : DbContext
         // 기본 설정
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("Users");
+            entity.HasKey(e => e.Id);
+        });
+
         // UserCharacter 테이블 설정
         modelBuilder.Entity<UserCharacter>(entity =>
         {

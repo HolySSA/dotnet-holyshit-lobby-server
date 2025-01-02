@@ -9,7 +9,7 @@ public static class DatabaseConfig
 {
   public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
   {
-    var connectionString = BuildConnectionString();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
 
     // DB 컨텍스트 등록
     services.AddDbContext<ApplicationDbContext>(options =>
@@ -27,16 +27,6 @@ public static class DatabaseConfig
     return services;
   }
 
-  private static string BuildConnectionString()
-  {
-    return $"Host={Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost"};" +
-           $"Port={Environment.GetEnvironmentVariable("DB_PORT") ?? "5432"};" +
-           $"Database={Environment.GetEnvironmentVariable("DB_NAME") ?? "holyshit_db"};" +
-           $"Username={Environment.GetEnvironmentVariable("DB_USER") ?? "postgres"};" +
-           $"Password={Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "aaaa4321"};" +
-           "Maximum Pool Size=100;Minimum Pool Size=0;";
-  }
-
   public static async Task InitializeDatabaseAsync(IServiceProvider serviceProvider)
   {
     try
@@ -44,16 +34,8 @@ public static class DatabaseConfig
       using var scope = serviceProvider.CreateScope();
       var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-      /*
-      // 마이그레이션 적용
-      if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
-      {
-        await dbContext.Database.MigrateAsync();
-        Console.WriteLine("마이그레이션 적용 완료");
-      }
-      */
-      // 데이터베이스가 존재하는지 확인하고 없으면 생성
-      await dbContext.Database.EnsureCreatedAsync();
+      // 데이터베이스 연결 테스트만 수행
+      await dbContext.Database.CanConnectAsync();
 
       Console.WriteLine("데이터베이스 초기화 완료");
     }

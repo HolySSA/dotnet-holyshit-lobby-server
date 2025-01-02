@@ -9,15 +9,21 @@ public static class ResponseHelper
   public static GamePacketMessage CreateLoginResponse(
     uint sequence,
     bool success,
-    UserInfoData userInfo,
+    List<CharacterInfoData> characters,
+    CharacterType lastSelectedCharacter,
     GlobalFailCode failCode = GlobalFailCode.NoneFailcode)
   {
     var response = new S2CLoginResponse
     {
       Success = success,
-      UserInfo = userInfo,
+      LastSelectedCharacter = lastSelectedCharacter,
       FailCode = failCode,
     };
+
+    if (characters != null)
+    {
+      response.Characters.AddRange(characters);
+    }
 
     Console.WriteLine($"[Response] Login Response 생성: Success={success}, FailCode={failCode}");
 

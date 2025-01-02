@@ -24,23 +24,21 @@ namespace HolyShitServer.Src.Network.Packets {
     static AuthReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgpBdXRoLnByb3RvGgxDb21tb24ucHJvdG8iLwoPQzJTTG9naW5SZXF1ZXN0",
-            "Eg0KBWVtYWlsGAEgASgJEg0KBXRva2VuGAIgASgJImcKEFMyQ0xvZ2luUmVz",
-            "cG9uc2USDwoHc3VjY2VzcxgBIAEoCBIfCgh1c2VySW5mbxgCIAEoCzINLlVz",
-            "ZXJJbmZvRGF0YRIhCghmYWlsQ29kZRgDIAEoDjIPLkdsb2JhbEZhaWxDb2Rl",
-            "IlQKDFVzZXJJbmZvRGF0YRIKCgJpZBgBIAEoAxIQCghuaWNrbmFtZRgCIAEo",
-            "CRImCgpjaGFyYWN0ZXJzGAMgAygLMhIuQ2hhcmFjdGVySW5mb0RhdGEinQEK",
-            "EUNoYXJhY3RlckluZm9EYXRhEiUKDWNoYXJhY3RlclR5cGUYASABKA4yDi5D",
-            "aGFyYWN0ZXJUeXBlEgwKBG5hbWUYAiABKAkSCgoCaHAYAyABKAUSEwoLZGVz",
-            "Y3JpcHRpb24YBCABKAkSDQoFb3duZWQYBSABKAgSEQoJcGxheUNvdW50GAYg",
-            "ASgFEhAKCHdpbkNvdW50GAcgASgFQiWqAiJIb2x5U2hpdFNlcnZlci5TcmMu",
-            "TmV0d29yay5QYWNrZXRzYgZwcm90bzM="));
+            "CgpBdXRoLnByb3RvGgxDb21tb24ucHJvdG8iMAoPQzJTTG9naW5SZXF1ZXN0",
+            "Eg4KBnVzZXJJZBgBIAEoCRINCgV0b2tlbhgCIAEoCSKdAQoQUzJDTG9naW5S",
+            "ZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEiYKCmNoYXJhY3RlcnMYAiADKAsy",
+            "Ei5DaGFyYWN0ZXJJbmZvRGF0YRItChVsYXN0U2VsZWN0ZWRDaGFyYWN0ZXIY",
+            "AyABKA4yDi5DaGFyYWN0ZXJUeXBlEiEKCGZhaWxDb2RlGAQgASgOMg8uR2xv",
+            "YmFsRmFpbENvZGUinQEKEUNoYXJhY3RlckluZm9EYXRhEiUKDWNoYXJhY3Rl",
+            "clR5cGUYASABKA4yDi5DaGFyYWN0ZXJUeXBlEgwKBG5hbWUYAiABKAkSCgoC",
+            "aHAYAyABKAUSEwoLZGVzY3JpcHRpb24YBCABKAkSDQoFb3duZWQYBSABKAgS",
+            "EQoJcGxheUNvdW50GAYgASgFEhAKCHdpbkNvdW50GAcgASgFQiWqAiJIb2x5",
+            "U2hpdFNlcnZlci5TcmMuTmV0d29yay5QYWNrZXRzYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::HolyShitServer.Src.Network.Packets.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SLoginRequest), global::HolyShitServer.Src.Network.Packets.C2SLoginRequest.Parser, new[]{ "Email", "Token" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CLoginResponse), global::HolyShitServer.Src.Network.Packets.S2CLoginResponse.Parser, new[]{ "Success", "UserInfo", "FailCode" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.UserInfoData), global::HolyShitServer.Src.Network.Packets.UserInfoData.Parser, new[]{ "Id", "Nickname", "Characters" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SLoginRequest), global::HolyShitServer.Src.Network.Packets.C2SLoginRequest.Parser, new[]{ "UserId", "Token" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CLoginResponse), global::HolyShitServer.Src.Network.Packets.S2CLoginResponse.Parser, new[]{ "Success", "Characters", "LastSelectedCharacter", "FailCode" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.CharacterInfoData), global::HolyShitServer.Src.Network.Packets.CharacterInfoData.Parser, new[]{ "CharacterType", "Name", "Hp", "Description", "Owned", "PlayCount", "WinCount" }, null, null, null, null)
           }));
     }
@@ -83,7 +81,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public C2SLoginRequest(C2SLoginRequest other) : this() {
-      email_ = other.email_;
+      userId_ = other.userId_;
       token_ = other.token_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -94,15 +92,15 @@ namespace HolyShitServer.Src.Network.Packets {
       return new C2SLoginRequest(this);
     }
 
-    /// <summary>Field number for the "email" field.</summary>
-    public const int EmailFieldNumber = 1;
-    private string email_ = "";
+    /// <summary>Field number for the "userId" field.</summary>
+    public const int UserIdFieldNumber = 1;
+    private string userId_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Email {
-      get { return email_; }
+    public string UserId {
+      get { return userId_; }
       set {
-        email_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        userId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -133,7 +131,7 @@ namespace HolyShitServer.Src.Network.Packets {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Email != other.Email) return false;
+      if (UserId != other.UserId) return false;
       if (Token != other.Token) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -142,7 +140,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Email.Length != 0) hash ^= Email.GetHashCode();
+      if (UserId.Length != 0) hash ^= UserId.GetHashCode();
       if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -162,9 +160,9 @@ namespace HolyShitServer.Src.Network.Packets {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Email.Length != 0) {
+      if (UserId.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(Email);
+        output.WriteString(UserId);
       }
       if (Token.Length != 0) {
         output.WriteRawTag(18);
@@ -180,9 +178,9 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Email.Length != 0) {
+      if (UserId.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(Email);
+        output.WriteString(UserId);
       }
       if (Token.Length != 0) {
         output.WriteRawTag(18);
@@ -198,8 +196,8 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Email.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Email);
+      if (UserId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UserId);
       }
       if (Token.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
@@ -216,8 +214,8 @@ namespace HolyShitServer.Src.Network.Packets {
       if (other == null) {
         return;
       }
-      if (other.Email.Length != 0) {
-        Email = other.Email;
+      if (other.UserId.Length != 0) {
+        UserId = other.UserId;
       }
       if (other.Token.Length != 0) {
         Token = other.Token;
@@ -242,7 +240,7 @@ namespace HolyShitServer.Src.Network.Packets {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            Email = input.ReadString();
+            UserId = input.ReadString();
             break;
           }
           case 18: {
@@ -269,7 +267,7 @@ namespace HolyShitServer.Src.Network.Packets {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            Email = input.ReadString();
+            UserId = input.ReadString();
             break;
           }
           case 18: {
@@ -319,7 +317,8 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public S2CLoginResponse(S2CLoginResponse other) : this() {
       success_ = other.success_;
-      userInfo_ = other.userInfo_ != null ? other.userInfo_.Clone() : null;
+      characters_ = other.characters_.Clone();
+      lastSelectedCharacter_ = other.lastSelectedCharacter_;
       failCode_ = other.failCode_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -342,20 +341,31 @@ namespace HolyShitServer.Src.Network.Packets {
       }
     }
 
-    /// <summary>Field number for the "userInfo" field.</summary>
-    public const int UserInfoFieldNumber = 2;
-    private global::HolyShitServer.Src.Network.Packets.UserInfoData userInfo_;
+    /// <summary>Field number for the "characters" field.</summary>
+    public const int CharactersFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::HolyShitServer.Src.Network.Packets.CharacterInfoData> _repeated_characters_codec
+        = pb::FieldCodec.ForMessage(18, global::HolyShitServer.Src.Network.Packets.CharacterInfoData.Parser);
+    private readonly pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.CharacterInfoData> characters_ = new pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.CharacterInfoData>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::HolyShitServer.Src.Network.Packets.UserInfoData UserInfo {
-      get { return userInfo_; }
+    public pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.CharacterInfoData> Characters {
+      get { return characters_; }
+    }
+
+    /// <summary>Field number for the "lastSelectedCharacter" field.</summary>
+    public const int LastSelectedCharacterFieldNumber = 3;
+    private global::HolyShitServer.Src.Network.Packets.CharacterType lastSelectedCharacter_ = global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.CharacterType LastSelectedCharacter {
+      get { return lastSelectedCharacter_; }
       set {
-        userInfo_ = value;
+        lastSelectedCharacter_ = value;
       }
     }
 
     /// <summary>Field number for the "failCode" field.</summary>
-    public const int FailCodeFieldNumber = 3;
+    public const int FailCodeFieldNumber = 4;
     private global::HolyShitServer.Src.Network.Packets.GlobalFailCode failCode_ = global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -382,7 +392,8 @@ namespace HolyShitServer.Src.Network.Packets {
         return true;
       }
       if (Success != other.Success) return false;
-      if (!object.Equals(UserInfo, other.UserInfo)) return false;
+      if(!characters_.Equals(other.characters_)) return false;
+      if (LastSelectedCharacter != other.LastSelectedCharacter) return false;
       if (FailCode != other.FailCode) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -392,7 +403,8 @@ namespace HolyShitServer.Src.Network.Packets {
     public override int GetHashCode() {
       int hash = 1;
       if (Success != false) hash ^= Success.GetHashCode();
-      if (userInfo_ != null) hash ^= UserInfo.GetHashCode();
+      hash ^= characters_.GetHashCode();
+      if (LastSelectedCharacter != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) hash ^= LastSelectedCharacter.GetHashCode();
       if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) hash ^= FailCode.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -416,12 +428,13 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(8);
         output.WriteBool(Success);
       }
-      if (userInfo_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(UserInfo);
+      characters_.WriteTo(output, _repeated_characters_codec);
+      if (LastSelectedCharacter != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) LastSelectedCharacter);
       }
       if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
-        output.WriteRawTag(24);
+        output.WriteRawTag(32);
         output.WriteEnum((int) FailCode);
       }
       if (_unknownFields != null) {
@@ -438,12 +451,13 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(8);
         output.WriteBool(Success);
       }
-      if (userInfo_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(UserInfo);
+      characters_.WriteTo(ref output, _repeated_characters_codec);
+      if (LastSelectedCharacter != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) LastSelectedCharacter);
       }
       if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
-        output.WriteRawTag(24);
+        output.WriteRawTag(32);
         output.WriteEnum((int) FailCode);
       }
       if (_unknownFields != null) {
@@ -459,8 +473,9 @@ namespace HolyShitServer.Src.Network.Packets {
       if (Success != false) {
         size += 1 + 1;
       }
-      if (userInfo_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(UserInfo);
+      size += characters_.CalculateSize(_repeated_characters_codec);
+      if (LastSelectedCharacter != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) LastSelectedCharacter);
       }
       if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) FailCode);
@@ -480,11 +495,9 @@ namespace HolyShitServer.Src.Network.Packets {
       if (other.Success != false) {
         Success = other.Success;
       }
-      if (other.userInfo_ != null) {
-        if (userInfo_ == null) {
-          UserInfo = new global::HolyShitServer.Src.Network.Packets.UserInfoData();
-        }
-        UserInfo.MergeFrom(other.UserInfo);
+      characters_.Add(other.characters_);
+      if (other.LastSelectedCharacter != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        LastSelectedCharacter = other.LastSelectedCharacter;
       }
       if (other.FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
         FailCode = other.FailCode;
@@ -513,13 +526,14 @@ namespace HolyShitServer.Src.Network.Packets {
             break;
           }
           case 18: {
-            if (userInfo_ == null) {
-              UserInfo = new global::HolyShitServer.Src.Network.Packets.UserInfoData();
-            }
-            input.ReadMessage(UserInfo);
+            characters_.AddEntriesFrom(input, _repeated_characters_codec);
             break;
           }
           case 24: {
+            LastSelectedCharacter = (global::HolyShitServer.Src.Network.Packets.CharacterType) input.ReadEnum();
+            break;
+          }
+          case 32: {
             FailCode = (global::HolyShitServer.Src.Network.Packets.GlobalFailCode) input.ReadEnum();
             break;
           }
@@ -547,275 +561,15 @@ namespace HolyShitServer.Src.Network.Packets {
             break;
           }
           case 18: {
-            if (userInfo_ == null) {
-              UserInfo = new global::HolyShitServer.Src.Network.Packets.UserInfoData();
-            }
-            input.ReadMessage(UserInfo);
+            characters_.AddEntriesFrom(ref input, _repeated_characters_codec);
             break;
           }
           case 24: {
+            LastSelectedCharacter = (global::HolyShitServer.Src.Network.Packets.CharacterType) input.ReadEnum();
+            break;
+          }
+          case 32: {
             FailCode = (global::HolyShitServer.Src.Network.Packets.GlobalFailCode) input.ReadEnum();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class UserInfoData : pb::IMessage<UserInfoData>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<UserInfoData> _parser = new pb::MessageParser<UserInfoData>(() => new UserInfoData());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<UserInfoData> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor.MessageTypes[2]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public UserInfoData() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public UserInfoData(UserInfoData other) : this() {
-      id_ = other.id_;
-      nickname_ = other.nickname_;
-      characters_ = other.characters_.Clone();
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public UserInfoData Clone() {
-      return new UserInfoData(this);
-    }
-
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private long id_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public long Id {
-      get { return id_; }
-      set {
-        id_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "nickname" field.</summary>
-    public const int NicknameFieldNumber = 2;
-    private string nickname_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Nickname {
-      get { return nickname_; }
-      set {
-        nickname_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "characters" field.</summary>
-    public const int CharactersFieldNumber = 3;
-    private static readonly pb::FieldCodec<global::HolyShitServer.Src.Network.Packets.CharacterInfoData> _repeated_characters_codec
-        = pb::FieldCodec.ForMessage(26, global::HolyShitServer.Src.Network.Packets.CharacterInfoData.Parser);
-    private readonly pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.CharacterInfoData> characters_ = new pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.CharacterInfoData>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.CharacterInfoData> Characters {
-      get { return characters_; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as UserInfoData);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(UserInfoData other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      if (Nickname != other.Nickname) return false;
-      if(!characters_.Equals(other.characters_)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id != 0L) hash ^= Id.GetHashCode();
-      if (Nickname.Length != 0) hash ^= Nickname.GetHashCode();
-      hash ^= characters_.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id != 0L) {
-        output.WriteRawTag(8);
-        output.WriteInt64(Id);
-      }
-      if (Nickname.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Nickname);
-      }
-      characters_.WriteTo(output, _repeated_characters_codec);
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id != 0L) {
-        output.WriteRawTag(8);
-        output.WriteInt64(Id);
-      }
-      if (Nickname.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(Nickname);
-      }
-      characters_.WriteTo(ref output, _repeated_characters_codec);
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Id);
-      }
-      if (Nickname.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Nickname);
-      }
-      size += characters_.CalculateSize(_repeated_characters_codec);
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(UserInfoData other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id != 0L) {
-        Id = other.Id;
-      }
-      if (other.Nickname.Length != 0) {
-        Nickname = other.Nickname;
-      }
-      characters_.Add(other.characters_);
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 8: {
-            Id = input.ReadInt64();
-            break;
-          }
-          case 18: {
-            Nickname = input.ReadString();
-            break;
-          }
-          case 26: {
-            characters_.AddEntriesFrom(input, _repeated_characters_codec);
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 8: {
-            Id = input.ReadInt64();
-            break;
-          }
-          case 18: {
-            Nickname = input.ReadString();
-            break;
-          }
-          case 26: {
-            characters_.AddEntriesFrom(ref input, _repeated_characters_codec);
             break;
           }
         }
@@ -840,7 +594,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor.MessageTypes[3]; }
+      get { return global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

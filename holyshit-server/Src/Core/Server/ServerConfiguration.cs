@@ -1,9 +1,12 @@
 using HolyShitServer.DB.Configuration;
+using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network.Protocol;
+using HolyShitServer.Src.Services;
 using HolyShitServer.Src.Services.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace HolyShitServer.Src.Core;
 
@@ -11,17 +14,19 @@ public static class ServerConfiguration
 {
   public static IServiceProvider ConfigureServices()
   {
-    // 설정 초기화
-    var configuration = new ConfigurationBuilder()
-      .SetBasePath(Directory.GetCurrentDirectory())
-      .AddJsonFile("appsettings.json")
-      .Build();
-
-    // 서비스 컬렉션 설정
     var services = new ServiceCollection();
-    // 데이터베이스 서비스 등록
-    services.AddDatabaseServices(configuration);
-    services.AddGameServices();
+        
+    // Configuration 설정
+    var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+    services.AddSingleton<IConfiguration>(configuration);
+
+    // 서비스 등록
+    services.AddSingleton<IConnectionMultiplexer>(sp =>ConnectionMultiplexer
+      .Connect(configuration.GetConnectionString("Redis") ?? throw new InvalidOperationException("Redis connection string is not configured")));
+    
+    services.AddDbContext<ApplicationDbContext>();
+    services.AddSingleton<TokenValidationService>();
+    services.AddSingleton<GameDataManager>();
 
     return services.BuildServiceProvider();
   }

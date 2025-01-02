@@ -5,20 +5,15 @@ option csharp_namespace = "HolyShitServer.Src.Network.Packets";
 import "Common.proto";
 
 message C2SLoginRequest {
-    string email = 1;
+    string userId = 1;
     string token = 2;
 }
 
 message S2CLoginResponse {
     bool success = 1;
-    UserInfoData userInfo = 2;
-    GlobalFailCode failCode = 3;
-}
-
-message UserInfoData {
-    int64 id = 1;
-    string nickname = 2;
-    repeated CharacterInfoData characters = 3;
+    repeated CharacterInfoData characters = 2;
+    CharacterType lastSelectedCharacter = 3;
+    GlobalFailCode failCode = 4;
 }
 
 message CharacterInfoData {

@@ -4,8 +4,8 @@ namespace HolyShitServer.Src.DB.Entities;
 
 public class UserCharacter
 {
-  public long Id { get; set; }
-  public long UserId { get; set; }  // FK
+  public int Id { get; set; }
+  public int UserId { get; set; }  // FK
   public CharacterType CharacterType { get; set; }
   public int PlayCount { get; set; }
   public int WinCount { get; set; }
