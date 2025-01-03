@@ -17,53 +17,31 @@ public class PacketSerializer
       var messageBytes = message.ToByteArray();
       var versionBytes = Encoding.UTF8.GetBytes(VERSION);
       var totalLength = HEADER_SIZE + versionBytes.Length + messageBytes.Length;
-
       var result = new byte[totalLength];
       var offset = 0;
 
       // 패킷 타입 (2 bytes)
-      var typeBytes = BitConverter.GetBytes((ushort)packetId);
-      if (BitConverter.IsLittleEndian)
-      {
-        Array.Reverse(typeBytes);
-      }
-      typeBytes.CopyTo(result, offset);
-      offset += 2;
+      WriteBytes(result, ref offset, BitConverter.GetBytes((ushort)packetId));
 
-      // Version Length (1 byte)
-      result[offset] = (byte)versionBytes.Length;
-      offset += 1;
-
-      // Version (String
+      // 버전 길이 (1 byte) + 버전 문자열
+      result[offset++] = (byte)versionBytes.Length;
       versionBytes.CopyTo(result, offset);
       offset += versionBytes.Length;
 
       // 시퀀스 (4 bytes)
-      var sequenceBytes = BitConverter.GetBytes(sequence);
-      if (BitConverter.IsLittleEndian)
-      {
-        Array.Reverse(sequenceBytes);
-      }
-      sequenceBytes.CopyTo(result, offset);
-      offset += 4;
+      WriteBytes(result, ref offset, BitConverter.GetBytes(sequence));
 
-      // Payload Length (4 bytes)
-      var lengthBytes = BitConverter.GetBytes(messageBytes.Length);
-      if (BitConverter.IsLittleEndian)
-      {
-        Array.Reverse(lengthBytes);
-      }
-      lengthBytes.CopyTo(result, offset);
-      offset += 4;
+      // 페이로드 길이 (4 bytes)
+      WriteBytes(result, ref offset, BitConverter.GetBytes(messageBytes.Length));
 
-      // Payload
+      // 페이로드
       messageBytes.CopyTo(result, offset);
 
       return result;
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Serialization 실패: {ex.Message}");
+      Console.WriteLine($"[PacketSerializer] Serialization 실패: {ex.Message}");
       return null;
     }
   }
@@ -73,98 +51,109 @@ public class PacketSerializer
   {
     try
     {
-      if (buffer.Length < HEADER_SIZE)
-      {
-        Console.WriteLine($"버퍼 크기 부족: {buffer.Length} < {HEADER_SIZE}");
-        return null;
-      }
+      if (buffer.Length < HEADER_SIZE) return null;
 
       var offset = 0;
 
       // 패킷 타입 (2 bytes)
-      var packetId = (PacketId)(buffer[offset + 1] | (buffer[offset] << 8));
-      offset += 2;
+      var packetId = (PacketId)ReadUInt16(buffer, ref offset);
 
-      // Version Length (1 byte)
-      var versionLength = buffer[offset];
-      offset += 1;
+      // 버전 길이 (1 byte) + 버전 문자열
+      var versionLength = buffer[offset++];
+      if (offset + versionLength > buffer.Length) return null;
+      offset += versionLength;  // 버전 검증이 필요하다면 여기서 수행
 
-      // Version (String)
-      if (offset + versionLength > buffer.Length)
-      {
-        Console.WriteLine("버전 문자열 읽기 실패");
-        return null;
-      }
+      // 시퀀스 (4 bytes)
+      var sequence = ReadUInt32(buffer, ref offset);
 
-      var version = Encoding.UTF8.GetString(buffer, offset, versionLength);
-      if (version != VERSION)
-      {
-        Console.WriteLine($"버전 불일치: 예상={VERSION}, 실제={version}");
-        return null;
-      }
-      offset += versionLength;
+      // 페이로드 길이 (4 bytes)
+      var payloadLength = ReadInt32(buffer, ref offset);
+      if (payloadLength <= 0 || payloadLength > 1024 * 1024) return null;
 
-      // 시퀀스 (4 bytes) - 오버플로우 방지
-      uint sequence;
-      try 
-      {
-        sequence = (uint)(buffer[offset + 3] |
-                  (buffer[offset + 2] << 8) |
-                  (buffer[offset + 1] << 16) |
-                  (buffer[offset] << 24));
-      }
-      catch (OverflowException)
-      {
-        Console.WriteLine("시퀀스 번호 변환 중 오버플로우 발생");
-        return (PacketId.Unknown, 0, null);
-      }
-      offset += 4;
-
-      // Payload Length (4 bytes) - 오버플로우 방지
-      int payloadLength;
-      try 
-      {
-        payloadLength = buffer[offset + 3] |
-                (buffer[offset + 2] << 8) |
-                (buffer[offset + 1] << 16) |
-                (buffer[offset] << 24);
-      }
-      catch (OverflowException)
-      {
-        Console.WriteLine("페이로드 길이 변환 중 오버플로우 발생");
-        return (PacketId.Unknown, 0, null);
-      }
-      offset += 4;
-
-      // 페이로드 길이 유효성 검사
-      if (payloadLength <= 0 || offset + payloadLength > buffer.Length)
-      {
-        Console.WriteLine($"페이로드 읽기 실패: 필요={payloadLength}, 가능={buffer.Length - offset}");
-        return null;
-      }
-
-      // 페이로드 읽기
+      // 페이로드
+      if (buffer.Length < offset + payloadLength) return null;
       var payload = new byte[payloadLength];
       Array.Copy(buffer, offset, payload, 0, payloadLength);
 
-      // 페이로드 내용 출력
-      Console.WriteLine($"페이로드 데이터: {BitConverter.ToString(payload)}");
-
-      // 메시지 파싱
       var message = PacketManager.ParseMessage(payload);
-      if (message == null)
-      {
-        Console.WriteLine($"메시지 파싱 실패: ID={packetId}");
-        return null;
-      }
-
-      Console.WriteLine($"Deserialize 성공: ID={packetId}, Sequence={sequence}, Type={message.GetType().Name}");
-      return (packetId, sequence, message);
+      return message == null ? null : (packetId, sequence, message);
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Deserialization 실패: {ex.Message}");
+      Console.WriteLine($"[PacketSerializer] Deserialization 실패: {ex.Message}");
       return null;
     }
+  }
+
+  public static (bool isValid, int totalSize) GetExpectedPacketSize(byte[] buffer)
+  {
+    try
+    {
+      if (buffer.Length < HEADER_SIZE)
+        return (true, 0);
+
+      var offset = 0;
+
+      // 패킷 타입 검증
+      var packetType = ReadUInt16(buffer, ref offset);
+      if (packetType > 1000) return (false, 0);
+
+      // 버전 길이 검증
+      var versionLength = buffer[offset++];
+      if (versionLength != 5) return (false, 0);
+
+      // 시퀀스 건너뛰기
+      offset += versionLength + 4;
+
+      // 페이로드 길이
+      var payloadLength = ReadInt32(buffer, ref offset);
+      if (payloadLength <= 0 || payloadLength > 1024 * 1024)
+        return (false, 0);
+
+      return (true, HEADER_SIZE + versionLength + payloadLength);
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[PacketSerializer] GetExpectedPacketSize 실패: {ex.Message}");
+      return (false, 0);
+    }
+  }
+
+  private static void WriteBytes(byte[] buffer, ref int offset, byte[] data)
+  {
+    if (BitConverter.IsLittleEndian)
+      Array.Reverse(data);
+    data.CopyTo(buffer, offset);
+    offset += data.Length;
+  }
+
+  private static ushort ReadUInt16(byte[] buffer, ref int offset)
+  {
+    var bytes = new byte[2];
+    Array.Copy(buffer, offset, bytes, 0, 2);
+    if (BitConverter.IsLittleEndian)
+      Array.Reverse(bytes);
+    offset += 2;
+    return BitConverter.ToUInt16(bytes, 0);
+  }
+
+  private static uint ReadUInt32(byte[] buffer, ref int offset)
+  {
+    var bytes = new byte[4];
+    Array.Copy(buffer, offset, bytes, 0, 4);
+    if (BitConverter.IsLittleEndian)
+      Array.Reverse(bytes);
+    offset += 4;
+    return BitConverter.ToUInt32(bytes, 0);
+  }
+
+  private static int ReadInt32(byte[] buffer, ref int offset)
+  {
+    var bytes = new byte[4];
+    Array.Copy(buffer, offset, bytes, 0, 4);
+    if (BitConverter.IsLittleEndian)
+      Array.Reverse(bytes);
+    offset += 4;
+    return BitConverter.ToInt32(bytes, 0);
   }
 }

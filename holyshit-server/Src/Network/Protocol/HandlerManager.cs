@@ -34,7 +34,7 @@ public static class HandlerManager
 
   private static void RegisterHandlers()
   {
-    //OnHandlers<C2SLoginRequest>(PacketId.LoginRequest, AuthPacketHandler.HandleLoginRequest);
+    OnHandlers<C2SLoginRequest>(PacketId.LoginRequest, AuthPacketHandler.HandleLoginRequest);
     OnHandlers<C2SGetRoomListRequest>(PacketId.GetRoomListRequest, LobbyPacketHandler.HandleGetRoomListRequest);
     OnHandlers<C2SCreateRoomRequest>(PacketId.CreateRoomRequest, LobbyPacketHandler.HandleCreateRoomRequest);
     OnHandlers<C2SJoinRoomRequest>(PacketId.JoinRoomRequest, LobbyPacketHandler.HandleJoinRoomRequest);

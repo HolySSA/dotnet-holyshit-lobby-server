@@ -4,6 +4,7 @@ using HolyShitServer.Src.Network.Protocol;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Models;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 
 namespace HolyShitServer.Src.Network.Socket;
 
@@ -44,7 +45,6 @@ public class ClientSession : IDisposable
   {
     try
     {
-      Console.WriteLine($"[Session] 시작: {SessionId}");
       await ProcessMessagesAsync();
     }
     catch (Exception ex)
@@ -56,77 +56,66 @@ public class ClientSession : IDisposable
       Dispose();
     }
   }
-  
+
 
   // 클라이언트 통신 처리 비동기로 시작
-  public async Task ProcessMessagesAsync()
+  private async Task ProcessMessagesAsync()
   {
+    var buffer = new byte[8192];
+    var messageBuffer = new List<byte>();
+
     while (!_disposed)
     {
       try
       {
-        // 헤더 읽기
-        var headerBuffer = new byte[PacketSerializer.HEADER_SIZE];
-        int headerBytesRead = await _stream.ReadAsync(headerBuffer, 0, PacketSerializer.HEADER_SIZE);
-        if (headerBytesRead == 0) break;
-
-        // 페이로드 길이 추출 (헤더의 마지막 4바이트)
-        var payloadLength = BitConverter.ToInt32(headerBuffer, 7);
-
-        // 페이로드 읽기
-        var payloadBuffer = new byte[payloadLength];
-        int payloadBytesRead = await _stream.ReadAsync(payloadBuffer, 0, payloadLength);
-        if (payloadBytesRead == 0) break;
-
-        // 전체 패킷 조합
-        var packetBuffer = new byte[PacketSerializer.HEADER_SIZE + payloadLength];
-        Array.Copy(headerBuffer, 0, packetBuffer, 0, PacketSerializer.HEADER_SIZE);
-        Array.Copy(payloadBuffer, 0, packetBuffer, PacketSerializer.HEADER_SIZE, payloadLength);
-
-        // 패킷 처리
-        var result = PacketSerializer.Deserialize(packetBuffer);
-        if (result.HasValue)
+        int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length);
+        if (bytesRead == 0)
         {
-          var (id, sequence, message) = result.Value;
-          if (message != null)
+          Console.WriteLine("[Session] 클라이언트 연결 종료");
+          break;
+        }
+
+        messageBuffer.AddRange(buffer.Take(bytesRead));
+
+        // 완전한 패킷이 도착할 때까지 계속 처리
+        while (messageBuffer.Count >= PacketSerializer.HEADER_SIZE)
+        {
+          var currentBuffer = messageBuffer.ToArray();
+          var result = PacketSerializer.GetExpectedPacketSize(currentBuffer);
+
+          if (!result.isValid)
           {
-            try 
-            {
-              await MessageQueue.EnqueueReceive(id, sequence, message);
-            }
-            catch (OverflowException ex)
-            {
-              Console.WriteLine($"[Session] 메시지 처리 중 오버플로우 발생: {SessionId}, {ex.Message}");
-              continue;  // 다음 메시지 처리 계속
-            }
-            catch (Exception ex)
-            {
-              Console.WriteLine($"[Session] 메시지 처리 중 오류 발생: {SessionId}, {ex.Message}");
-              continue;  // 다음 메시지 처리 계속
-            }
+            messageBuffer.RemoveAt(0);
+            continue;
           }
+
+          var expectedSize = result.totalSize;
+          if (expectedSize == 0 || messageBuffer.Count < expectedSize)
+            break;
+
+          // 완전한 패킷 처리
+          var packetData = messageBuffer.Take(expectedSize).ToArray();
+          await ProcessPacketAsync(packetData);
+          messageBuffer.RemoveRange(0, expectedSize);
         }
-        else
-        {
-          Console.WriteLine($"[Session] 패킷 역직렬화 실패: {SessionId}");
-          continue;  // 다음 메시지 처리 계속
-        }
-      }
-      catch (IOException ex)
-      {
-        Console.WriteLine($"[Session] 네트워크 오류 발생: {SessionId}, {ex.Message}");
-        break;  // 네트워크 오류는 연결 종료
-      }
-      catch (ObjectDisposedException)
-      {
-        break;  // 정상적인 종료
       }
       catch (Exception ex)
       {
-        Console.WriteLine($"[Session] 예상치 못한 오류 발생: {SessionId}, {ex.Message}");
-        continue;  // 다른 예외는 계속 처리
+        Console.WriteLine($"[Session] 오류 발생: {SessionId}, {ex.Message}");
+        break;
       }
     }
+  }
+
+  private async Task ProcessPacketAsync(byte[] packetData)
+  {
+    var result = PacketSerializer.Deserialize(packetData);
+    if (!result.HasValue) return;
+
+    var (id, seq, message) = result.Value;
+    if (message == null) return;
+
+    await MessageQueue.EnqueueReceive(id, seq, message);
   }
 
   // 응답 전송
@@ -147,7 +136,7 @@ public class ClientSession : IDisposable
   public async Task SendDataAsync(byte[] data)
   {
     if (_disposed) throw new ObjectDisposedException(nameof(ClientSession));
-    
+
     await _stream.WriteAsync(data);
     await _stream.FlushAsync();
   }
@@ -199,7 +188,7 @@ public class ClientSession : IDisposable
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"[Session] Dispose 중 오류 발생: {ex.Message}");
+      Console.WriteLine($"[Session] Dispose 중 오류 발생: {ex.Message}");
     }
   }
 }
