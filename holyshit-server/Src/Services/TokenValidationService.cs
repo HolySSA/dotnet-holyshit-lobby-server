@@ -1,63 +1,56 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
-
-namespace HolyShitServer.Src.Services;
 
 public class TokenValidationService
 {
-  private readonly IConfiguration _config;
-  private readonly IConnectionMultiplexer _redis;
-  private readonly string _jwtKey;
-    private readonly string _jwtIssuer;
-    private readonly string _jwtAudience;
+    private readonly IConnectionMultiplexer _redis;
+    private readonly IConfiguration _config;
+    private const string SESSION_KEY_FORMAT = "session:{0}";
 
-  public TokenValidationService(IConfiguration config, IConnectionMultiplexer redis)
-  {
-    _config = config;
-    _redis = redis;
-
-    // 설정값 검증 및 초기화
-    _jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("JWT key is not configured");
-    _jwtIssuer = _config["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT issuer is not configured");
-    _jwtAudience = _config["Jwt:Audience"] ?? throw new InvalidOperationException("JWT audience is not configured");
-  }
-
-  public async Task<(bool isValid, long userId)> ValidateTokenAsync(string token)
-  {
-    try
+    public TokenValidationService(IConnectionMultiplexer redis, IConfiguration config)
     {
-      var tokenHandler = new JwtSecurityTokenHandler();
-      var key = Encoding.UTF8.GetBytes(_jwtKey);
-
-      var validationParameters = new TokenValidationParameters
-      {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = true,
-        ValidIssuer = _jwtIssuer,
-        ValidateAudience = true,
-        ValidAudience = _jwtAudience,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-      };
-
-      var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
-      var userId = long.Parse(principal.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-
-      // Redis에서 토큰 유효성 검증 (로그아웃된 토큰인지 확인)
-      var storedToken = await _redis.GetDatabase().StringGetAsync($"token:{userId}");
-      if (!storedToken.HasValue || storedToken != token)
-        return (false, 0);
-
-      return (true, userId);
+        _redis = redis ?? throw new ArgumentNullException(nameof(redis));
+        _config = config ?? throw new ArgumentNullException(nameof(config));
     }
-    catch
+
+    public async Task<(bool isValid, long userId)> ValidateTokenAsync(string token)
     {
-      return (false, 0);
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            var email = jwtToken.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
+            if (string.IsNullOrEmpty(email))
+            {
+                Console.WriteLine("[TokenValidation] 토큰에 이메일 정보가 없습니다.");
+                return (false, 0);
+            }
+
+            var db = _redis.GetDatabase();
+            var sessionKey = string.Format(SESSION_KEY_FORMAT, email);
+
+            // 토큰 필드만 직접 조회
+            var storedToken = await db.HashGetAsync(sessionKey, "Token");
+            if (storedToken.IsNull || storedToken.ToString() != token)
+            {
+                return (false, 0);
+            }
+
+            var userId = long.Parse(jwtToken.Claims.First(c => c.Type == "nameid").Value);
+            return (true, userId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[TokenValidation] 토큰 검증 실패: {ex.Message}");
+            return (false, 0);
+        }
     }
-  }
+}
+
+public class SessionData
+{
+    public string Token { get; set; } = string.Empty;
+    public DateTime LastActivity { get; set; }
 }

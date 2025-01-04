@@ -2,34 +2,26 @@ using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Network.Socket;
-using HolyShitServer.Src.Services;
 using HolyShitServer.Src.Utils.Decode;
 using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HolyShitServer.Src.Network.Handlers;
 
 public static class AuthPacketHandler
 {
-  private static TokenValidationService? _tokenValidationService;
-  private static IConnectionMultiplexer? _redis;
-  private static ApplicationDbContext? _dbContext;
-  private static GameDataManager? _gameDataManager;
-
-  /// <summary>
-  /// 서비스 초기화
-  /// </summary>
-  public static void Initialize(
-    TokenValidationService tokenValidationService,
-    IConnectionMultiplexer redis,
-    ApplicationDbContext dbContext,
-    GameDataManager gameDataManager)
+  private static readonly Dictionary<string, CharacterType> CharacterTypeMap = new()
   {
-    _tokenValidationService = tokenValidationService;
-    _redis = redis;
-    _dbContext = dbContext;
-    _gameDataManager = gameDataManager;
-  }
+      { "RED", CharacterType.Red },
+      { "SHARK", CharacterType.Shark },
+      { "MALANG", CharacterType.Malang },
+      { "FROGGY", CharacterType.Froggy },
+      { "PINK", CharacterType.Pink },
+      { "SWIM_GLASSES", CharacterType.SwimGlasses },
+      { "MASK", CharacterType.Mask },
+      { "DINOSAUR", CharacterType.Dinosaur },
+      { "PINK_SLIME", CharacterType.PinkSlime }
+  };
 
   /// <summary>
   /// 로그인 요청 처리
@@ -38,41 +30,72 @@ public static class AuthPacketHandler
   {
     try
     {
-      if (_tokenValidationService == null || _redis == null || _dbContext == null || _gameDataManager == null)
-        throw new InvalidOperationException("Services not initialized");
+      using var scope = client.ServiceProvider.CreateScope();
+      var tokenValidationService = scope.ServiceProvider.GetRequiredService<TokenValidationService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+      var gameDataManager = scope.ServiceProvider.GetRequiredService<GameDataManager>();
 
       // 토큰 검증
-      var (isValid, userId) = await _tokenValidationService.ValidateTokenAsync(request.Token);
+      Console.WriteLine($"[Auth] 토큰 검증 시작: {request.Token[..Math.Min(20, request.Token.Length)]}...");
+
+      var (isValid, userId) = await tokenValidationService.ValidateTokenAsync(request.Token);
       if (!isValid)
+      {
+        Console.WriteLine("[Auth] 토큰 검증 실패");
         return ResponseHelper.CreateLoginResponse(sequence, false, new List<CharacterInfoData>(), CharacterType.NoneCharacter, GlobalFailCode.AuthenticationFailed);
+      }
+
+      Console.WriteLine($"[Auth] 토큰 검증 성공. UserId: {userId}");
 
       // 유저 조회
-      var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+      var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
       if (user == null)
+      {
+        Console.WriteLine($"[Auth] 유저 정보 없음. UserId: {userId}");
         return ResponseHelper.CreateLoginResponse(sequence, false, new List<CharacterInfoData>(), CharacterType.NoneCharacter, GlobalFailCode.AuthenticationFailed);
+      }
+
+      Console.WriteLine($"[Auth] 유저 정보 조회 성공. UserId: {userId}");
+
+      // 세션에 유저 ID 설정
+      client.SetUserId(userId);
 
       // 전체 캐릭터 조회
-      var allCharacters = _gameDataManager.GetAllCharacters();
+      var allCharacters = gameDataManager.GetAllCharacters();
       // 유저 보유 캐릭터 조회
-      var userCharacters = await _dbContext.UserCharacters.Where(uc => uc.UserId == userId).ToListAsync();
+      var userCharacters = await dbContext.UserCharacters.Where(uc => uc.UserId == userId).ToListAsync();
 
       // 캐릭터 리스트
-      var characterInfoList = allCharacters.Select(c => new CharacterInfoData
+      var characterInfoList = allCharacters.Select(c =>
       {
-        CharacterType = Enum.Parse<CharacterType>(c.Type),
-        Name = c.Name,
-        Description = c.Description,
-        Hp = c.BaseHp,
-        Owned = userCharacters.Any(uc => uc.CharacterType == Enum.Parse<CharacterType>(c.Type)),
-        PlayCount = userCharacters.FirstOrDefault(uc => uc.CharacterType == Enum.Parse<CharacterType>(c.Type))?.PlayCount ?? 0,
-        WinCount = userCharacters.FirstOrDefault(uc => uc.CharacterType == Enum.Parse<CharacterType>(c.Type))?.WinCount ?? 0
-      }).ToList();
+        if (!CharacterTypeMap.TryGetValue(c.Type, out var characterType))
+        {
+          Console.WriteLine($"[Auth] 캐릭터 타입 매핑 실패: {c.Type}");
+          return null;
+        }
 
+        var userCharacter = userCharacters.FirstOrDefault(uc => uc.CharacterType == characterType);
+        var info = new CharacterInfoData
+        {
+          CharacterType = characterType,
+          Name = c.Name,
+          Description = c.Description,
+          Hp = c.BaseHp,
+          Owned = userCharacter != null,
+          PlayCount = userCharacter?.PlayCount ?? 0,
+          WinCount = userCharacter?.WinCount ?? 0
+        };
+
+        Console.WriteLine($"[Auth] 캐릭터 정보: Type={info.CharacterType}, Name={info.Name}, Owned={info.Owned}");
+        return info;
+      }).Where(c => c != null).ToList();
+
+      Console.WriteLine($"[Auth] 로그인 성공. UserId: {userId}");
       return ResponseHelper.CreateLoginResponse(sequence, true, characterInfoList, user.LastSelectedCharacter, GlobalFailCode.NoneFailcode);
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"로그인 처리 중 오류 발생: {ex.Message}");
+      Console.WriteLine($"[Auth] 로그인 처리 중 오류 발생: {ex.Message}\n{ex.StackTrace}");
       return ResponseHelper.CreateLoginResponse(sequence, false, new List<CharacterInfoData>(), CharacterType.NoneCharacter, GlobalFailCode.UnknownError);
     }
   }

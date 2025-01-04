@@ -20,12 +20,17 @@ public static class ServerConfiguration
     var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
     services.AddSingleton<IConfiguration>(configuration);
 
-    // 서비스 등록
-    services.AddSingleton<IConnectionMultiplexer>(sp =>ConnectionMultiplexer
-      .Connect(configuration.GetConnectionString("Redis") ?? throw new InvalidOperationException("Redis connection string is not configured")));
+    // Redis 설정
+    var redisConnection = configuration["Redis:ConnectionString"];
+    if (string.IsNullOrEmpty(redisConnection))
+    {
+        throw new InvalidOperationException("Redis connection string is not configured in appsettings.json");
+    }
+    services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisConnection));
     
+    // 서비스 등록
     services.AddDbContext<ApplicationDbContext>();
-    services.AddSingleton<TokenValidationService>();
+    services.AddScoped<TokenValidationService>();
     services.AddSingleton<GameDataManager>();
 
     return services.BuildServiceProvider();
@@ -37,7 +42,7 @@ public static class ServerConfiguration
     await DatabaseConfig.InitializeDatabaseAsync(serviceProvider);
 
     // 게임 데이터 로드
-    var gameDataManager = new GameDataManager();
+    var gameDataManager = serviceProvider.GetRequiredService<GameDataManager>(); // 싱글톤 인스턴스 사용
     await gameDataManager.InitializeDataAsync();
 
     // 패킷매니저, 핸들러매니저 초기화
