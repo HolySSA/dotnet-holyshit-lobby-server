@@ -2,6 +2,7 @@ using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Network.Socket;
+using HolyShitServer.Src.Services;
 using HolyShitServer.Src.Utils.Decode;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,21 +32,17 @@ public static class AuthPacketHandler
     try
     {
       using var scope = client.ServiceProvider.CreateScope();
-      var tokenValidationService = scope.ServiceProvider.GetRequiredService<TokenValidationService>();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
       var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
       var gameDataManager = scope.ServiceProvider.GetRequiredService<GameDataManager>();
 
       // 토큰 검증
-      Console.WriteLine($"[Auth] 토큰 검증 시작: {request.Token[..Math.Min(20, request.Token.Length)]}...");
-
-      var (isValid, userId) = await tokenValidationService.ValidateTokenAsync(request.Token);
+      var (isValid, userId) = await redisService.ValidateTokenAsync(request.Token);
       if (!isValid)
       {
         Console.WriteLine("[Auth] 토큰 검증 실패");
         return ResponseHelper.CreateLoginResponse(sequence, false, new List<CharacterInfoData>(), CharacterType.NoneCharacter, GlobalFailCode.AuthenticationFailed);
       }
-
-      Console.WriteLine($"[Auth] 토큰 검증 성공. UserId: {userId}");
 
       // 유저 조회
       var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -54,8 +51,6 @@ public static class AuthPacketHandler
         Console.WriteLine($"[Auth] 유저 정보 없음. UserId: {userId}");
         return ResponseHelper.CreateLoginResponse(sequence, false, new List<CharacterInfoData>(), CharacterType.NoneCharacter, GlobalFailCode.AuthenticationFailed);
       }
-
-      Console.WriteLine($"[Auth] 유저 정보 조회 성공. UserId: {userId}");
 
       // 세션에 유저 ID 설정
       client.SetUserId(userId);
@@ -86,7 +81,6 @@ public static class AuthPacketHandler
           WinCount = userCharacter?.WinCount ?? 0
         };
 
-        Console.WriteLine($"[Auth] 캐릭터 정보: Type={info.CharacterType}, Name={info.Name}, Owned={info.Owned}");
         return info;
       }).Where(c => c != null).ToList();
 

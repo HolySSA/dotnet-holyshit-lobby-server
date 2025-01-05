@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<ApplicationDbContext>();
 
         // Token Validation Service
-        services.AddSingleton<TokenValidationService>();
+        services.AddSingleton<RedisService>();
 
         // Game Data Manager
         services.AddSingleton<GameDataManager>();

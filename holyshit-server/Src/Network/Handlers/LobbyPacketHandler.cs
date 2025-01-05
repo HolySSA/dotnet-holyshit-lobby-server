@@ -17,7 +17,7 @@ public static class LobbyPacketHandler
 
     return ResponseHelper.CreateGetRoomListResponse(
       sequence,
-      result.Success ? result.Data : null
+      result.Success ? result.Data : new List<RoomData>()
     );
   }
 

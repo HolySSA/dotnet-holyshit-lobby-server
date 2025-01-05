@@ -27,13 +27,13 @@ public class RoomService : IRoomService
     {
       return await Task.Run(() =>
       {
-        // 유저 검증
-        var userInfo = _userModel.GetUser(userId);
-        if (userInfo == null)
-            return ServiceResult<List<RoomData>>.Error(GlobalFailCode.AuthenticationFailed);
+        // 유저 검증 - 레디스에서 불러와서 검증
 
         // 방 목록 조회
         var roomList = _roomModel.GetRoomList();
+        if (roomList == null)
+          return ServiceResult<List<RoomData>>.Ok(new List<RoomData>()); // 빈 리스트
+
         return ServiceResult<List<RoomData>>.Ok(roomList);
       });
     }
@@ -417,7 +417,7 @@ public class RoomService : IRoomService
       NextStateAt = 0,
       StateTargetUserId = 0
     };
-    
+
     // 카드 초기화
     character.HandCards.Clear();
     character.Equips.Clear();

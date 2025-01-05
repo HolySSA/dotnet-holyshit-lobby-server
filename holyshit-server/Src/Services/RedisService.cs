@@ -2,13 +2,15 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 
-public class TokenValidationService
+namespace HolyShitServer.Src.Services;
+
+public class RedisService
 {
     private readonly IConnectionMultiplexer _redis;
     private readonly IConfiguration _config;
     private const string SESSION_KEY_FORMAT = "session:{0}";
 
-    public TokenValidationService(IConnectionMultiplexer redis, IConfiguration config)
+    public RedisService(IConnectionMultiplexer redis, IConfiguration config)
     {
         _redis = redis ?? throw new ArgumentNullException(nameof(redis));
         _config = config ?? throw new ArgumentNullException(nameof(config));
