@@ -3,6 +3,7 @@ using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network.Protocol;
 using HolyShitServer.Src.Services;
+using HolyShitServer.Src.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
@@ -30,6 +31,7 @@ public static class ServerConfiguration
     // 서비스 등록
     services.AddDbContext<ApplicationDbContext>();
     services.AddScoped<RedisService>();
+    services.AddScoped<IRoomService, RoomService>();
     services.AddSingleton<GameDataManager>();
 
     return services.BuildServiceProvider();

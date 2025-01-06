@@ -67,7 +67,7 @@ public static class AuthPacketHandler
       await redisService.CacheUserCharactersAsync(userId, ownedCharacterTypes);
 
       // 캐릭터 리스트
-      var characterInfoList = allCharacters.Select(c =>
+      var characterInfoList = allCharacters.Where(c => c != null).Select(c =>
       {
         if (!CharacterTypeMap.TryGetValue(c.Type, out var characterType))
         {
@@ -76,7 +76,7 @@ public static class AuthPacketHandler
         }
 
         var userCharacter = userCharacters.FirstOrDefault(uc => uc.CharacterType == characterType);
-        var info = new CharacterInfoData
+        return new CharacterInfoData
         {
           CharacterType = characterType,
           Name = c.Name,
@@ -86,9 +86,7 @@ public static class AuthPacketHandler
           PlayCount = userCharacter?.PlayCount ?? 0,
           WinCount = userCharacter?.WinCount ?? 0
         };
-
-        return info;
-      }).Where(c => c != null).ToList()!;
+      }).Where(c => c != null).Select(c => c!).ToList();
 
       Console.WriteLine($"[Auth] 로그인 성공. UserId: {userId}");
       return ResponseHelper.CreateLoginResponse(sequence, true, characterInfoList, user.LastSelectedCharacter, GlobalFailCode.NoneFailcode);
@@ -107,14 +105,14 @@ public static class AuthPacketHandler
       using var scope = client.ServiceProvider.CreateScope();
       var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
       var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-      
+
       // 유저 조회
       var user = await redisService.GetUserCharacterTypeAsync(client.UserId, dbContext);
       if (user == null)
       {
         return ResponseHelper.CreateSelectCharacterResponse(
-          sequence, 
-          false, 
+          sequence,
+          false,
           CharacterType.NoneCharacter,
           GlobalFailCode.AuthenticationFailed
         );
@@ -125,8 +123,8 @@ public static class AuthPacketHandler
       if (!ownedCharacterTypes.Contains(request.CharacterType))
       {
         return ResponseHelper.CreateSelectCharacterResponse(
-          sequence, 
-          false, 
+          sequence,
+          false,
           CharacterType.NoneCharacter,
           GlobalFailCode.CharacterNotFound
         );
@@ -137,8 +135,8 @@ public static class AuthPacketHandler
 
       Console.WriteLine($"[Auth] 캐릭터 선택 성공. UserId: {client.UserId}, Character: {request.CharacterType}");
       return ResponseHelper.CreateSelectCharacterResponse(
-        sequence, 
-        true, 
+        sequence,
+        true,
         request.CharacterType,
         GlobalFailCode.NoneFailcode
       );
@@ -147,8 +145,8 @@ public static class AuthPacketHandler
     {
       Console.WriteLine($"[Auth] 캐릭터 선택 중 오류 발생: {ex.Message}\n{ex.StackTrace}");
       return ResponseHelper.CreateSelectCharacterResponse(
-        sequence, 
-        false, 
+        sequence,
+        false,
         CharacterType.NoneCharacter,
         GlobalFailCode.UnknownError
       );

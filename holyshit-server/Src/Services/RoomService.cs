@@ -1,9 +1,11 @@
+using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Models;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Network.Socket;
 using HolyShitServer.Src.Services.Interfaces;
 using HolyShitServer.Src.Services.Results;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HolyShitServer.Src.Services;
 
@@ -11,30 +13,27 @@ public class RoomService : IRoomService
 {
   private readonly UserModel _userModel;
   private readonly RoomModel _roomModel;
+  private readonly IServiceProvider _serviceProvider;
 
-  public RoomService()
+  public RoomService(IServiceProvider serviceProvider)
   {
     _userModel = UserModel.Instance;
     _roomModel = RoomModel.Instance;
+    _serviceProvider = serviceProvider;
   }
 
   /// <summary>
   /// 현재 존재하는 모든 방 목록을 반환
   /// </summary>
-  public async Task<ServiceResult<List<RoomData>>> GetRoomList(long userId)
+  public async Task<ServiceResult<List<RoomData>>> GetRoomList()
   {
     try
     {
       return await Task.Run(() =>
       {
-        // 유저 검증 - 레디스에서 불러와서 검증
-
         // 방 목록 조회
         var roomList = _roomModel.GetRoomList();
-        if (roomList == null)
-          return ServiceResult<List<RoomData>>.Ok(new List<RoomData>()); // 빈 리스트
-
-        return ServiceResult<List<RoomData>>.Ok(roomList);
+        return ServiceResult<List<RoomData>>.Ok(roomList ?? new List<RoomData>());
       });
     }
     catch (Exception ex)
@@ -47,34 +46,57 @@ public class RoomService : IRoomService
   /// <summary>
   /// 방 생성
   /// </summary>
-  public async Task<ServiceResult<RoomData>> CreateRoom(long userId, string name, int maxUserNum)
+  public async Task<ServiceResult<RoomData>> CreateRoom(int userId, string name, int maxUserNum)
   {
     try
     {
-      // CPU-bound 작업이므로 Task.Run으로 래핑
-      return await Task.Run(() =>
-      {
-        // 유저 검증
-        var userInfo = _userModel.GetUser(userId);
-        if (userInfo == null)
+      // 입력값 검증
+      if (string.IsNullOrEmpty(name) || maxUserNum < 2 || maxUserNum > 8)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.InvalidRequest);
+
+      using var scope = _serviceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+      // Redis에서 유저 정보 조회
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
+      if (userCharacterData == null)
           return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
 
-        // 이미 방에 있는지 체크
-        var existingRoom = _roomModel.GetUserRoom(userId);
-        if (existingRoom != null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.CreateRoomFailed);
+      // 이미 방에 있는지 체크
+      var existingRoom = _roomModel.GetUserRoom(userId);
+      if (existingRoom != null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.CreateRoomFailed);
 
-        // 입력값 검증
-        if (string.IsNullOrEmpty(name) || maxUserNum < 2 || maxUserNum > 8)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.InvalidRequest);
+      // 로비용 기본 UserData 생성
+      var userData = new UserData
+      {
+        Id = userId,
+        Nickname = userCharacterData.Nickname,
+        Character = new CharacterData
+        {
+          CharacterType = userCharacterData.LastSelectedCharacter,
+          RoleType = RoleType.NoneRole,
+          Hp = 0,
+          Weapon = 0,
+          StateInfo = new CharacterStateInfoData
+          {
+            State = CharacterStateType.NoneCharacterState,
+            NextState = CharacterStateType.NoneCharacterState,
+            NextStateAt = 0,
+            StateTargetUserId = 0
+          },
+          BbangCount = 0,
+          HandCardsCount = 0
+        }
+      };
 
-        // 방 생성
-        var room = _roomModel.CreateRoom(name, maxUserNum, userId, userInfo.UserData);
-        if (room == null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.CreateRoomFailed);
+      // 방 생성
+      var room = _roomModel.CreateRoom(name, maxUserNum, userId, userData);
+      if (room == null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.CreateRoomFailed);
 
-        return ServiceResult<RoomData>.Ok(room.ToProto());
-      });
+      return ServiceResult<RoomData>.Ok(room.ToProto());
     }
     catch (Exception ex)
     {
@@ -86,7 +108,7 @@ public class RoomService : IRoomService
   /// <summary>
   /// 방 입장
   /// </summary>
-  public async Task<ServiceResult<RoomData>> JoinRoom(long userId, int roomId)
+  public async Task<ServiceResult<RoomData>> JoinRoom(int userId, int roomId)
   {
     try
     {
@@ -138,7 +160,7 @@ public class RoomService : IRoomService
   /// <summary>
   /// 랜덤 방 입장
   /// </summary>
-  public async Task<ServiceResult<RoomData>> JoinRandomRoom(long userId)
+  public async Task<ServiceResult<RoomData>> JoinRandomRoom(int userId)
   {
     try
     {
@@ -188,7 +210,7 @@ public class RoomService : IRoomService
   /// <summary>
   /// 방 퇴장
   /// </summary>
-  public async Task<ServiceResult> LeaveRoom(long userId)
+  public async Task<ServiceResult> LeaveRoom(int userId)
   {
     try
     {
@@ -225,7 +247,7 @@ public class RoomService : IRoomService
   /// <summary>
   /// 게임 레디 토글
   /// </summary>
-  public async Task<ServiceResult> GameReady(long userId, bool isReady)
+  public async Task<ServiceResult> GameReady(int userId, bool isReady)
   {
     try
     {
@@ -258,7 +280,7 @@ public class RoomService : IRoomService
   /// <summary>
   /// 게임 준비 단계 시작
   /// </summary>
-  public async Task<ServiceResult> GamePrepare(long userId)
+  public async Task<ServiceResult> GamePrepare(int userId)
   {
     try
     {
@@ -318,7 +340,7 @@ public class RoomService : IRoomService
   /// <summary>
   /// 게임 시작
   /// </summary>
-  public async Task<ServiceResult> GameStart(long userId)
+  public async Task<ServiceResult> GameStart(int userId)
   {
     try
     {

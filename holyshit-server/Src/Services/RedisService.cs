@@ -69,6 +69,7 @@ public class RedisService
             var hashFields = new HashEntry[]
             {
                 new HashEntry("Id", user.Id),
+                new HashEntry("Nickname", user.Nickname),
                 new HashEntry("LastSelectedCharacter", (int)user.LastSelectedCharacter),
                 // 필요한 다른 유저 정보도 여기에 추가
             };
@@ -134,8 +135,8 @@ public class RedisService
                 return new UserCharacterTypeData
                 {
                     Id = userId,
+                    Nickname = userDict["Nickname"],
                     LastSelectedCharacter = (CharacterType)int.Parse(userDict["LastSelectedCharacter"])
-                    // 필요한 다른 필드들도 여기서 매핑
                 };
             }
 
@@ -148,6 +149,7 @@ public class RedisService
                 return new UserCharacterTypeData
                 {
                     Id = user.Id,
+                    Nickname = user.Nickname,
                     LastSelectedCharacter = user.LastSelectedCharacter
                 };
             }
@@ -256,5 +258,6 @@ public class RedisService
 public class UserCharacterTypeData
 {
     public int Id { get; set; }
+    public string Nickname { get; set; } = string.Empty;
     public CharacterType LastSelectedCharacter { get; set; }
 }

@@ -4,16 +4,18 @@ using HolyShitServer.Src.Utils.Decode;
 using HolyShitServer.Src.Services.Interfaces;
 using HolyShitServer.Src.Services;
 using HolyShitServer.Src.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HolyShitServer.Src.Network.Handlers;
 
 public static class LobbyPacketHandler
 {
-  private static readonly IRoomService _roomService = new RoomService();
-
   public static async Task<GamePacketMessage> HandleGetRoomListRequest(ClientSession client, uint sequence, C2SGetRoomListRequest request)
   {
-    var result = await _roomService.GetRoomList(client.UserId);
+    using var scope = client.ServiceProvider.CreateScope();
+    var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
+
+    var result = await roomService.GetRoomList();
 
     return ResponseHelper.CreateGetRoomListResponse(
       sequence,
@@ -23,7 +25,10 @@ public static class LobbyPacketHandler
 
   public static async Task<GamePacketMessage> HandleCreateRoomRequest(ClientSession client, uint sequence, C2SCreateRoomRequest request)
   {
-    var result = await _roomService.CreateRoom(userId: client.UserId, name: request.Name, maxUserNum: request.MaxUserNum);
+    using var scope = client.ServiceProvider.CreateScope();
+    var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
+
+    var result = await roomService.CreateRoom(client.UserId, request.Name, request.MaxUserNum);
     return ResponseHelper.CreateCreateRoomResponse(
       sequence,
       result.Success,
@@ -32,6 +37,7 @@ public static class LobbyPacketHandler
     );
   }
 
+  /*
   public static async Task<GamePacketMessage> HandleJoinRoomRequest(ClientSession client, uint sequence, C2SJoinRoomRequest request)
   {
     var result = await _roomService.JoinRoom(client.UserId, request.RoomId);
@@ -255,4 +261,5 @@ public static class LobbyPacketHandler
       result.FailCode
     );
   }
+  */
 }
