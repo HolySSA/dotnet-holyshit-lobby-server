@@ -25,3 +25,13 @@ message CharacterInfoData {
     int32 playCount = 6;  // 플레이 횟수
     int32 winCount = 7;   // 승리 횟수
 }
+
+message C2SSelectCharacterRequest {
+    CharacterType characterType = 1;  // 선택한 캐릭터 타입
+}
+
+message S2CSelectCharacterResponse {
+    bool success = 1;                 // 성공 여부
+    CharacterType characterType = 2;  // 선택된 캐릭터 타입
+    GlobalFailCode failCode = 3;      // 실패 코드
+}

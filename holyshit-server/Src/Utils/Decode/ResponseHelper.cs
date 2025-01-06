@@ -33,6 +33,25 @@ public static class ResponseHelper
     return new GamePacketMessage(PacketId.LoginResponse, sequence, gamePacket);
   }
 
+  public static GamePacketMessage CreateSelectCharacterResponse(
+    uint sequence,
+    bool success,
+    CharacterType characterType,
+    GlobalFailCode failCode)
+  {
+    var response = new S2CSelectCharacterResponse
+    {
+      Success = success,
+      CharacterType = characterType,
+      FailCode = failCode
+    };
+
+    var gamePacket = new GamePacket();
+    gamePacket.SelectCharacterResponse = response;
+
+    return new GamePacketMessage(PacketId.SelectCharacterResponse, sequence, gamePacket);
+  }
+
   public static GamePacketMessage CreateGetRoomListResponse(
     uint sequence,
     List<RoomData>? rooms)

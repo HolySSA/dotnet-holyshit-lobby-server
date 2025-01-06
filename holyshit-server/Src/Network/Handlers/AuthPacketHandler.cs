@@ -60,6 +60,12 @@ public static class AuthPacketHandler
       // 유저 보유 캐릭터 조회
       var userCharacters = await dbContext.UserCharacters.Where(uc => uc.UserId == userId).ToListAsync();
 
+      // Redis에 유저 현재 캐릭터 정보 캐싱
+      await redisService.CacheUserCharacterTypeAsync(user);
+      // Redis에 유저의 보유 캐릭터 정보 캐싱
+      var ownedCharacterTypes = userCharacters.Select(uc => uc.CharacterType).ToList();
+      await redisService.CacheUserCharactersAsync(userId, ownedCharacterTypes);
+
       // 캐릭터 리스트
       var characterInfoList = allCharacters.Select(c =>
       {
@@ -82,7 +88,7 @@ public static class AuthPacketHandler
         };
 
         return info;
-      }).Where(c => c != null).ToList();
+      }).Where(c => c != null).ToList()!;
 
       Console.WriteLine($"[Auth] 로그인 성공. UserId: {userId}");
       return ResponseHelper.CreateLoginResponse(sequence, true, characterInfoList, user.LastSelectedCharacter, GlobalFailCode.NoneFailcode);
@@ -91,6 +97,61 @@ public static class AuthPacketHandler
     {
       Console.WriteLine($"[Auth] 로그인 처리 중 오류 발생: {ex.Message}\n{ex.StackTrace}");
       return ResponseHelper.CreateLoginResponse(sequence, false, new List<CharacterInfoData>(), CharacterType.NoneCharacter, GlobalFailCode.UnknownError);
+    }
+  }
+
+  public static async Task<GamePacketMessage> HandleSelectCharacterRequest(ClientSession client, uint sequence, C2SSelectCharacterRequest request)
+  {
+    try
+    {
+      using var scope = client.ServiceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+      
+      // 유저 조회
+      var user = await redisService.GetUserCharacterTypeAsync(client.UserId, dbContext);
+      if (user == null)
+      {
+        return ResponseHelper.CreateSelectCharacterResponse(
+          sequence, 
+          false, 
+          CharacterType.NoneCharacter,
+          GlobalFailCode.AuthenticationFailed
+        );
+      }
+
+      // 캐릭터 보유 여부 확인
+      var ownedCharacterTypes = await redisService.GetUserCharactersAsync(client.UserId, dbContext);
+      if (!ownedCharacterTypes.Contains(request.CharacterType))
+      {
+        return ResponseHelper.CreateSelectCharacterResponse(
+          sequence, 
+          false, 
+          CharacterType.NoneCharacter,
+          GlobalFailCode.CharacterNotFound
+        );
+      }
+
+      // 마지막 선택 캐릭터 업데이트
+      await redisService.UpdateUserSelectedCharacterAsync(client.UserId, request.CharacterType);
+
+      Console.WriteLine($"[Auth] 캐릭터 선택 성공. UserId: {client.UserId}, Character: {request.CharacterType}");
+      return ResponseHelper.CreateSelectCharacterResponse(
+        sequence, 
+        true, 
+        request.CharacterType,
+        GlobalFailCode.NoneFailcode
+      );
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[Auth] 캐릭터 선택 중 오류 발생: {ex.Message}\n{ex.StackTrace}");
+      return ResponseHelper.CreateSelectCharacterResponse(
+        sequence, 
+        false, 
+        CharacterType.NoneCharacter,
+        GlobalFailCode.UnknownError
+      );
     }
   }
 }

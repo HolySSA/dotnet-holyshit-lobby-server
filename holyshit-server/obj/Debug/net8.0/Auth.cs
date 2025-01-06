@@ -32,14 +32,21 @@ namespace HolyShitServer.Src.Network.Packets {
             "YmFsRmFpbENvZGUinQEKEUNoYXJhY3RlckluZm9EYXRhEiUKDWNoYXJhY3Rl",
             "clR5cGUYASABKA4yDi5DaGFyYWN0ZXJUeXBlEgwKBG5hbWUYAiABKAkSCgoC",
             "aHAYAyABKAUSEwoLZGVzY3JpcHRpb24YBCABKAkSDQoFb3duZWQYBSABKAgS",
-            "EQoJcGxheUNvdW50GAYgASgFEhAKCHdpbkNvdW50GAcgASgFQiWqAiJIb2x5",
-            "U2hpdFNlcnZlci5TcmMuTmV0d29yay5QYWNrZXRzYgZwcm90bzM="));
+            "EQoJcGxheUNvdW50GAYgASgFEhAKCHdpbkNvdW50GAcgASgFIkIKGUMyU1Nl",
+            "bGVjdENoYXJhY3RlclJlcXVlc3QSJQoNY2hhcmFjdGVyVHlwZRgBIAEoDjIO",
+            "LkNoYXJhY3RlclR5cGUidwoaUzJDU2VsZWN0Q2hhcmFjdGVyUmVzcG9uc2US",
+            "DwoHc3VjY2VzcxgBIAEoCBIlCg1jaGFyYWN0ZXJUeXBlGAIgASgOMg4uQ2hh",
+            "cmFjdGVyVHlwZRIhCghmYWlsQ29kZRgDIAEoDjIPLkdsb2JhbEZhaWxDb2Rl",
+            "QiWqAiJIb2x5U2hpdFNlcnZlci5TcmMuTmV0d29yay5QYWNrZXRzYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::HolyShitServer.Src.Network.Packets.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SLoginRequest), global::HolyShitServer.Src.Network.Packets.C2SLoginRequest.Parser, new[]{ "UserId", "Token" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CLoginResponse), global::HolyShitServer.Src.Network.Packets.S2CLoginResponse.Parser, new[]{ "Success", "Characters", "LastSelectedCharacter", "FailCode" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.CharacterInfoData), global::HolyShitServer.Src.Network.Packets.CharacterInfoData.Parser, new[]{ "CharacterType", "Name", "Hp", "Description", "Owned", "PlayCount", "WinCount" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.CharacterInfoData), global::HolyShitServer.Src.Network.Packets.CharacterInfoData.Parser, new[]{ "CharacterType", "Name", "Hp", "Description", "Owned", "PlayCount", "WinCount" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SSelectCharacterRequest), global::HolyShitServer.Src.Network.Packets.C2SSelectCharacterRequest.Parser, new[]{ "CharacterType" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CSelectCharacterResponse), global::HolyShitServer.Src.Network.Packets.S2CSelectCharacterResponse.Parser, new[]{ "Success", "CharacterType", "FailCode" }, null, null, null, null)
           }));
     }
     #endregion
@@ -999,6 +1006,488 @@ namespace HolyShitServer.Src.Network.Packets {
           }
           case 56: {
             WinCount = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class C2SSelectCharacterRequest : pb::IMessage<C2SSelectCharacterRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<C2SSelectCharacterRequest> _parser = new pb::MessageParser<C2SSelectCharacterRequest>(() => new C2SSelectCharacterRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<C2SSelectCharacterRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2SSelectCharacterRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2SSelectCharacterRequest(C2SSelectCharacterRequest other) : this() {
+      characterType_ = other.characterType_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2SSelectCharacterRequest Clone() {
+      return new C2SSelectCharacterRequest(this);
+    }
+
+    /// <summary>Field number for the "characterType" field.</summary>
+    public const int CharacterTypeFieldNumber = 1;
+    private global::HolyShitServer.Src.Network.Packets.CharacterType characterType_ = global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter;
+    /// <summary>
+    /// 선택한 캐릭터 타입
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.CharacterType CharacterType {
+      get { return characterType_; }
+      set {
+        characterType_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as C2SSelectCharacterRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(C2SSelectCharacterRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (CharacterType != other.CharacterType) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) hash ^= CharacterType.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) CharacterType);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) CharacterType);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) CharacterType);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(C2SSelectCharacterRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        CharacterType = other.CharacterType;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            CharacterType = (global::HolyShitServer.Src.Network.Packets.CharacterType) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            CharacterType = (global::HolyShitServer.Src.Network.Packets.CharacterType) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class S2CSelectCharacterResponse : pb::IMessage<S2CSelectCharacterResponse>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<S2CSelectCharacterResponse> _parser = new pb::MessageParser<S2CSelectCharacterResponse>(() => new S2CSelectCharacterResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<S2CSelectCharacterResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public S2CSelectCharacterResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public S2CSelectCharacterResponse(S2CSelectCharacterResponse other) : this() {
+      success_ = other.success_;
+      characterType_ = other.characterType_;
+      failCode_ = other.failCode_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public S2CSelectCharacterResponse Clone() {
+      return new S2CSelectCharacterResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    /// <summary>
+    /// 성공 여부
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "characterType" field.</summary>
+    public const int CharacterTypeFieldNumber = 2;
+    private global::HolyShitServer.Src.Network.Packets.CharacterType characterType_ = global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter;
+    /// <summary>
+    /// 선택된 캐릭터 타입
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.CharacterType CharacterType {
+      get { return characterType_; }
+      set {
+        characterType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "failCode" field.</summary>
+    public const int FailCodeFieldNumber = 3;
+    private global::HolyShitServer.Src.Network.Packets.GlobalFailCode failCode_ = global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode;
+    /// <summary>
+    /// 실패 코드
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.GlobalFailCode FailCode {
+      get { return failCode_; }
+      set {
+        failCode_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as S2CSelectCharacterResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(S2CSelectCharacterResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      if (CharacterType != other.CharacterType) return false;
+      if (FailCode != other.FailCode) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) hash ^= CharacterType.GetHashCode();
+      if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) hash ^= FailCode.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) CharacterType);
+      }
+      if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) FailCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      if (CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) CharacterType);
+      }
+      if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) FailCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) CharacterType);
+      }
+      if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) FailCode);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(S2CSelectCharacterResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      if (other.CharacterType != global::HolyShitServer.Src.Network.Packets.CharacterType.NoneCharacter) {
+        CharacterType = other.CharacterType;
+      }
+      if (other.FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
+        FailCode = other.FailCode;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 16: {
+            CharacterType = (global::HolyShitServer.Src.Network.Packets.CharacterType) input.ReadEnum();
+            break;
+          }
+          case 24: {
+            FailCode = (global::HolyShitServer.Src.Network.Packets.GlobalFailCode) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 16: {
+            CharacterType = (global::HolyShitServer.Src.Network.Packets.CharacterType) input.ReadEnum();
+            break;
+          }
+          case 24: {
+            FailCode = (global::HolyShitServer.Src.Network.Packets.GlobalFailCode) input.ReadEnum();
             break;
           }
         }

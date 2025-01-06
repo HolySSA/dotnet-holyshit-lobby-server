@@ -17,7 +17,7 @@ public class ClientSession : IDisposable
 
   public MessageQueue MessageQueue { get; } // 메시지 큐
   public string SessionId { get; }
-  public long UserId { get; private set; } // 유저 ID
+  public int UserId { get; private set; } // 유저 ID
   public IServiceProvider ServiceProvider => _serviceProvider;
   public IServiceScope? ServiceScope { get; set; }
 
@@ -36,7 +36,7 @@ public class ClientSession : IDisposable
   /// <summary>
   /// 유저 ID 설정
   /// </summary>
-  public void SetUserId(long userId)
+  public void SetUserId(int userId)
   {
     UserId = userId;
   }
