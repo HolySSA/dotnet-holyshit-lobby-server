@@ -38,8 +38,8 @@ public static class HandlerManager
     OnHandlers<C2SSelectCharacterRequest>(PacketId.SelectCharacterRequest, AuthPacketHandler.HandleSelectCharacterRequest);
     OnHandlers<C2SGetRoomListRequest>(PacketId.GetRoomListRequest, LobbyPacketHandler.HandleGetRoomListRequest);
     OnHandlers<C2SCreateRoomRequest>(PacketId.CreateRoomRequest, LobbyPacketHandler.HandleCreateRoomRequest);
-    //OnHandlers<C2SJoinRoomRequest>(PacketId.JoinRoomRequest, LobbyPacketHandler.HandleJoinRoomRequest);
-    //OnHandlers<C2SJoinRandomRoomRequest>(PacketId.JoinRandomRoomRequest, LobbyPacketHandler.HandleJoinRandomRoomRequest);
+    OnHandlers<C2SJoinRoomRequest>(PacketId.JoinRoomRequest, LobbyPacketHandler.HandleJoinRoomRequest);
+    OnHandlers<C2SJoinRandomRoomRequest>(PacketId.JoinRandomRoomRequest, LobbyPacketHandler.HandleJoinRandomRoomRequest);
     //OnHandlers<C2SLeaveRoomRequest>(PacketId.LeaveRoomRequest, LobbyPacketHandler.HandleLeaveRoomRequest);
     //OnHandlers<C2SGameReadyRequest>(PacketId.GameReadyRequest, LobbyPacketHandler.HandleGameReadyRequest);
     //OnHandlers<C2SGamePrepareRequest>(PacketId.GamePrepareRequest, LobbyPacketHandler.HandleGamePrepareRequest);
@@ -80,12 +80,24 @@ public static class HandlerManager
         var result = await handler(client, sequence, message);
         if (result != null)
         {
-          // 핸들러 결과 메시지 큐에 자동으로 추가
-          await client.MessageQueue.EnqueueSend(
-            result.PacketId,
-            result.Sequence,
-            result.Message,
-            result.TargetSessionIds);
+          // 핸들러 결과가 브로드캐스트인 경우
+          if (result.TargetUserIds != null && result.TargetUserIds.Any())
+          {
+            var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
+            await messageQueueService.BroadcastMessage(
+              result.PacketId,
+              result.Sequence,
+              result.Message,
+              result.TargetUserIds);
+          }
+          // 단일 대상인 경우
+          else
+          {
+            await client.MessageQueue.EnqueueSend(
+              result.PacketId,
+              result.Sequence,
+              result.Message);
+          }
         }
       }
       catch (Exception ex)

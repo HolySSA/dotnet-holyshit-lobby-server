@@ -1,5 +1,6 @@
 using HolyShitServer.DB.Configuration;
 using HolyShitServer.DB.Contexts;
+using HolyShitServer.Src.Core.Client;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network.Protocol;
 using HolyShitServer.Src.Services;
@@ -33,6 +34,8 @@ public static class ServerConfiguration
     services.AddScoped<RedisService>();
     services.AddScoped<IRoomService, RoomService>();
     services.AddSingleton<GameDataManager>();
+    services.AddSingleton<ClientManager>();
+    services.AddSingleton<MessageQueueService>();
 
     return services.BuildServiceProvider();
   }

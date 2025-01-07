@@ -4,9 +4,9 @@ using HolyShitServer.Src.Network.Protocol;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Models;
 using Microsoft.Extensions.DependencyInjection;
-using System.Text;
 using HolyShitServer.Src.Services;
 using HolyShitServer.DB.Contexts;
+using HolyShitServer.Src.Core.Client;
 
 namespace HolyShitServer.Src.Network.Socket;
 
@@ -15,6 +15,7 @@ public class ClientSession : IDisposable
   private readonly TcpClient _client; // 현재 연결된 클라이언트
   private readonly NetworkStream _stream; // 클라이언트와의 네트워크 스트림
   private readonly IServiceProvider _serviceProvider;  // DI 컨테이너
+  private readonly ClientManager _clientManager; 
   private bool _disposed; // 객체 해제 여부
 
   public MessageQueue MessageQueue { get; } // 메시지 큐
@@ -31,8 +32,12 @@ public class ClientSession : IDisposable
     _client = client;
     _stream = client.GetStream();
     _serviceProvider = serviceProvider;
+    _clientManager = serviceProvider.GetRequiredService<ClientManager>();
     SessionId = Guid.NewGuid().ToString();
     MessageQueue = new MessageQueue(this);
+
+    // 세션 등록
+    _clientManager.AddSession(this);
   }
 
   /// <summary>
@@ -41,6 +46,9 @@ public class ClientSession : IDisposable
   public void SetUserId(int userId)
   {
     UserId = userId;
+
+    // 유저 ID로 세션 등록
+    _clientManager.RegisterUserSession(userId, this);
   }
 
   public async Task StartAsync()
@@ -184,6 +192,8 @@ public class ClientSession : IDisposable
           roomModel.LeaveRoom(UserId);
         }
 
+        // 세션 제거
+        _clientManager.RemoveSession(this);
         Console.WriteLine($"[Session] 유저 제거: Id={UserId}");
       }
 

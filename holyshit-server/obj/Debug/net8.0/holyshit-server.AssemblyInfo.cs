@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("holyshit-server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e2c07c4c511081270f4023209b4f2ccd529479b3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+205a433107c654292df56865042bdf574f0eaaee")]
 [assembly: System.Reflection.AssemblyProductAttribute("holyshit-server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("holyshit-server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

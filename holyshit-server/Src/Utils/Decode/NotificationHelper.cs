@@ -3,14 +3,12 @@ using HolyShitServer.Src.Network.Socket;
 
 public static class NotificationHelper
 {
-  public static GamePacketMessage CreateJoinRoomNotification(UserData joinUser, List<string> targetSessionIds)
+  public static GamePacketMessage CreateJoinRoomNotification(UserData joinUser, List<int> targetUserIds)
   {
     var notification = new S2CJoinRoomNotification
     {
       JoinUser = joinUser
     };
-
-    Console.WriteLine($"[Notification] JoinRoom Notification 생성: JoinUserId={joinUser.Id}, Targets={targetSessionIds.Count}명");
 
     var gamePacket = new GamePacket();
     gamePacket.JoinRoomNotification = notification;
@@ -18,11 +16,11 @@ public static class NotificationHelper
     return GamePacketMessage.CreateBroadcast(
       PacketId.JoinRoomNotification,
       gamePacket,
-      targetSessionIds
+      targetUserIds
     );
   }
 
-  public static GamePacketMessage CreateLeaveRoomNotification(int userId, List<string> targetSessionIds)
+  public static GamePacketMessage CreateLeaveRoomNotification(int userId, List<int> targetUserIds)
   {
     var notification = new S2CLeaveRoomNotification
     {
@@ -35,11 +33,11 @@ public static class NotificationHelper
     return GamePacketMessage.CreateBroadcast(
       PacketId.LeaveRoomNotification,
       gamePacket,
-      targetSessionIds
+      targetUserIds
     );
   }
 
-  public static GamePacketMessage CreateGameReadyNotification(int userId, bool isReady, List<string> targetSessionIds)
+  public static GamePacketMessage CreateGameReadyNotification(int userId, bool isReady, List<int> targetUserIds)
   {
     var notification = new S2CGameReadyNotification
     {
@@ -53,11 +51,11 @@ public static class NotificationHelper
     return GamePacketMessage.CreateBroadcast(
       PacketId.GameReadyNotification,
       gamePacket,
-      targetSessionIds
+      targetUserIds
     );
   }
 
-  public static GamePacketMessage CreateGamePrepareNotification(RoomData room, List<string> targetSessionIds)
+  public static GamePacketMessage CreateGamePrepareNotification(RoomData room, List<int> targetUserIds)
   {
     var gamePacket = new GamePacket();
     gamePacket.GamePrepareNotification = new S2CGamePrepareNotification
@@ -68,11 +66,11 @@ public static class NotificationHelper
     return GamePacketMessage.CreateBroadcast(
       PacketId.GamePrepareNotification,
       gamePacket,
-      targetSessionIds
+      targetUserIds
     );
   }
 
-  public static GamePacketMessage CreateGameStartNotification(GameStateData gameState, List<UserData> users, List<CharacterPositionData> characterPositions, List<string> targetSessionIds)
+  public static GamePacketMessage CreateGameStartNotification(GameStateData gameState, List<UserData> users, List<CharacterPositionData> characterPositions, List<int> targetUserIds)
   {
     var notification = new S2CGameStartNotification
     {
@@ -85,10 +83,10 @@ public static class NotificationHelper
     var gamePacket = new GamePacket();
     gamePacket.GameStartNotification = notification;
 
-    return GamePacketMessage.CreateBroadcast(PacketId.GameStartNotification, gamePacket, targetSessionIds);
+    return GamePacketMessage.CreateBroadcast(PacketId.GameStartNotification, gamePacket, targetUserIds);
   }
 
-  public static GamePacketMessage CreatePositionUpdateNotification(List<CharacterPositionData> characterPositions, List<string> targetSessionIds)
+  public static GamePacketMessage CreatePositionUpdateNotification(List<CharacterPositionData> characterPositions, List<int> targetUserIds)
   {
     var notification = new S2CPositionUpdateNotification();
     notification.CharacterPositions.AddRange(characterPositions);
@@ -96,6 +94,6 @@ public static class NotificationHelper
     var gamePacket = new GamePacket();
     gamePacket.PositionUpdateNotification = notification;
 
-    return GamePacketMessage.CreateBroadcast(PacketId.PositionUpdateNotification, gamePacket, targetSessionIds);
+    return GamePacketMessage.CreateBroadcast(PacketId.PositionUpdateNotification, gamePacket, targetUserIds);
   }
 }

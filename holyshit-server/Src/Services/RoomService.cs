@@ -112,43 +112,66 @@ public class RoomService : IRoomService
   {
     try
     {
-      // CPU-bound 작업이므로 Task.Run으로 래핑
-      return await Task.Run(() =>
+      using var scope = _serviceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+      // 유저 정보 조회
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
+      if (userCharacterData == null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
+
+      // 이미 방에 있는지 확인
+      var existingRoom = _roomModel.GetUserRoom(userId);
+      if (existingRoom != null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+      
+      // 요청한 방이 존재하는지 확인
+      var targetRoom = _roomModel.GetRoom(roomId);
+      if (targetRoom == null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
+
+      // 인원 수 체크
+      var currentUsers = targetRoom.GetAllUsers();
+      if (currentUsers.Count >= targetRoom.MaxUserNum)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+
+      // 상태 체크
+      if (targetRoom.State != RoomStateType.Wait)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.InvalidRoomState);
+
+      // 로비용 기본 UserData 생성
+      var userData = new UserData
       {
-        // 유저 정보 확인
-        var userInfo = _userModel.GetUser(userId);
-        if (userInfo == null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
+        Id = userId,
+        Nickname = userCharacterData.Nickname,
+        Character = new CharacterData
+        {
+          CharacterType = userCharacterData.LastSelectedCharacter,
+          RoleType = RoleType.NoneRole,
+          Hp = 0,
+          Weapon = 0,
+          StateInfo = new CharacterStateInfoData
+          {
+            State = CharacterStateType.NoneCharacterState,
+            NextState = CharacterStateType.NoneCharacterState,
+            NextStateAt = 0,
+            StateTargetUserId = 0
+          },
+          BbangCount = 0,
+          HandCardsCount = 0
+        }
+      };
 
-        // 이미 방에 있는지 확인
-        var existingRoom = _roomModel.GetUserRoom(userId);
-        if (existingRoom != null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+      // 방 입장 처리
+      if (!_roomModel.JoinRoom(roomId, userData))
+        return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+      
+      var updatedRoom = _roomModel.GetRoom(roomId);
+      if (updatedRoom == null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
 
-        // 요청한 방이 존재하는지 확인
-        var targetRoom = _roomModel.GetRoom(roomId);
-        if (targetRoom == null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
-
-        // 인원 수 체크
-        var currentUsers = targetRoom.GetAllUsers();
-        if (currentUsers.Count >= targetRoom.MaxUserNum)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
-
-        // 상태 체크
-        if (targetRoom.State != RoomStateType.Wait)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.InvalidRoomState);
-
-        // 방 입장 처리
-        if (!_roomModel.JoinRoom(roomId, userInfo.UserData))
-          return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
-
-        var updatedRoom = _roomModel.GetRoom(roomId);
-        if (updatedRoom == null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
-
-        return ServiceResult<RoomData>.Ok(updatedRoom.ToProto());
-      });
+      return ServiceResult<RoomData>.Ok(updatedRoom.ToProto());
     }
     catch (Exception ex)
     {
@@ -164,41 +187,64 @@ public class RoomService : IRoomService
   {
     try
     {
-      return await Task.Run(() =>
+      using var scope = _serviceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+      // 유저 검증
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
+      if (userCharacterData == null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
+
+      // 이미 방에 있는지 확인
+      var existingRoom = _roomModel.GetUserRoom(userId);
+      if (existingRoom != null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+
+      // 입장 가능한 방 목록 조회
+      var availableRooms = _roomModel.GetRoomList()
+        .Where(r => r.Users.Count < r.MaxUserNum && r.State == RoomStateType.Wait)
+        .ToList();
+      if (!availableRooms.Any())
+        return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
+
+      // 랜덤 방 선택
+      var random = new Random();
+      var selectedRoom = availableRooms[random.Next(availableRooms.Count)];
+
+      // 로비용 기본 UserData 생성
+      var userData = new UserData
       {
-        // 유저 검증
-        var userInfo = _userModel.GetUser(userId);
-        if (userInfo == null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
+        Id = userId,
+        Nickname = userCharacterData.Nickname,
+        Character = new CharacterData
+        {
+          CharacterType = userCharacterData.LastSelectedCharacter,
+          RoleType = RoleType.NoneRole,
+          Hp = 0,
+          Weapon = 0,
+          StateInfo = new CharacterStateInfoData
+          {
+            State = CharacterStateType.NoneCharacterState,
+            NextState = CharacterStateType.NoneCharacterState,
+            NextStateAt = 0,
+            StateTargetUserId = 0
+          },
+          BbangCount = 0,
+          HandCardsCount = 0
+        }
+      };
 
-        // 이미 방에 있는지 확인
-        var existingRoom = _roomModel.GetUserRoom(userId);
-        if (existingRoom != null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
+      // 선택된 방 입장
+      if (!_roomModel.JoinRoom(selectedRoom.Id, userData))
+        return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
 
-        // 입장 가능한 방 목록 조회
-        var availableRooms = _roomModel.GetRoomList()
-          .Where(r => r.Users.Count < r.MaxUserNum && r.State == RoomStateType.Wait)
-          .ToList();
+      // 업데이트된 방 정보 조회
+      var updatedRoom = _roomModel.GetRoom(selectedRoom.Id);
+      if (updatedRoom == null)
+        return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
 
-        if (!availableRooms.Any())
-          return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
-
-        // 랜덤 방 선택
-        var random = new Random();
-        var selectedRoom = availableRooms[random.Next(availableRooms.Count)];
-
-        // 선택된 방 입장
-        if (!_roomModel.JoinRoom(selectedRoom.Id, userInfo.UserData))
-          return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
-
-        // 업데이트된 방 정보 조회
-        var updatedRoom = _roomModel.GetRoom(selectedRoom.Id);
-        if (updatedRoom == null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
-
-        return ServiceResult<RoomData>.Ok(updatedRoom.ToProto());
-      });
+      return ServiceResult<RoomData>.Ok(updatedRoom.ToProto());
     }
     catch (Exception ex)
     {

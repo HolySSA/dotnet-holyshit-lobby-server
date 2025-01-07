@@ -3,20 +3,23 @@ using Google.Protobuf;
 using HolyShitServer.Src.Core.Client;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Network.Protocol;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HolyShitServer.Src.Network.Socket;
 
 public class MessageQueue
 {
   private readonly ConcurrentQueue<GamePacketMessage> _receiveQueue = new();
-  private readonly ConcurrentQueue<GamePacketMessage> _sendQueue = new();
+  private readonly ConcurrentQueue<(PacketId, uint, IMessage)> _sendQueue = new();
   private volatile bool _processingReceive;
   private volatile bool _processingSend;
   private readonly ClientSession _session;
+  private readonly MessageQueueService _messageQueueService;
 
   public MessageQueue(ClientSession session)
   {
     _session = session;
+    _messageQueueService = session.ServiceProvider.GetRequiredService<MessageQueueService>();
   }
 
   public async Task EnqueueReceive(PacketId packetId, uint sequence, IMessage message)
@@ -25,9 +28,9 @@ public class MessageQueue
     await ProcessReceiveQueue();
   }
 
-  public async Task EnqueueSend(PacketId packetId, uint sequence, IMessage message, List<string>? targetSessionIds = null)
+  public async Task EnqueueSend(PacketId packetId, uint sequence, IMessage message)
   {
-    _sendQueue.Enqueue(new GamePacketMessage(packetId, sequence, message, targetSessionIds));
+    _sendQueue.Enqueue((packetId, sequence, message));
     await ProcessSendQueue();
   }
 
@@ -67,31 +70,11 @@ public class MessageQueue
       {
         try
         {
-          // ... 패킷 타입에 따른 메시지 할당 ...
-          var serializedData = PacketSerializer.Serialize(
-              message.PacketId, 
-              message.Message, 
-              message.Sequence);
-
+          var (packetId, sequence, data) = message;
+          var serializedData = PacketSerializer.Serialize(packetId, data, sequence);
           if (serializedData != null)
           {
-            if (message.TargetSessionIds.Count > 0)
-            {
-              // 브로드 캐스트
-              foreach (var sessionId in message.TargetSessionIds)
-              {
-                var targetSession = ClientManager.GetSession(sessionId);
-                if (targetSession != null)
-                {
-                  await targetSession.SendDataAsync(serializedData);
-                }
-              }
-            }
-            else
-            {
-              // 단일 대상
-              await _session.SendDataAsync(serializedData);
-            }
+            await _session.SendDataAsync(serializedData);
           }
         }
         catch (Exception ex)

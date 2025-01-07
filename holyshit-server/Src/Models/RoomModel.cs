@@ -105,17 +105,15 @@ public class RoomModel
     return null;
   }
 
-  public List<string> GetRoomTargetSessionIds(int roomId, int excludeUserId)
+  public List<int> GetRoomTargetUserIds(int roomId, int excludeUserId)
   {
     var room = GetRoom(roomId);
     if (room == null)
-      return new List<string>();
+      return new List<int>();
 
     return room.GetAllUsers()
       .Where(u => u.Id != excludeUserId)
-      .Select(u => UserModel.Instance.GetUser(u.Id)?.Client.SessionId)
-      .Where(sessionId => sessionId != null)
-      .Select(sessionId => sessionId!)
+      .Select(u => u.Id)
       .ToList();
   }
 

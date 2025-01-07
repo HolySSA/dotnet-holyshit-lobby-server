@@ -5,6 +5,7 @@ using HolyShitServer.Src.Services.Interfaces;
 using HolyShitServer.Src.Services;
 using HolyShitServer.Src.Models;
 using Microsoft.Extensions.DependencyInjection;
+using HolyShitServer.DB.Contexts;
 
 namespace HolyShitServer.Src.Network.Handlers;
 
@@ -37,29 +38,33 @@ public static class LobbyPacketHandler
     );
   }
 
-  /*
+  /// <summary>
+  /// 방 입장 요청 처리
+  /// </summary>
   public static async Task<GamePacketMessage> HandleJoinRoomRequest(ClientSession client, uint sequence, C2SJoinRoomRequest request)
   {
-    var result = await _roomService.JoinRoom(client.UserId, request.RoomId);
+    using var scope = client.ServiceProvider.CreateScope();
+    var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
 
+    // 방 입장 처리
+    var result = await roomService.JoinRoom(client.UserId, request.RoomId);
+    // 방 입장 알림
     if (result.Success && result.Data != null)
     {
-      var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(result.Data.Id, client.UserId);
-      if (targetSessionIds.Any())
+      var targetUserIds = RoomModel.Instance.GetRoomTargetUserIds(result.Data.Id, client.UserId);
+      if (targetUserIds.Any())
       {
-        var userInfo = UserModel.Instance.GetUser(client.UserId);
-        if (userInfo?.UserData != null)
+        var joinedUser = result.Data.Users.FirstOrDefault(u => u.Id == client.UserId);
+        if (joinedUser != null)
         {
-          var notification = NotificationHelper.CreateJoinRoomNotification(
-            userInfo.UserData,
-            targetSessionIds
-          );
-
-          await client.MessageQueue.EnqueueSend(
+          // 알림 생성 및 브로드캐스트
+          var notification = NotificationHelper.CreateJoinRoomNotification(joinedUser, targetUserIds);
+          var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
+          await messageQueueService.BroadcastMessage(
             notification.PacketId,
             notification.Sequence,
             notification.Message,
-            notification.TargetSessionIds
+            targetUserIds
           );
         }
       }
@@ -75,27 +80,28 @@ public static class LobbyPacketHandler
 
   public static async Task<GamePacketMessage> HandleJoinRandomRoomRequest(ClientSession client, uint sequence, C2SJoinRandomRoomRequest request)
   {
-    var result = await _roomService.JoinRandomRoom(client.UserId);
+    using var scope = client.ServiceProvider.CreateScope();
+    var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
+
+    var result = await roomService.JoinRandomRoom(client.UserId);
 
     // 방 입장 성공 시 방의 모든 유저들에게 알림
     if (result.Success && result.Data != null)
     {
-      var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(result.Data.Id, client.UserId);
-      if (targetSessionIds.Any())
+      var targetUserIds = RoomModel.Instance.GetRoomTargetUserIds(result.Data.Id, client.UserId);
+      if (targetUserIds.Any())
       {
-        var userInfo = UserModel.Instance.GetUser(client.UserId);
-        if (userInfo?.UserData != null)
+        var joinedUser = result.Data.Users.FirstOrDefault(u => u.Id == client.UserId);
+        if (joinedUser != null)
         {
-          var notification = NotificationHelper.CreateJoinRoomNotification(
-            userInfo.UserData,
-            targetSessionIds
-          );
-
-          await client.MessageQueue.EnqueueSend(
+          // 알림 생성 및 브로드캐스트
+          var notification = NotificationHelper.CreateJoinRoomNotification(joinedUser, targetUserIds);
+          var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
+          await messageQueueService.BroadcastMessage(
             notification.PacketId,
             notification.Sequence,
             notification.Message,
-            notification.TargetSessionIds
+            targetUserIds
           );
         }
       }
@@ -109,6 +115,7 @@ public static class LobbyPacketHandler
     );
   }
 
+  /*
   public static async Task<GamePacketMessage> HandleLeaveRoomRequest(ClientSession client, uint sequence, C2SLeaveRoomRequest request)
   {
     // 방 유저들 가져오기
