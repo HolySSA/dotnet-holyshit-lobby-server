@@ -12,11 +12,11 @@ public class GameService : IGameService
 
   public GameService()
   {
-      _userModel = UserModel.Instance;
-      _roomModel = RoomModel.Instance;
+    _userModel = UserModel.Instance;
+    _roomModel = RoomModel.Instance;
   }
 
-  public async Task<ServiceResult<List<CharacterPositionData>>> UpdatePosition(long userId, double x, double y)
+  public async Task<ServiceResult<List<CharacterPositionData>>> UpdatePosition(int userId, double x, double y)
   {
     try
     {

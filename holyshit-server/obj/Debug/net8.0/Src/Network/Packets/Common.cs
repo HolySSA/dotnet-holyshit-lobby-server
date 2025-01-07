@@ -25,7 +25,7 @@ namespace HolyShitServer.Src.Network.Packets {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CiBTcmMvTmV0d29yay9QYWNrZXRzL0NvbW1vbi5wcm90byJLCghVc2VyRGF0",
-            "YRIKCgJpZBgBIAEoAxIQCghuaWNrbmFtZRgCIAEoCRIhCgljaGFyYWN0ZXIY",
+            "YRIKCgJpZBgBIAEoBRIQCghuaWNrbmFtZRgCIAEoCRIhCgljaGFyYWN0ZXIY",
             "AyABKAsyDi5DaGFyYWN0ZXJEYXRhIoYCCg1DaGFyYWN0ZXJEYXRhEiUKDWNo",
             "YXJhY3RlclR5cGUYASABKA4yDi5DaGFyYWN0ZXJUeXBlEhsKCHJvbGVUeXBl",
             "GAIgASgOMgkuUm9sZVR5cGUSCgoCaHAYAyABKAUSDgoGd2VhcG9uGAQgASgF",
@@ -37,10 +37,10 @@ namespace HolyShitServer.Src.Network.Packets {
             "dGUYAiABKA4yEy5DaGFyYWN0ZXJTdGF0ZVR5cGUSEwoLbmV4dFN0YXRlQXQY",
             "AyABKAMSGQoRc3RhdGVUYXJnZXRVc2VySWQYBCABKAMiMgoIQ2FyZERhdGES",
             "FwoEdHlwZRgBIAEoDjIJLkNhcmRUeXBlEg0KBWNvdW50GAIgASgFIoIBCghS",
-            "b29tRGF0YRIKCgJpZBgBIAEoBRIPCgdvd25lcklkGAIgASgDEgwKBG5hbWUY",
+            "b29tRGF0YRIKCgJpZBgBIAEoBRIPCgdvd25lcklkGAIgASgFEgwKBG5hbWUY",
             "AyABKAkSEgoKbWF4VXNlck51bRgEIAEoBRIdCgVzdGF0ZRgFIAEoDjIOLlJv",
             "b21TdGF0ZVR5cGUSGAoFdXNlcnMYBiADKAsyCS5Vc2VyRGF0YSI5ChVDaGFy",
-            "YWN0ZXJQb3NpdGlvbkRhdGESCgoCaWQYASABKAMSCQoBeBgCIAEoARIJCgF5",
+            "YWN0ZXJQb3NpdGlvbkRhdGESCgoCaWQYASABKAUSCQoBeBgCIAEoARIJCgF5",
             "GAMgASgBIkMKDUdhbWVTdGF0ZURhdGESHQoJcGhhc2VUeXBlGAEgASgOMgou",
             "UGhhc2VUeXBlEhMKC25leHRQaGFzZUF0GAIgASgDKpMBCg1DaGFyYWN0ZXJU",
             "eXBlEhIKDk5PTkVfQ0hBUkFDVEVSEAASBwoDUkVEEAESCQoFU0hBUksQAxIK",
@@ -387,10 +387,10 @@ namespace HolyShitServer.Src.Network.Packets {
 
     /// <summary>Field number for the "id" field.</summary>
     public const int IdFieldNumber = 1;
-    private long id_;
+    private int id_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public long Id {
+    public int Id {
       get { return id_; }
       set {
         id_ = value;
@@ -446,7 +446,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Id != 0L) hash ^= Id.GetHashCode();
+      if (Id != 0) hash ^= Id.GetHashCode();
       if (Nickname.Length != 0) hash ^= Nickname.GetHashCode();
       if (character_ != null) hash ^= Character.GetHashCode();
       if (_unknownFields != null) {
@@ -467,9 +467,9 @@ namespace HolyShitServer.Src.Network.Packets {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Id != 0L) {
+      if (Id != 0) {
         output.WriteRawTag(8);
-        output.WriteInt64(Id);
+        output.WriteInt32(Id);
       }
       if (Nickname.Length != 0) {
         output.WriteRawTag(18);
@@ -489,9 +489,9 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id != 0L) {
+      if (Id != 0) {
         output.WriteRawTag(8);
-        output.WriteInt64(Id);
+        output.WriteInt32(Id);
       }
       if (Nickname.Length != 0) {
         output.WriteRawTag(18);
@@ -511,8 +511,8 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Id != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Id);
+      if (Id != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Id);
       }
       if (Nickname.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Nickname);
@@ -532,7 +532,7 @@ namespace HolyShitServer.Src.Network.Packets {
       if (other == null) {
         return;
       }
-      if (other.Id != 0L) {
+      if (other.Id != 0) {
         Id = other.Id;
       }
       if (other.Nickname.Length != 0) {
@@ -564,7 +564,7 @@ namespace HolyShitServer.Src.Network.Packets {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            Id = input.ReadInt64();
+            Id = input.ReadInt32();
             break;
           }
           case 18: {
@@ -598,7 +598,7 @@ namespace HolyShitServer.Src.Network.Packets {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            Id = input.ReadInt64();
+            Id = input.ReadInt32();
             break;
           }
           case 18: {
@@ -1744,10 +1744,10 @@ namespace HolyShitServer.Src.Network.Packets {
 
     /// <summary>Field number for the "ownerId" field.</summary>
     public const int OwnerIdFieldNumber = 2;
-    private long ownerId_;
+    private int ownerId_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public long OwnerId {
+    public int OwnerId {
       get { return ownerId_; }
       set {
         ownerId_ = value;
@@ -1836,7 +1836,7 @@ namespace HolyShitServer.Src.Network.Packets {
     public override int GetHashCode() {
       int hash = 1;
       if (Id != 0) hash ^= Id.GetHashCode();
-      if (OwnerId != 0L) hash ^= OwnerId.GetHashCode();
+      if (OwnerId != 0) hash ^= OwnerId.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (MaxUserNum != 0) hash ^= MaxUserNum.GetHashCode();
       if (State != global::HolyShitServer.Src.Network.Packets.RoomStateType.Wait) hash ^= State.GetHashCode();
@@ -1863,9 +1863,9 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(8);
         output.WriteInt32(Id);
       }
-      if (OwnerId != 0L) {
+      if (OwnerId != 0) {
         output.WriteRawTag(16);
-        output.WriteInt64(OwnerId);
+        output.WriteInt32(OwnerId);
       }
       if (Name.Length != 0) {
         output.WriteRawTag(26);
@@ -1894,9 +1894,9 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(8);
         output.WriteInt32(Id);
       }
-      if (OwnerId != 0L) {
+      if (OwnerId != 0) {
         output.WriteRawTag(16);
-        output.WriteInt64(OwnerId);
+        output.WriteInt32(OwnerId);
       }
       if (Name.Length != 0) {
         output.WriteRawTag(26);
@@ -1924,8 +1924,8 @@ namespace HolyShitServer.Src.Network.Packets {
       if (Id != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Id);
       }
-      if (OwnerId != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(OwnerId);
+      if (OwnerId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(OwnerId);
       }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
@@ -1952,7 +1952,7 @@ namespace HolyShitServer.Src.Network.Packets {
       if (other.Id != 0) {
         Id = other.Id;
       }
-      if (other.OwnerId != 0L) {
+      if (other.OwnerId != 0) {
         OwnerId = other.OwnerId;
       }
       if (other.Name.Length != 0) {
@@ -1989,7 +1989,7 @@ namespace HolyShitServer.Src.Network.Packets {
             break;
           }
           case 16: {
-            OwnerId = input.ReadInt64();
+            OwnerId = input.ReadInt32();
             break;
           }
           case 26: {
@@ -2032,7 +2032,7 @@ namespace HolyShitServer.Src.Network.Packets {
             break;
           }
           case 16: {
-            OwnerId = input.ReadInt64();
+            OwnerId = input.ReadInt32();
             break;
           }
           case 26: {
@@ -2107,10 +2107,10 @@ namespace HolyShitServer.Src.Network.Packets {
 
     /// <summary>Field number for the "id" field.</summary>
     public const int IdFieldNumber = 1;
-    private long id_;
+    private int id_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public long Id {
+    public int Id {
       get { return id_; }
       set {
         id_ = value;
@@ -2166,7 +2166,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (Id != 0L) hash ^= Id.GetHashCode();
+      if (Id != 0) hash ^= Id.GetHashCode();
       if (X != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(X);
       if (Y != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Y);
       if (_unknownFields != null) {
@@ -2187,9 +2187,9 @@ namespace HolyShitServer.Src.Network.Packets {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (Id != 0L) {
+      if (Id != 0) {
         output.WriteRawTag(8);
-        output.WriteInt64(Id);
+        output.WriteInt32(Id);
       }
       if (X != 0D) {
         output.WriteRawTag(17);
@@ -2209,9 +2209,9 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id != 0L) {
+      if (Id != 0) {
         output.WriteRawTag(8);
-        output.WriteInt64(Id);
+        output.WriteInt32(Id);
       }
       if (X != 0D) {
         output.WriteRawTag(17);
@@ -2231,8 +2231,8 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (Id != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Id);
+      if (Id != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Id);
       }
       if (X != 0D) {
         size += 1 + 8;
@@ -2252,7 +2252,7 @@ namespace HolyShitServer.Src.Network.Packets {
       if (other == null) {
         return;
       }
-      if (other.Id != 0L) {
+      if (other.Id != 0) {
         Id = other.Id;
       }
       if (other.X != 0D) {
@@ -2281,7 +2281,7 @@ namespace HolyShitServer.Src.Network.Packets {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            Id = input.ReadInt64();
+            Id = input.ReadInt32();
             break;
           }
           case 17: {
@@ -2312,7 +2312,7 @@ namespace HolyShitServer.Src.Network.Packets {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            Id = input.ReadInt64();
+            Id = input.ReadInt32();
             break;
           }
           case 17: {

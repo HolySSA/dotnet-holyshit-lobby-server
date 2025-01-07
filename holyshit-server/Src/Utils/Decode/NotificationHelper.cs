@@ -22,7 +22,7 @@ public static class NotificationHelper
     );
   }
 
-  public static GamePacketMessage CreateLeaveRoomNotification(long userId, List<string> targetSessionIds)
+  public static GamePacketMessage CreateLeaveRoomNotification(int userId, List<string> targetSessionIds)
   {
     var notification = new S2CLeaveRoomNotification
     {
@@ -39,7 +39,7 @@ public static class NotificationHelper
     );
   }
 
-  public static GamePacketMessage CreateGameReadyNotification(long userId, bool isReady, List<string> targetSessionIds)
+  public static GamePacketMessage CreateGameReadyNotification(int userId, bool isReady, List<string> targetSessionIds)
   {
     var notification = new S2CGameReadyNotification
     {
@@ -78,7 +78,7 @@ public static class NotificationHelper
     {
       GameState = gameState
     };
-    
+
     notification.Users.AddRange(users);
     notification.CharacterPositions.AddRange(characterPositions);
 

@@ -5,6 +5,8 @@ using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
+using HolyShitServer.Src.Services;
+using HolyShitServer.DB.Contexts;
 
 namespace HolyShitServer.Src.Network.Socket;
 
@@ -148,21 +150,27 @@ public class ClientSession : IDisposable
 
     try
     {
-      var userInfo = UserModel.Instance.GetAllUsers().FirstOrDefault(user => user.Client == this);
-      if (userInfo != null)
+      if (UserId > 0)
       {
+        // Redis의 캐릭터 정보를 DB에 동기화
+        using var scope = ServiceProvider.CreateScope();
+        var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        redisService.SyncSelectedCharacterToDbAsync(UserId, dbContext).GetAwaiter().GetResult();
+
         // 방에서 나가기
         var roomModel = RoomModel.Instance;
-        var currentRoom = roomModel.GetUserRoom(userInfo.UserId);
+        var currentRoom = roomModel.GetUserRoom(UserId);
         if (currentRoom != null)
         {
+          /*
           // 방의 다른 유저들에게 알림 보내기
-          var targetSessionIds = roomModel.GetRoomTargetSessionIds(currentRoom.Id, userInfo.UserId);
+          var targetSessionIds = roomModel.GetRoomTargetSessionIds(currentRoom.Id, UserId);
           if (targetSessionIds.Any())
           {
             var notification = NotificationHelper.CreateLeaveRoomNotification(
-                userInfo.UserId,
-                targetSessionIds
+              UserId,
+              targetSessionIds
             );
 
             MessageQueue.EnqueueSend(
@@ -172,12 +180,11 @@ public class ClientSession : IDisposable
               notification.TargetSessionIds
             ).GetAwaiter().GetResult();
           }
-
-          roomModel.LeaveRoom(userInfo.UserId);
+          */
+          roomModel.LeaveRoom(UserId);
         }
 
-        UserModel.Instance.RemoveUser(userInfo.UserId);
-        Console.WriteLine($"[Session] 유저 제거: Id={userInfo.UserId}");
+        Console.WriteLine($"[Session] 유저 제거: Id={UserId}");
       }
 
       _stream?.Dispose();

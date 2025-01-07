@@ -12,7 +12,7 @@ public class RoomModel
 
   // 동시성을 고려하여 ConcurrentDictionary 컬렉션 사용
   private readonly ConcurrentDictionary<int, Room> _rooms = new();
-  private readonly ConcurrentDictionary<long, int> _userRoomMap = new();
+  private readonly ConcurrentDictionary<int, int> _userRoomMap = new();
 
   public static RoomModel Instance
   {
@@ -32,44 +32,44 @@ public class RoomModel
 
   private RoomModel() { }
 
-  public Room? CreateRoom(string name, int maxUserNum, long ownerId, UserData ownerData)
+  public Room? CreateRoom(string name, int maxUserNum, int ownerId, UserData ownerData)
+  {
+    var roomId = Interlocked.Increment(ref _nextRoomId) - 1;
+    var room = new Room
     {
-      var roomId = Interlocked.Increment(ref _nextRoomId) - 1;
-      var room = new Room
-      {
-        Id = roomId,
-        Name = name,
-        MaxUserNum = maxUserNum,
-        OwnerId = ownerId,
-        State = RoomStateType.Wait
-      };
+      Id = roomId,
+      Name = name,
+      MaxUserNum = maxUserNum,
+      OwnerId = ownerId,
+      State = RoomStateType.Wait
+    };
 
-      if (room.AddUser(ownerData) && _rooms.TryAdd(roomId, room))
-      {
-        _userRoomMap.TryAdd(ownerId, roomId);
-        return room;
-      }
-
-      return null;
+    if (room.AddUser(ownerData) && _rooms.TryAdd(roomId, room))
+    {
+      _userRoomMap.TryAdd(ownerId, roomId);
+      return room;
     }
+
+    return null;
+  }
 
   public bool JoinRoom(int roomId, UserData userData)
+  {
+    if (_rooms.TryGetValue(roomId, out var room))
     {
-      if (_rooms.TryGetValue(roomId, out var room))
+      if (room.GetAllUsers().Count >= room.MaxUserNum)
+        return false;
+
+      if (room.AddUser(userData))
       {
-        if (room.GetAllUsers().Count >= room.MaxUserNum)
-          return false;
-
-        if (room.AddUser(userData))
-        {
-          _userRoomMap.TryAdd(userData.Id, roomId);
-          return true;
-        }
+        _userRoomMap.TryAdd(userData.Id, roomId);
+        return true;
       }
-      return false;
     }
+    return false;
+  }
 
-  public bool LeaveRoom(long userId)
+  public bool LeaveRoom(int userId)
   {
     if (_userRoomMap.TryRemove(userId, out var roomId) && _rooms.TryGetValue(roomId, out var room))
     {
@@ -96,7 +96,7 @@ public class RoomModel
     return room;
   }
 
-  public Room? GetUserRoom(long userId)
+  public Room? GetUserRoom(int userId)
   {
     if (_userRoomMap.TryGetValue(userId, out var roomId))
     {
@@ -105,7 +105,7 @@ public class RoomModel
     return null;
   }
 
-  public List<string> GetRoomTargetSessionIds(int roomId, long excludeUserId)
+  public List<string> GetRoomTargetSessionIds(int roomId, int excludeUserId)
   {
     var room = GetRoom(roomId);
     if (room == null)
@@ -125,7 +125,7 @@ public class RoomModel
     {
       return room.SetState(newState);
     }
-    
+
     return false;
   }
 

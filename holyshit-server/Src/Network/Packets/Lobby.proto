@@ -56,7 +56,7 @@ message S2CLeaveRoomResponse {
 }
 
 message S2CLeaveRoomNotification {
-    int64 userId = 1;
+    int32 userId = 1;
 }
 
 message C2SGameReadyRequest {
@@ -69,7 +69,7 @@ message S2CGameReadyResponse {
 }
 
 message S2CGameReadyNotification {
-    int64 userId = 1;      // 레디 상태가 변경된 유저 ID
+    int32 userId = 1;      // 레디 상태가 변경된 유저 ID
     bool isReady = 2;      // 변경된 레디 상태
 }
 

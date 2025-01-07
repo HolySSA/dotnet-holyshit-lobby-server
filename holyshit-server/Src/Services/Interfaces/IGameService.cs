@@ -5,5 +5,5 @@ namespace HolyShitServer.Src.Services.Interfaces;
 
 public interface IGameService
 {
-  Task<ServiceResult<List<CharacterPositionData>>> UpdatePosition(long userId, double x, double y);
+  Task<ServiceResult<List<CharacterPositionData>>> UpdatePosition(int userId, double x, double y);
 }
