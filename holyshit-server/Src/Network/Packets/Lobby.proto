@@ -60,7 +60,7 @@ message S2CLeaveRoomNotification {
 }
 
 message C2SGameReadyRequest {
-    bool isReady = 1;  // 현재 레디 상태
+    bool isReady = 1;  // 토글된 레디 상태
 }
 
 message S2CGameReadyResponse {
@@ -70,7 +70,7 @@ message S2CGameReadyResponse {
 
 message S2CGameReadyNotification {
     int32 userId = 1;      // 레디 상태가 변경된 유저 ID
-    bool isReady = 2;      // 변경된 레디 상태
+    bool isReady = 2;      // 수신한 레디 상태 그대로
 }
 
 message C2SGamePrepareRequest {

@@ -260,28 +260,29 @@ public class RoomService : IRoomService
   {
     try
     {
-      return await Task.Run(() =>
-      {
-        // 유저 검증
-        var userInfo = _userModel.GetUser(userId);
-        if (userInfo == null)
-          return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
+      using var scope = _serviceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        // 현재 방 확인
-        var currentRoom = _roomModel.GetUserRoom(userId);
-        if (currentRoom == null)
-          return ServiceResult.Error(GlobalFailCode.RoomNotFound);
+      // 유저 검증
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
+      if (userCharacterData == null)
+        return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
 
-        // 게임 중인지 확인
-        if (currentRoom.State == RoomStateType.Ingame)
-          return ServiceResult.Error(GlobalFailCode.InvalidRoomState);
+      // 현재 방 확인
+      var currentRoom = _roomModel.GetUserRoom(userId);
+      if (currentRoom == null)
+        return ServiceResult.Error(GlobalFailCode.RoomNotFound);
 
-        // 방 퇴장 처리
-        if (!_roomModel.LeaveRoom(userId))
-          return ServiceResult.Error(GlobalFailCode.LeaveRoomFailed);
+      // 게임 중인지 확인
+      if (currentRoom.State == RoomStateType.Ingame)
+        return ServiceResult.Error(GlobalFailCode.InvalidRoomState);
+      
+      // 방 퇴장 처리
+      if (!_roomModel.LeaveRoom(userId))
+        return ServiceResult.Error(GlobalFailCode.LeaveRoomFailed);
 
-        return ServiceResult.Ok();
-      });
+      return ServiceResult.Ok();
     }
     catch (Exception ex)
     {
@@ -297,24 +298,25 @@ public class RoomService : IRoomService
   {
     try
     {
-      return await Task.Run(() =>
-      {
-        // 유저 검증
-        var userInfo = _userModel.GetUser(userId);
-        if (userInfo == null)
-          return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
+      using var scope = _serviceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        // 현재 방 검증
-        var currentRoom = _roomModel.GetUserRoom(userId);
-        if (currentRoom == null)
-          return ServiceResult.Error(GlobalFailCode.RoomNotFound);
+      // 유저 검증
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
+      if (userCharacterData == null)
+        return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
 
-        // 방 상태 검증
-        if (currentRoom.State != RoomStateType.Wait)
-          return ServiceResult.Error(GlobalFailCode.InvalidRoomState);
+      // 현재 방 검증
+      var currentRoom = _roomModel.GetUserRoom(userId);
+      if (currentRoom == null)
+        return ServiceResult.Error(GlobalFailCode.RoomNotFound);
 
-        return ServiceResult.Ok();
-      });
+      // 방 상태 검증
+      if (currentRoom.State != RoomStateType.Wait)
+        return ServiceResult.Error(GlobalFailCode.InvalidRoomState);
+
+      return ServiceResult.Ok();
     }
     catch (Exception ex)
     {

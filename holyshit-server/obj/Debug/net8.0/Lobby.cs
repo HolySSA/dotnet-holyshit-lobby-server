@@ -2720,7 +2720,7 @@ namespace HolyShitServer.Src.Network.Packets {
     public const int IsReadyFieldNumber = 1;
     private bool isReady_;
     /// <summary>
-    /// 현재 레디 상태
+    /// 토글된 레디 상태
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3172,7 +3172,7 @@ namespace HolyShitServer.Src.Network.Packets {
     public const int IsReadyFieldNumber = 2;
     private bool isReady_;
     /// <summary>
-    /// 변경된 레디 상태
+    /// 수신한 레디 상태 그대로
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]

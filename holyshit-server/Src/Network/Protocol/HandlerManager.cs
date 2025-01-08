@@ -40,8 +40,8 @@ public static class HandlerManager
     OnHandlers<C2SCreateRoomRequest>(PacketId.CreateRoomRequest, LobbyPacketHandler.HandleCreateRoomRequest);
     OnHandlers<C2SJoinRoomRequest>(PacketId.JoinRoomRequest, LobbyPacketHandler.HandleJoinRoomRequest);
     OnHandlers<C2SJoinRandomRoomRequest>(PacketId.JoinRandomRoomRequest, LobbyPacketHandler.HandleJoinRandomRoomRequest);
-    //OnHandlers<C2SLeaveRoomRequest>(PacketId.LeaveRoomRequest, LobbyPacketHandler.HandleLeaveRoomRequest);
-    //OnHandlers<C2SGameReadyRequest>(PacketId.GameReadyRequest, LobbyPacketHandler.HandleGameReadyRequest);
+    OnHandlers<C2SLeaveRoomRequest>(PacketId.LeaveRoomRequest, LobbyPacketHandler.HandleLeaveRoomRequest);
+    OnHandlers<C2SGameReadyRequest>(PacketId.GameReadyRequest, LobbyPacketHandler.HandleGameReadyRequest);
     //OnHandlers<C2SGamePrepareRequest>(PacketId.GamePrepareRequest, LobbyPacketHandler.HandleGamePrepareRequest);
     //OnHandlers<C2SGameStartRequest>(PacketId.GameStartRequest, LobbyPacketHandler.HandleGameStartRequest);
     //OnHandlers<C2SPositionUpdateRequest>(PacketId.PositionUpdateRequest, GamePacketHandler.HandlePositionUpdateRequest);
