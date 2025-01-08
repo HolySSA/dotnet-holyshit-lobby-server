@@ -294,7 +294,7 @@ public class RoomService : IRoomService
   /// <summary>
   /// 게임 레디 토글
   /// </summary>
-  public async Task<ServiceResult> GameReady(int userId, bool isReady)
+  public async Task<ServiceResult> RoomReady(int userId, bool isReady)
   {
     try
     {
@@ -316,12 +316,42 @@ public class RoomService : IRoomService
       if (currentRoom.State != RoomStateType.Wait)
         return ServiceResult.Error(GlobalFailCode.InvalidRoomState);
 
+      // 레디 상태 설정
+      if (!currentRoom.SetUserReady(userId, isReady))
+        return ServiceResult.Error(GlobalFailCode.UnknownError);
+
       return ServiceResult.Ok();
     }
     catch (Exception ex)
     {
       Console.WriteLine($"[RoomService] GameReady 실패: {ex.Message}");
       return ServiceResult.Error(GlobalFailCode.UnknownError);
+    }
+  }
+
+  /// <summary>
+  /// 방 레디 상태 조회
+  /// </summary>
+  public async Task<ServiceResult<List<RoomUserReadyData>>> GetRoomReadyState(int roomId)
+  {
+    try{
+      // 방 존재 여부 확인
+      var room = _roomModel.GetRoom(roomId);
+      if (room == null)
+        return ServiceResult<List<RoomUserReadyData>>.Error(GlobalFailCode.RoomNotFound);
+
+      // 방 상태 검증
+      if (room.State != RoomStateType.Wait)
+        return ServiceResult<List<RoomUserReadyData>>.Error(GlobalFailCode.InvalidRoomState);
+
+      // 모든 유저의 레디 상태 수집
+      var readyStates = await Task.Run(() => _roomModel.GetRoomReadyStates(roomId));
+      return ServiceResult<List<RoomUserReadyData>>.Ok(readyStates);
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[RoomService] GetRoomReadyState 실패: {ex.Message}");
+      return ServiceResult<List<RoomUserReadyData>>.Error(GlobalFailCode.UnknownError);
     }
   }
 

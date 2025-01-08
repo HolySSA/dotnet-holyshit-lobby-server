@@ -37,19 +37,22 @@ public static class NotificationHelper
     );
   }
 
-  public static GamePacketMessage CreateGameReadyNotification(int userId, bool isReady, List<int> targetUserIds)
+  public static GamePacketMessage CreateRoomReadyNotification(int userId, bool isReady, List<int> targetUserIds)
   {
-    var notification = new S2CGameReadyNotification
+    var notification = new S2CRoomReadyNotification
     {
-      UserId = userId,
-      IsReady = isReady
+      UserReady = new RoomUserReadyData
+      {
+        UserId = userId,
+        IsReady = isReady
+      }
     };
 
     var gamePacket = new GamePacket();
-    gamePacket.GameReadyNotification = notification;
+    gamePacket.RoomReadyNotification = notification;
 
     return GamePacketMessage.CreateBroadcast(
-      PacketId.GameReadyNotification,
+      PacketId.RoomReadyNotification,
       gamePacket,
       targetUserIds
     );

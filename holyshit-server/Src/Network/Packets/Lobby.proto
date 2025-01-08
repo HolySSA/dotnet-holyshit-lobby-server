@@ -59,18 +59,27 @@ message S2CLeaveRoomNotification {
     int32 userId = 1;
 }
 
-message C2SGameReadyRequest {
+message C2SRoomReadyRequest {
     bool isReady = 1;  // 토글된 레디 상태
 }
 
-message S2CGameReadyResponse {
+message S2CRoomReadyResponse {
     bool success = 1;
     GlobalFailCode failCode = 2;
 }
 
-message S2CGameReadyNotification {
-    int32 userId = 1;      // 레디 상태가 변경된 유저 ID
-    bool isReady = 2;      // 수신한 레디 상태 그대로
+message S2CRoomReadyNotification {
+    RoomUserReadyData userReady = 1;
+}
+
+message C2SGetRoomReadyStateRequest {
+    int32 roomId = 1;
+}
+
+message S2CGetRoomReadyStateResponse {
+    bool success = 1;
+    repeated RoomUserReadyData readyStates = 2;
+    GlobalFailCode failCode = 3;
 }
 
 message C2SGamePrepareRequest {

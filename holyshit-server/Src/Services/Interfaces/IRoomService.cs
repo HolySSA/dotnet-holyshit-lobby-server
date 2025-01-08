@@ -10,7 +10,8 @@ public interface IRoomService
   Task<ServiceResult<RoomData>> JoinRoom(int userId, int roomId);
   Task<ServiceResult<RoomData>> JoinRandomRoom(int userId);
   Task<ServiceResult> LeaveRoom(int userId);
-  Task<ServiceResult> GameReady(int userId, bool isReady);
+  Task<ServiceResult> RoomReady(int userId, bool isReady);
+  Task<ServiceResult<List<RoomUserReadyData>>> GetRoomReadyState(int roomId);
   Task<ServiceResult> GamePrepare(int userId);
   Task<ServiceResult> GameStart(int userId);
 }

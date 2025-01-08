@@ -53,6 +53,11 @@ message GameStateData {
     int64 nextPhaseAt = 2; // 다음 페이즈 시작 시점(밀리초 타임스탬프)
 }
 
+message RoomUserReadyData {
+    int32 userId = 1;
+    bool isReady = 2; // 현재 레디 상태
+}
+
 enum CharacterType {
     NONE_CHARACTER = 0;
     RED = 1; // 빨강이

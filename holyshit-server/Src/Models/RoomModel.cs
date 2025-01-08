@@ -13,7 +13,7 @@ public class RoomModel
   // 동시성을 고려하여 ConcurrentDictionary 컬렉션 사용
   private readonly ConcurrentDictionary<int, Room> _rooms = new();
   private readonly ConcurrentDictionary<int, int> _userRoomMap = new();
-
+  
   public static RoomModel Instance
   {
     get
@@ -125,6 +125,16 @@ public class RoomModel
     }
 
     return false;
+  }
+
+  public List<RoomUserReadyData> GetRoomReadyStates(int roomId)
+  {
+    if (_rooms.TryGetValue(roomId, out var room))
+    {
+      return room.GetAllReadyStates();
+    }
+
+    return new List<RoomUserReadyData>();
   }
 
   /*

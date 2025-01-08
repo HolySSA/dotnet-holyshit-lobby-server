@@ -25,7 +25,7 @@ namespace HolyShitServer.Src.Network.Packets {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChBHYW1lUGFja2V0LnByb3RvGgxDb21tb24ucHJvdG8aCkF1dGgucHJvdG8a",
-            "C0xvYmJ5LnByb3RvGgpHYW1lLnByb3RvIqcMCgpHYW1lUGFja2V0EikKDWxv",
+            "C0xvYmJ5LnByb3RvGgpHYW1lLnByb3RvIrUNCgpHYW1lUGFja2V0EikKDWxv",
             "Z2luX3JlcXVlc3QYASABKAsyEC5DMlNMb2dpblJlcXVlc3RIABIrCg5sb2dp",
             "bl9yZXNwb25zZRgCIAEoCzIRLlMyQ0xvZ2luUmVzcG9uc2VIABI+ChhzZWxl",
             "Y3RfY2hhcmFjdGVyX3JlcXVlc3QYAyABKAsyGi5DMlNTZWxlY3RDaGFyYWN0",
@@ -46,42 +46,46 @@ namespace HolyShitServer.Src.Network.Packets {
             "dmVSb29tUmVxdWVzdEgAEjQKE2xlYXZlX3Jvb21fcmVzcG9uc2UYDyABKAsy",
             "FS5TMkNMZWF2ZVJvb21SZXNwb25zZUgAEjwKF2xlYXZlX3Jvb21fbm90aWZp",
             "Y2F0aW9uGBAgASgLMhkuUzJDTGVhdmVSb29tTm90aWZpY2F0aW9uSAASMgoS",
-            "Z2FtZV9yZWFkeV9yZXF1ZXN0GBEgASgLMhQuQzJTR2FtZVJlYWR5UmVxdWVz",
-            "dEgAEjQKE2dhbWVfcmVhZHlfcmVzcG9uc2UYEiABKAsyFS5TMkNHYW1lUmVh",
-            "ZHlSZXNwb25zZUgAEjwKF2dhbWVfcmVhZHlfbm90aWZpY2F0aW9uGBMgASgL",
-            "MhkuUzJDR2FtZVJlYWR5Tm90aWZpY2F0aW9uSAASNgoUZ2FtZV9wcmVwYXJl",
-            "X3JlcXVlc3QYFCABKAsyFi5DMlNHYW1lUHJlcGFyZVJlcXVlc3RIABI4ChVn",
-            "YW1lX3ByZXBhcmVfcmVzcG9uc2UYFSABKAsyFy5TMkNHYW1lUHJlcGFyZVJl",
-            "c3BvbnNlSAASQAoZZ2FtZV9wcmVwYXJlX25vdGlmaWNhdGlvbhgWIAEoCzIb",
-            "LlMyQ0dhbWVQcmVwYXJlTm90aWZpY2F0aW9uSAASMgoSZ2FtZV9zdGFydF9y",
-            "ZXF1ZXN0GBcgASgLMhQuQzJTR2FtZVN0YXJ0UmVxdWVzdEgAEjQKE2dhbWVf",
-            "c3RhcnRfcmVzcG9uc2UYGCABKAsyFS5TMkNHYW1lU3RhcnRSZXNwb25zZUgA",
-            "EjwKF2dhbWVfc3RhcnRfbm90aWZpY2F0aW9uGBkgASgLMhkuUzJDR2FtZVN0",
-            "YXJ0Tm90aWZpY2F0aW9uSAASPAoXcG9zaXRpb25fdXBkYXRlX3JlcXVlc3QY",
-            "GiABKAsyGS5DMlNQb3NpdGlvblVwZGF0ZVJlcXVlc3RIABJGChxwb3NpdGlv",
-            "bl91cGRhdGVfbm90aWZpY2F0aW9uGBsgASgLMh4uUzJDUG9zaXRpb25VcGRh",
-            "dGVOb3RpZmljYXRpb25IAEIJCgdwYXlsb2FkKrIFCghQYWNrZXRJZBILCgdV",
-            "bmtub3duEAASEAoMTG9naW5SZXF1ZXN0EAESEQoNTG9naW5SZXNwb25zZRAC",
-            "EhoKFlNlbGVjdENoYXJhY3RlclJlcXVlc3QQAxIbChdTZWxlY3RDaGFyYWN0",
-            "ZXJSZXNwb25zZRAEEhUKEUNyZWF0ZVJvb21SZXF1ZXN0EAUSFgoSQ3JlYXRl",
-            "Um9vbVJlc3BvbnNlEAYSFgoSR2V0Um9vbUxpc3RSZXF1ZXN0EAcSFwoTR2V0",
-            "Um9vbUxpc3RSZXNwb25zZRAIEhMKD0pvaW5Sb29tUmVxdWVzdBAJEhQKEEpv",
-            "aW5Sb29tUmVzcG9uc2UQChIZChVKb2luUmFuZG9tUm9vbVJlcXVlc3QQCxIa",
-            "ChZKb2luUmFuZG9tUm9vbVJlc3BvbnNlEAwSGAoUSm9pblJvb21Ob3RpZmlj",
-            "YXRpb24QDRIUChBMZWF2ZVJvb21SZXF1ZXN0EA4SFQoRTGVhdmVSb29tUmVz",
-            "cG9uc2UQDxIZChVMZWF2ZVJvb21Ob3RpZmljYXRpb24QEBIUChBHYW1lUmVh",
-            "ZHlSZXF1ZXN0EBESFQoRR2FtZVJlYWR5UmVzcG9uc2UQEhIZChVHYW1lUmVh",
-            "ZHlOb3RpZmljYXRpb24QExIWChJHYW1lUHJlcGFyZVJlcXVlc3QQFBIXChNH",
-            "YW1lUHJlcGFyZVJlc3BvbnNlEBUSGwoXR2FtZVByZXBhcmVOb3RpZmljYXRp",
-            "b24QFhIUChBHYW1lU3RhcnRSZXF1ZXN0EBcSFQoRR2FtZVN0YXJ0UmVzcG9u",
-            "c2UQGBIZChVHYW1lU3RhcnROb3RpZmljYXRpb24QGRIZChVQb3NpdGlvblVw",
-            "ZGF0ZVJlcXVlc3QQGhIeChpQb3NpdGlvblVwZGF0ZU5vdGlmaWNhdGlvbhAb",
-            "QiWqAiJIb2x5U2hpdFNlcnZlci5TcmMuTmV0d29yay5QYWNrZXRzYgZwcm90",
-            "bzM="));
+            "cm9vbV9yZWFkeV9yZXF1ZXN0GBEgASgLMhQuQzJTUm9vbVJlYWR5UmVxdWVz",
+            "dEgAEjQKE3Jvb21fcmVhZHlfcmVzcG9uc2UYEiABKAsyFS5TMkNSb29tUmVh",
+            "ZHlSZXNwb25zZUgAEjwKF3Jvb21fcmVhZHlfbm90aWZpY2F0aW9uGBMgASgL",
+            "MhkuUzJDUm9vbVJlYWR5Tm90aWZpY2F0aW9uSAASRAocZ2V0X3Jvb21fcmVh",
+            "ZHlfc3RhdGVfcmVxdWVzdBgUIAEoCzIcLkMyU0dldFJvb21SZWFkeVN0YXRl",
+            "UmVxdWVzdEgAEkYKHWdldF9yb29tX3JlYWR5X3N0YXRlX3Jlc3BvbnNlGBUg",
+            "ASgLMh0uUzJDR2V0Um9vbVJlYWR5U3RhdGVSZXNwb25zZUgAEjYKFGdhbWVf",
+            "cHJlcGFyZV9yZXF1ZXN0GBYgASgLMhYuQzJTR2FtZVByZXBhcmVSZXF1ZXN0",
+            "SAASOAoVZ2FtZV9wcmVwYXJlX3Jlc3BvbnNlGBcgASgLMhcuUzJDR2FtZVBy",
+            "ZXBhcmVSZXNwb25zZUgAEkAKGWdhbWVfcHJlcGFyZV9ub3RpZmljYXRpb24Y",
+            "GCABKAsyGy5TMkNHYW1lUHJlcGFyZU5vdGlmaWNhdGlvbkgAEjIKEmdhbWVf",
+            "c3RhcnRfcmVxdWVzdBgZIAEoCzIULkMyU0dhbWVTdGFydFJlcXVlc3RIABI0",
+            "ChNnYW1lX3N0YXJ0X3Jlc3BvbnNlGBogASgLMhUuUzJDR2FtZVN0YXJ0UmVz",
+            "cG9uc2VIABI8ChdnYW1lX3N0YXJ0X25vdGlmaWNhdGlvbhgbIAEoCzIZLlMy",
+            "Q0dhbWVTdGFydE5vdGlmaWNhdGlvbkgAEjwKF3Bvc2l0aW9uX3VwZGF0ZV9y",
+            "ZXF1ZXN0GBwgASgLMhkuQzJTUG9zaXRpb25VcGRhdGVSZXF1ZXN0SAASRgoc",
+            "cG9zaXRpb25fdXBkYXRlX25vdGlmaWNhdGlvbhgdIAEoCzIeLlMyQ1Bvc2l0",
+            "aW9uVXBkYXRlTm90aWZpY2F0aW9uSABCCQoHcGF5bG9hZCrvBQoIUGFja2V0",
+            "SWQSCwoHVW5rbm93bhAAEhAKDExvZ2luUmVxdWVzdBABEhEKDUxvZ2luUmVz",
+            "cG9uc2UQAhIaChZTZWxlY3RDaGFyYWN0ZXJSZXF1ZXN0EAMSGwoXU2VsZWN0",
+            "Q2hhcmFjdGVyUmVzcG9uc2UQBBIVChFDcmVhdGVSb29tUmVxdWVzdBAFEhYK",
+            "EkNyZWF0ZVJvb21SZXNwb25zZRAGEhYKEkdldFJvb21MaXN0UmVxdWVzdBAH",
+            "EhcKE0dldFJvb21MaXN0UmVzcG9uc2UQCBITCg9Kb2luUm9vbVJlcXVlc3QQ",
+            "CRIUChBKb2luUm9vbVJlc3BvbnNlEAoSGQoVSm9pblJhbmRvbVJvb21SZXF1",
+            "ZXN0EAsSGgoWSm9pblJhbmRvbVJvb21SZXNwb25zZRAMEhgKFEpvaW5Sb29t",
+            "Tm90aWZpY2F0aW9uEA0SFAoQTGVhdmVSb29tUmVxdWVzdBAOEhUKEUxlYXZl",
+            "Um9vbVJlc3BvbnNlEA8SGQoVTGVhdmVSb29tTm90aWZpY2F0aW9uEBASFAoQ",
+            "Um9vbVJlYWR5UmVxdWVzdBAREhUKEVJvb21SZWFkeVJlc3BvbnNlEBISGQoV",
+            "Um9vbVJlYWR5Tm90aWZpY2F0aW9uEBMSHAoYR2V0Um9vbVJlYWR5U3RhdGVS",
+            "ZXF1ZXN0EBQSHQoZR2V0Um9vbVJlYWR5U3RhdGVSZXNwb25zZRAVEhYKEkdh",
+            "bWVQcmVwYXJlUmVxdWVzdBAWEhcKE0dhbWVQcmVwYXJlUmVzcG9uc2UQFxIb",
+            "ChdHYW1lUHJlcGFyZU5vdGlmaWNhdGlvbhAYEhQKEEdhbWVTdGFydFJlcXVl",
+            "c3QQGRIVChFHYW1lU3RhcnRSZXNwb25zZRAaEhkKFUdhbWVTdGFydE5vdGlm",
+            "aWNhdGlvbhAbEhkKFVBvc2l0aW9uVXBkYXRlUmVxdWVzdBAcEh4KGlBvc2l0",
+            "aW9uVXBkYXRlTm90aWZpY2F0aW9uEB1CJaoCIkhvbHlTaGl0U2VydmVyLlNy",
+            "Yy5OZXR3b3JrLlBhY2tldHNiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::HolyShitServer.Src.Network.Packets.CommonReflection.Descriptor, global::HolyShitServer.Src.Network.Packets.AuthReflection.Descriptor, global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor, global::HolyShitServer.Src.Network.Packets.GameReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::HolyShitServer.Src.Network.Packets.PacketId), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.GamePacket), global::HolyShitServer.Src.Network.Packets.GamePacket.Parser, new[]{ "LoginRequest", "LoginResponse", "SelectCharacterRequest", "SelectCharacterResponse", "CreateRoomRequest", "CreateRoomResponse", "GetRoomListRequest", "GetRoomListResponse", "JoinRoomRequest", "JoinRoomResponse", "JoinRandomRoomRequest", "JoinRandomRoomResponse", "JoinRoomNotification", "LeaveRoomRequest", "LeaveRoomResponse", "LeaveRoomNotification", "GameReadyRequest", "GameReadyResponse", "GameReadyNotification", "GamePrepareRequest", "GamePrepareResponse", "GamePrepareNotification", "GameStartRequest", "GameStartResponse", "GameStartNotification", "PositionUpdateRequest", "PositionUpdateNotification" }, new[]{ "Payload" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.GamePacket), global::HolyShitServer.Src.Network.Packets.GamePacket.Parser, new[]{ "LoginRequest", "LoginResponse", "SelectCharacterRequest", "SelectCharacterResponse", "CreateRoomRequest", "CreateRoomResponse", "GetRoomListRequest", "GetRoomListResponse", "JoinRoomRequest", "JoinRoomResponse", "JoinRandomRoomRequest", "JoinRandomRoomResponse", "JoinRoomNotification", "LeaveRoomRequest", "LeaveRoomResponse", "LeaveRoomNotification", "RoomReadyRequest", "RoomReadyResponse", "RoomReadyNotification", "GetRoomReadyStateRequest", "GetRoomReadyStateResponse", "GamePrepareRequest", "GamePrepareResponse", "GamePrepareNotification", "GameStartRequest", "GameStartResponse", "GameStartNotification", "PositionUpdateRequest", "PositionUpdateNotification" }, new[]{ "Payload" }, null, null, null)
           }));
     }
     #endregion
@@ -112,20 +116,25 @@ namespace HolyShitServer.Src.Network.Packets {
     [pbr::OriginalName("LeaveRoomRequest")] LeaveRoomRequest = 14,
     [pbr::OriginalName("LeaveRoomResponse")] LeaveRoomResponse = 15,
     [pbr::OriginalName("LeaveRoomNotification")] LeaveRoomNotification = 16,
-    [pbr::OriginalName("GameReadyRequest")] GameReadyRequest = 17,
-    [pbr::OriginalName("GameReadyResponse")] GameReadyResponse = 18,
-    [pbr::OriginalName("GameReadyNotification")] GameReadyNotification = 19,
-    [pbr::OriginalName("GamePrepareRequest")] GamePrepareRequest = 20,
-    [pbr::OriginalName("GamePrepareResponse")] GamePrepareResponse = 21,
-    [pbr::OriginalName("GamePrepareNotification")] GamePrepareNotification = 22,
-    [pbr::OriginalName("GameStartRequest")] GameStartRequest = 23,
-    [pbr::OriginalName("GameStartResponse")] GameStartResponse = 24,
-    [pbr::OriginalName("GameStartNotification")] GameStartNotification = 25,
+    [pbr::OriginalName("RoomReadyRequest")] RoomReadyRequest = 17,
+    [pbr::OriginalName("RoomReadyResponse")] RoomReadyResponse = 18,
+    [pbr::OriginalName("RoomReadyNotification")] RoomReadyNotification = 19,
+    [pbr::OriginalName("GetRoomReadyStateRequest")] GetRoomReadyStateRequest = 20,
+    [pbr::OriginalName("GetRoomReadyStateResponse")] GetRoomReadyStateResponse = 21,
+    /// <summary>
+    /// Game Start messages
+    /// </summary>
+    [pbr::OriginalName("GamePrepareRequest")] GamePrepareRequest = 22,
+    [pbr::OriginalName("GamePrepareResponse")] GamePrepareResponse = 23,
+    [pbr::OriginalName("GamePrepareNotification")] GamePrepareNotification = 24,
+    [pbr::OriginalName("GameStartRequest")] GameStartRequest = 25,
+    [pbr::OriginalName("GameStartResponse")] GameStartResponse = 26,
+    [pbr::OriginalName("GameStartNotification")] GameStartNotification = 27,
     /// <summary>
     /// Game messages
     /// </summary>
-    [pbr::OriginalName("PositionUpdateRequest")] PositionUpdateRequest = 26,
-    [pbr::OriginalName("PositionUpdateNotification")] PositionUpdateNotification = 27,
+    [pbr::OriginalName("PositionUpdateRequest")] PositionUpdateRequest = 28,
+    [pbr::OriginalName("PositionUpdateNotification")] PositionUpdateNotification = 29,
   }
 
   #endregion
@@ -215,14 +224,20 @@ namespace HolyShitServer.Src.Network.Packets {
         case PayloadOneofCase.LeaveRoomNotification:
           LeaveRoomNotification = other.LeaveRoomNotification.Clone();
           break;
-        case PayloadOneofCase.GameReadyRequest:
-          GameReadyRequest = other.GameReadyRequest.Clone();
+        case PayloadOneofCase.RoomReadyRequest:
+          RoomReadyRequest = other.RoomReadyRequest.Clone();
           break;
-        case PayloadOneofCase.GameReadyResponse:
-          GameReadyResponse = other.GameReadyResponse.Clone();
+        case PayloadOneofCase.RoomReadyResponse:
+          RoomReadyResponse = other.RoomReadyResponse.Clone();
           break;
-        case PayloadOneofCase.GameReadyNotification:
-          GameReadyNotification = other.GameReadyNotification.Clone();
+        case PayloadOneofCase.RoomReadyNotification:
+          RoomReadyNotification = other.RoomReadyNotification.Clone();
+          break;
+        case PayloadOneofCase.GetRoomReadyStateRequest:
+          GetRoomReadyStateRequest = other.GetRoomReadyStateRequest.Clone();
+          break;
+        case PayloadOneofCase.GetRoomReadyStateResponse:
+          GetRoomReadyStateResponse = other.GetRoomReadyStateResponse.Clone();
           break;
         case PayloadOneofCase.GamePrepareRequest:
           GamePrepareRequest = other.GamePrepareRequest.Clone();
@@ -457,44 +472,71 @@ namespace HolyShitServer.Src.Network.Packets {
       }
     }
 
-    /// <summary>Field number for the "game_ready_request" field.</summary>
-    public const int GameReadyRequestFieldNumber = 17;
+    /// <summary>Field number for the "room_ready_request" field.</summary>
+    public const int RoomReadyRequestFieldNumber = 17;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest GameReadyRequest {
-      get { return payloadCase_ == PayloadOneofCase.GameReadyRequest ? (global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest) payload_ : null; }
+    public global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest RoomReadyRequest {
+      get { return payloadCase_ == PayloadOneofCase.RoomReadyRequest ? (global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.GameReadyRequest;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.RoomReadyRequest;
       }
     }
 
-    /// <summary>Field number for the "game_ready_response" field.</summary>
-    public const int GameReadyResponseFieldNumber = 18;
+    /// <summary>Field number for the "room_ready_response" field.</summary>
+    public const int RoomReadyResponseFieldNumber = 18;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse GameReadyResponse {
-      get { return payloadCase_ == PayloadOneofCase.GameReadyResponse ? (global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse) payload_ : null; }
+    public global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse RoomReadyResponse {
+      get { return payloadCase_ == PayloadOneofCase.RoomReadyResponse ? (global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.GameReadyResponse;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.RoomReadyResponse;
       }
     }
 
-    /// <summary>Field number for the "game_ready_notification" field.</summary>
-    public const int GameReadyNotificationFieldNumber = 19;
+    /// <summary>Field number for the "room_ready_notification" field.</summary>
+    public const int RoomReadyNotificationFieldNumber = 19;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification GameReadyNotification {
-      get { return payloadCase_ == PayloadOneofCase.GameReadyNotification ? (global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification) payload_ : null; }
+    public global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification RoomReadyNotification {
+      get { return payloadCase_ == PayloadOneofCase.RoomReadyNotification ? (global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification) payload_ : null; }
       set {
         payload_ = value;
-        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.GameReadyNotification;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.RoomReadyNotification;
+      }
+    }
+
+    /// <summary>Field number for the "get_room_ready_state_request" field.</summary>
+    public const int GetRoomReadyStateRequestFieldNumber = 20;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest GetRoomReadyStateRequest {
+      get { return payloadCase_ == PayloadOneofCase.GetRoomReadyStateRequest ? (global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest) payload_ : null; }
+      set {
+        payload_ = value;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.GetRoomReadyStateRequest;
+      }
+    }
+
+    /// <summary>Field number for the "get_room_ready_state_response" field.</summary>
+    public const int GetRoomReadyStateResponseFieldNumber = 21;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse GetRoomReadyStateResponse {
+      get { return payloadCase_ == PayloadOneofCase.GetRoomReadyStateResponse ? (global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse) payload_ : null; }
+      set {
+        payload_ = value;
+        payloadCase_ = value == null ? PayloadOneofCase.None : PayloadOneofCase.GetRoomReadyStateResponse;
       }
     }
 
     /// <summary>Field number for the "game_prepare_request" field.</summary>
-    public const int GamePrepareRequestFieldNumber = 20;
+    public const int GamePrepareRequestFieldNumber = 22;
+    /// <summary>
+    /// Game Start messages
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::HolyShitServer.Src.Network.Packets.C2SGamePrepareRequest GamePrepareRequest {
@@ -506,7 +548,7 @@ namespace HolyShitServer.Src.Network.Packets {
     }
 
     /// <summary>Field number for the "game_prepare_response" field.</summary>
-    public const int GamePrepareResponseFieldNumber = 21;
+    public const int GamePrepareResponseFieldNumber = 23;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::HolyShitServer.Src.Network.Packets.S2CGamePrepareResponse GamePrepareResponse {
@@ -518,7 +560,7 @@ namespace HolyShitServer.Src.Network.Packets {
     }
 
     /// <summary>Field number for the "game_prepare_notification" field.</summary>
-    public const int GamePrepareNotificationFieldNumber = 22;
+    public const int GamePrepareNotificationFieldNumber = 24;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::HolyShitServer.Src.Network.Packets.S2CGamePrepareNotification GamePrepareNotification {
@@ -530,7 +572,7 @@ namespace HolyShitServer.Src.Network.Packets {
     }
 
     /// <summary>Field number for the "game_start_request" field.</summary>
-    public const int GameStartRequestFieldNumber = 23;
+    public const int GameStartRequestFieldNumber = 25;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::HolyShitServer.Src.Network.Packets.C2SGameStartRequest GameStartRequest {
@@ -542,7 +584,7 @@ namespace HolyShitServer.Src.Network.Packets {
     }
 
     /// <summary>Field number for the "game_start_response" field.</summary>
-    public const int GameStartResponseFieldNumber = 24;
+    public const int GameStartResponseFieldNumber = 26;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::HolyShitServer.Src.Network.Packets.S2CGameStartResponse GameStartResponse {
@@ -554,7 +596,7 @@ namespace HolyShitServer.Src.Network.Packets {
     }
 
     /// <summary>Field number for the "game_start_notification" field.</summary>
-    public const int GameStartNotificationFieldNumber = 25;
+    public const int GameStartNotificationFieldNumber = 27;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::HolyShitServer.Src.Network.Packets.S2CGameStartNotification GameStartNotification {
@@ -566,7 +608,7 @@ namespace HolyShitServer.Src.Network.Packets {
     }
 
     /// <summary>Field number for the "position_update_request" field.</summary>
-    public const int PositionUpdateRequestFieldNumber = 26;
+    public const int PositionUpdateRequestFieldNumber = 28;
     /// <summary>
     /// Game messages
     /// </summary>
@@ -581,7 +623,7 @@ namespace HolyShitServer.Src.Network.Packets {
     }
 
     /// <summary>Field number for the "position_update_notification" field.</summary>
-    public const int PositionUpdateNotificationFieldNumber = 27;
+    public const int PositionUpdateNotificationFieldNumber = 29;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification PositionUpdateNotification {
@@ -612,17 +654,19 @@ namespace HolyShitServer.Src.Network.Packets {
       LeaveRoomRequest = 14,
       LeaveRoomResponse = 15,
       LeaveRoomNotification = 16,
-      GameReadyRequest = 17,
-      GameReadyResponse = 18,
-      GameReadyNotification = 19,
-      GamePrepareRequest = 20,
-      GamePrepareResponse = 21,
-      GamePrepareNotification = 22,
-      GameStartRequest = 23,
-      GameStartResponse = 24,
-      GameStartNotification = 25,
-      PositionUpdateRequest = 26,
-      PositionUpdateNotification = 27,
+      RoomReadyRequest = 17,
+      RoomReadyResponse = 18,
+      RoomReadyNotification = 19,
+      GetRoomReadyStateRequest = 20,
+      GetRoomReadyStateResponse = 21,
+      GamePrepareRequest = 22,
+      GamePrepareResponse = 23,
+      GamePrepareNotification = 24,
+      GameStartRequest = 25,
+      GameStartResponse = 26,
+      GameStartNotification = 27,
+      PositionUpdateRequest = 28,
+      PositionUpdateNotification = 29,
     }
     private PayloadOneofCase payloadCase_ = PayloadOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -669,9 +713,11 @@ namespace HolyShitServer.Src.Network.Packets {
       if (!object.Equals(LeaveRoomRequest, other.LeaveRoomRequest)) return false;
       if (!object.Equals(LeaveRoomResponse, other.LeaveRoomResponse)) return false;
       if (!object.Equals(LeaveRoomNotification, other.LeaveRoomNotification)) return false;
-      if (!object.Equals(GameReadyRequest, other.GameReadyRequest)) return false;
-      if (!object.Equals(GameReadyResponse, other.GameReadyResponse)) return false;
-      if (!object.Equals(GameReadyNotification, other.GameReadyNotification)) return false;
+      if (!object.Equals(RoomReadyRequest, other.RoomReadyRequest)) return false;
+      if (!object.Equals(RoomReadyResponse, other.RoomReadyResponse)) return false;
+      if (!object.Equals(RoomReadyNotification, other.RoomReadyNotification)) return false;
+      if (!object.Equals(GetRoomReadyStateRequest, other.GetRoomReadyStateRequest)) return false;
+      if (!object.Equals(GetRoomReadyStateResponse, other.GetRoomReadyStateResponse)) return false;
       if (!object.Equals(GamePrepareRequest, other.GamePrepareRequest)) return false;
       if (!object.Equals(GamePrepareResponse, other.GamePrepareResponse)) return false;
       if (!object.Equals(GamePrepareNotification, other.GamePrepareNotification)) return false;
@@ -704,9 +750,11 @@ namespace HolyShitServer.Src.Network.Packets {
       if (payloadCase_ == PayloadOneofCase.LeaveRoomRequest) hash ^= LeaveRoomRequest.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.LeaveRoomResponse) hash ^= LeaveRoomResponse.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.LeaveRoomNotification) hash ^= LeaveRoomNotification.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.GameReadyRequest) hash ^= GameReadyRequest.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.GameReadyResponse) hash ^= GameReadyResponse.GetHashCode();
-      if (payloadCase_ == PayloadOneofCase.GameReadyNotification) hash ^= GameReadyNotification.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.RoomReadyRequest) hash ^= RoomReadyRequest.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.RoomReadyResponse) hash ^= RoomReadyResponse.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.RoomReadyNotification) hash ^= RoomReadyNotification.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateRequest) hash ^= GetRoomReadyStateRequest.GetHashCode();
+      if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateResponse) hash ^= GetRoomReadyStateResponse.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.GamePrepareRequest) hash ^= GamePrepareRequest.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.GamePrepareResponse) hash ^= GamePrepareResponse.GetHashCode();
       if (payloadCase_ == PayloadOneofCase.GamePrepareNotification) hash ^= GamePrepareNotification.GetHashCode();
@@ -798,48 +846,56 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(130, 1);
         output.WriteMessage(LeaveRoomNotification);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyRequest) {
+      if (payloadCase_ == PayloadOneofCase.RoomReadyRequest) {
         output.WriteRawTag(138, 1);
-        output.WriteMessage(GameReadyRequest);
+        output.WriteMessage(RoomReadyRequest);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyResponse) {
+      if (payloadCase_ == PayloadOneofCase.RoomReadyResponse) {
         output.WriteRawTag(146, 1);
-        output.WriteMessage(GameReadyResponse);
+        output.WriteMessage(RoomReadyResponse);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyNotification) {
+      if (payloadCase_ == PayloadOneofCase.RoomReadyNotification) {
         output.WriteRawTag(154, 1);
-        output.WriteMessage(GameReadyNotification);
+        output.WriteMessage(RoomReadyNotification);
+      }
+      if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateRequest) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(GetRoomReadyStateRequest);
+      }
+      if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateResponse) {
+        output.WriteRawTag(170, 1);
+        output.WriteMessage(GetRoomReadyStateResponse);
       }
       if (payloadCase_ == PayloadOneofCase.GamePrepareRequest) {
-        output.WriteRawTag(162, 1);
+        output.WriteRawTag(178, 1);
         output.WriteMessage(GamePrepareRequest);
       }
       if (payloadCase_ == PayloadOneofCase.GamePrepareResponse) {
-        output.WriteRawTag(170, 1);
+        output.WriteRawTag(186, 1);
         output.WriteMessage(GamePrepareResponse);
       }
       if (payloadCase_ == PayloadOneofCase.GamePrepareNotification) {
-        output.WriteRawTag(178, 1);
+        output.WriteRawTag(194, 1);
         output.WriteMessage(GamePrepareNotification);
       }
       if (payloadCase_ == PayloadOneofCase.GameStartRequest) {
-        output.WriteRawTag(186, 1);
+        output.WriteRawTag(202, 1);
         output.WriteMessage(GameStartRequest);
       }
       if (payloadCase_ == PayloadOneofCase.GameStartResponse) {
-        output.WriteRawTag(194, 1);
+        output.WriteRawTag(210, 1);
         output.WriteMessage(GameStartResponse);
       }
       if (payloadCase_ == PayloadOneofCase.GameStartNotification) {
-        output.WriteRawTag(202, 1);
+        output.WriteRawTag(218, 1);
         output.WriteMessage(GameStartNotification);
       }
       if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
-        output.WriteRawTag(210, 1);
+        output.WriteRawTag(226, 1);
         output.WriteMessage(PositionUpdateRequest);
       }
       if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
-        output.WriteRawTag(218, 1);
+        output.WriteRawTag(234, 1);
         output.WriteMessage(PositionUpdateNotification);
       }
       if (_unknownFields != null) {
@@ -916,48 +972,56 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(130, 1);
         output.WriteMessage(LeaveRoomNotification);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyRequest) {
+      if (payloadCase_ == PayloadOneofCase.RoomReadyRequest) {
         output.WriteRawTag(138, 1);
-        output.WriteMessage(GameReadyRequest);
+        output.WriteMessage(RoomReadyRequest);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyResponse) {
+      if (payloadCase_ == PayloadOneofCase.RoomReadyResponse) {
         output.WriteRawTag(146, 1);
-        output.WriteMessage(GameReadyResponse);
+        output.WriteMessage(RoomReadyResponse);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyNotification) {
+      if (payloadCase_ == PayloadOneofCase.RoomReadyNotification) {
         output.WriteRawTag(154, 1);
-        output.WriteMessage(GameReadyNotification);
+        output.WriteMessage(RoomReadyNotification);
+      }
+      if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateRequest) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(GetRoomReadyStateRequest);
+      }
+      if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateResponse) {
+        output.WriteRawTag(170, 1);
+        output.WriteMessage(GetRoomReadyStateResponse);
       }
       if (payloadCase_ == PayloadOneofCase.GamePrepareRequest) {
-        output.WriteRawTag(162, 1);
+        output.WriteRawTag(178, 1);
         output.WriteMessage(GamePrepareRequest);
       }
       if (payloadCase_ == PayloadOneofCase.GamePrepareResponse) {
-        output.WriteRawTag(170, 1);
+        output.WriteRawTag(186, 1);
         output.WriteMessage(GamePrepareResponse);
       }
       if (payloadCase_ == PayloadOneofCase.GamePrepareNotification) {
-        output.WriteRawTag(178, 1);
+        output.WriteRawTag(194, 1);
         output.WriteMessage(GamePrepareNotification);
       }
       if (payloadCase_ == PayloadOneofCase.GameStartRequest) {
-        output.WriteRawTag(186, 1);
+        output.WriteRawTag(202, 1);
         output.WriteMessage(GameStartRequest);
       }
       if (payloadCase_ == PayloadOneofCase.GameStartResponse) {
-        output.WriteRawTag(194, 1);
+        output.WriteRawTag(210, 1);
         output.WriteMessage(GameStartResponse);
       }
       if (payloadCase_ == PayloadOneofCase.GameStartNotification) {
-        output.WriteRawTag(202, 1);
+        output.WriteRawTag(218, 1);
         output.WriteMessage(GameStartNotification);
       }
       if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
-        output.WriteRawTag(210, 1);
+        output.WriteRawTag(226, 1);
         output.WriteMessage(PositionUpdateRequest);
       }
       if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
-        output.WriteRawTag(218, 1);
+        output.WriteRawTag(234, 1);
         output.WriteMessage(PositionUpdateNotification);
       }
       if (_unknownFields != null) {
@@ -1018,14 +1082,20 @@ namespace HolyShitServer.Src.Network.Packets {
       if (payloadCase_ == PayloadOneofCase.LeaveRoomNotification) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(LeaveRoomNotification);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyRequest) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(GameReadyRequest);
+      if (payloadCase_ == PayloadOneofCase.RoomReadyRequest) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(RoomReadyRequest);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyResponse) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(GameReadyResponse);
+      if (payloadCase_ == PayloadOneofCase.RoomReadyResponse) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(RoomReadyResponse);
       }
-      if (payloadCase_ == PayloadOneofCase.GameReadyNotification) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(GameReadyNotification);
+      if (payloadCase_ == PayloadOneofCase.RoomReadyNotification) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(RoomReadyNotification);
+      }
+      if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateRequest) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(GetRoomReadyStateRequest);
+      }
+      if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateResponse) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(GetRoomReadyStateResponse);
       }
       if (payloadCase_ == PayloadOneofCase.GamePrepareRequest) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(GamePrepareRequest);
@@ -1160,23 +1230,35 @@ namespace HolyShitServer.Src.Network.Packets {
           }
           LeaveRoomNotification.MergeFrom(other.LeaveRoomNotification);
           break;
-        case PayloadOneofCase.GameReadyRequest:
-          if (GameReadyRequest == null) {
-            GameReadyRequest = new global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest();
+        case PayloadOneofCase.RoomReadyRequest:
+          if (RoomReadyRequest == null) {
+            RoomReadyRequest = new global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest();
           }
-          GameReadyRequest.MergeFrom(other.GameReadyRequest);
+          RoomReadyRequest.MergeFrom(other.RoomReadyRequest);
           break;
-        case PayloadOneofCase.GameReadyResponse:
-          if (GameReadyResponse == null) {
-            GameReadyResponse = new global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse();
+        case PayloadOneofCase.RoomReadyResponse:
+          if (RoomReadyResponse == null) {
+            RoomReadyResponse = new global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse();
           }
-          GameReadyResponse.MergeFrom(other.GameReadyResponse);
+          RoomReadyResponse.MergeFrom(other.RoomReadyResponse);
           break;
-        case PayloadOneofCase.GameReadyNotification:
-          if (GameReadyNotification == null) {
-            GameReadyNotification = new global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification();
+        case PayloadOneofCase.RoomReadyNotification:
+          if (RoomReadyNotification == null) {
+            RoomReadyNotification = new global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification();
           }
-          GameReadyNotification.MergeFrom(other.GameReadyNotification);
+          RoomReadyNotification.MergeFrom(other.RoomReadyNotification);
+          break;
+        case PayloadOneofCase.GetRoomReadyStateRequest:
+          if (GetRoomReadyStateRequest == null) {
+            GetRoomReadyStateRequest = new global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest();
+          }
+          GetRoomReadyStateRequest.MergeFrom(other.GetRoomReadyStateRequest);
+          break;
+        case PayloadOneofCase.GetRoomReadyStateResponse:
+          if (GetRoomReadyStateResponse == null) {
+            GetRoomReadyStateResponse = new global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse();
+          }
+          GetRoomReadyStateResponse.MergeFrom(other.GetRoomReadyStateResponse);
           break;
         case PayloadOneofCase.GamePrepareRequest:
           if (GamePrepareRequest == null) {
@@ -1392,33 +1474,51 @@ namespace HolyShitServer.Src.Network.Packets {
             break;
           }
           case 138: {
-            global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest();
-            if (payloadCase_ == PayloadOneofCase.GameReadyRequest) {
-              subBuilder.MergeFrom(GameReadyRequest);
+            global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest();
+            if (payloadCase_ == PayloadOneofCase.RoomReadyRequest) {
+              subBuilder.MergeFrom(RoomReadyRequest);
             }
             input.ReadMessage(subBuilder);
-            GameReadyRequest = subBuilder;
+            RoomReadyRequest = subBuilder;
             break;
           }
           case 146: {
-            global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse();
-            if (payloadCase_ == PayloadOneofCase.GameReadyResponse) {
-              subBuilder.MergeFrom(GameReadyResponse);
+            global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse();
+            if (payloadCase_ == PayloadOneofCase.RoomReadyResponse) {
+              subBuilder.MergeFrom(RoomReadyResponse);
             }
             input.ReadMessage(subBuilder);
-            GameReadyResponse = subBuilder;
+            RoomReadyResponse = subBuilder;
             break;
           }
           case 154: {
-            global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification();
-            if (payloadCase_ == PayloadOneofCase.GameReadyNotification) {
-              subBuilder.MergeFrom(GameReadyNotification);
+            global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification();
+            if (payloadCase_ == PayloadOneofCase.RoomReadyNotification) {
+              subBuilder.MergeFrom(RoomReadyNotification);
             }
             input.ReadMessage(subBuilder);
-            GameReadyNotification = subBuilder;
+            RoomReadyNotification = subBuilder;
             break;
           }
           case 162: {
+            global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest();
+            if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateRequest) {
+              subBuilder.MergeFrom(GetRoomReadyStateRequest);
+            }
+            input.ReadMessage(subBuilder);
+            GetRoomReadyStateRequest = subBuilder;
+            break;
+          }
+          case 170: {
+            global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse();
+            if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateResponse) {
+              subBuilder.MergeFrom(GetRoomReadyStateResponse);
+            }
+            input.ReadMessage(subBuilder);
+            GetRoomReadyStateResponse = subBuilder;
+            break;
+          }
+          case 178: {
             global::HolyShitServer.Src.Network.Packets.C2SGamePrepareRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SGamePrepareRequest();
             if (payloadCase_ == PayloadOneofCase.GamePrepareRequest) {
               subBuilder.MergeFrom(GamePrepareRequest);
@@ -1427,7 +1527,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GamePrepareRequest = subBuilder;
             break;
           }
-          case 170: {
+          case 186: {
             global::HolyShitServer.Src.Network.Packets.S2CGamePrepareResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGamePrepareResponse();
             if (payloadCase_ == PayloadOneofCase.GamePrepareResponse) {
               subBuilder.MergeFrom(GamePrepareResponse);
@@ -1436,7 +1536,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GamePrepareResponse = subBuilder;
             break;
           }
-          case 178: {
+          case 194: {
             global::HolyShitServer.Src.Network.Packets.S2CGamePrepareNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGamePrepareNotification();
             if (payloadCase_ == PayloadOneofCase.GamePrepareNotification) {
               subBuilder.MergeFrom(GamePrepareNotification);
@@ -1445,7 +1545,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GamePrepareNotification = subBuilder;
             break;
           }
-          case 186: {
+          case 202: {
             global::HolyShitServer.Src.Network.Packets.C2SGameStartRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SGameStartRequest();
             if (payloadCase_ == PayloadOneofCase.GameStartRequest) {
               subBuilder.MergeFrom(GameStartRequest);
@@ -1454,7 +1554,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GameStartRequest = subBuilder;
             break;
           }
-          case 194: {
+          case 210: {
             global::HolyShitServer.Src.Network.Packets.S2CGameStartResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGameStartResponse();
             if (payloadCase_ == PayloadOneofCase.GameStartResponse) {
               subBuilder.MergeFrom(GameStartResponse);
@@ -1463,7 +1563,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GameStartResponse = subBuilder;
             break;
           }
-          case 202: {
+          case 218: {
             global::HolyShitServer.Src.Network.Packets.S2CGameStartNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGameStartNotification();
             if (payloadCase_ == PayloadOneofCase.GameStartNotification) {
               subBuilder.MergeFrom(GameStartNotification);
@@ -1472,7 +1572,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GameStartNotification = subBuilder;
             break;
           }
-          case 210: {
+          case 226: {
             global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest();
             if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
               subBuilder.MergeFrom(PositionUpdateRequest);
@@ -1481,7 +1581,7 @@ namespace HolyShitServer.Src.Network.Packets {
             PositionUpdateRequest = subBuilder;
             break;
           }
-          case 218: {
+          case 234: {
             global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification();
             if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
               subBuilder.MergeFrom(PositionUpdateNotification);
@@ -1654,33 +1754,51 @@ namespace HolyShitServer.Src.Network.Packets {
             break;
           }
           case 138: {
-            global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest();
-            if (payloadCase_ == PayloadOneofCase.GameReadyRequest) {
-              subBuilder.MergeFrom(GameReadyRequest);
+            global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest();
+            if (payloadCase_ == PayloadOneofCase.RoomReadyRequest) {
+              subBuilder.MergeFrom(RoomReadyRequest);
             }
             input.ReadMessage(subBuilder);
-            GameReadyRequest = subBuilder;
+            RoomReadyRequest = subBuilder;
             break;
           }
           case 146: {
-            global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse();
-            if (payloadCase_ == PayloadOneofCase.GameReadyResponse) {
-              subBuilder.MergeFrom(GameReadyResponse);
+            global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse();
+            if (payloadCase_ == PayloadOneofCase.RoomReadyResponse) {
+              subBuilder.MergeFrom(RoomReadyResponse);
             }
             input.ReadMessage(subBuilder);
-            GameReadyResponse = subBuilder;
+            RoomReadyResponse = subBuilder;
             break;
           }
           case 154: {
-            global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification();
-            if (payloadCase_ == PayloadOneofCase.GameReadyNotification) {
-              subBuilder.MergeFrom(GameReadyNotification);
+            global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification();
+            if (payloadCase_ == PayloadOneofCase.RoomReadyNotification) {
+              subBuilder.MergeFrom(RoomReadyNotification);
             }
             input.ReadMessage(subBuilder);
-            GameReadyNotification = subBuilder;
+            RoomReadyNotification = subBuilder;
             break;
           }
           case 162: {
+            global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest();
+            if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateRequest) {
+              subBuilder.MergeFrom(GetRoomReadyStateRequest);
+            }
+            input.ReadMessage(subBuilder);
+            GetRoomReadyStateRequest = subBuilder;
+            break;
+          }
+          case 170: {
+            global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse();
+            if (payloadCase_ == PayloadOneofCase.GetRoomReadyStateResponse) {
+              subBuilder.MergeFrom(GetRoomReadyStateResponse);
+            }
+            input.ReadMessage(subBuilder);
+            GetRoomReadyStateResponse = subBuilder;
+            break;
+          }
+          case 178: {
             global::HolyShitServer.Src.Network.Packets.C2SGamePrepareRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SGamePrepareRequest();
             if (payloadCase_ == PayloadOneofCase.GamePrepareRequest) {
               subBuilder.MergeFrom(GamePrepareRequest);
@@ -1689,7 +1807,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GamePrepareRequest = subBuilder;
             break;
           }
-          case 170: {
+          case 186: {
             global::HolyShitServer.Src.Network.Packets.S2CGamePrepareResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGamePrepareResponse();
             if (payloadCase_ == PayloadOneofCase.GamePrepareResponse) {
               subBuilder.MergeFrom(GamePrepareResponse);
@@ -1698,7 +1816,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GamePrepareResponse = subBuilder;
             break;
           }
-          case 178: {
+          case 194: {
             global::HolyShitServer.Src.Network.Packets.S2CGamePrepareNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGamePrepareNotification();
             if (payloadCase_ == PayloadOneofCase.GamePrepareNotification) {
               subBuilder.MergeFrom(GamePrepareNotification);
@@ -1707,7 +1825,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GamePrepareNotification = subBuilder;
             break;
           }
-          case 186: {
+          case 202: {
             global::HolyShitServer.Src.Network.Packets.C2SGameStartRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SGameStartRequest();
             if (payloadCase_ == PayloadOneofCase.GameStartRequest) {
               subBuilder.MergeFrom(GameStartRequest);
@@ -1716,7 +1834,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GameStartRequest = subBuilder;
             break;
           }
-          case 194: {
+          case 210: {
             global::HolyShitServer.Src.Network.Packets.S2CGameStartResponse subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGameStartResponse();
             if (payloadCase_ == PayloadOneofCase.GameStartResponse) {
               subBuilder.MergeFrom(GameStartResponse);
@@ -1725,7 +1843,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GameStartResponse = subBuilder;
             break;
           }
-          case 202: {
+          case 218: {
             global::HolyShitServer.Src.Network.Packets.S2CGameStartNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CGameStartNotification();
             if (payloadCase_ == PayloadOneofCase.GameStartNotification) {
               subBuilder.MergeFrom(GameStartNotification);
@@ -1734,7 +1852,7 @@ namespace HolyShitServer.Src.Network.Packets {
             GameStartNotification = subBuilder;
             break;
           }
-          case 210: {
+          case 226: {
             global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest subBuilder = new global::HolyShitServer.Src.Network.Packets.C2SPositionUpdateRequest();
             if (payloadCase_ == PayloadOneofCase.PositionUpdateRequest) {
               subBuilder.MergeFrom(PositionUpdateRequest);
@@ -1743,7 +1861,7 @@ namespace HolyShitServer.Src.Network.Packets {
             PositionUpdateRequest = subBuilder;
             break;
           }
-          case 218: {
+          case 234: {
             global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification subBuilder = new global::HolyShitServer.Src.Network.Packets.S2CPositionUpdateNotification();
             if (payloadCase_ == PayloadOneofCase.PositionUpdateNotification) {
               subBuilder.MergeFrom(PositionUpdateNotification);

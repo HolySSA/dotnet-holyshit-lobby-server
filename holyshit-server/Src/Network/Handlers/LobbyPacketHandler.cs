@@ -147,12 +147,12 @@ public static class LobbyPacketHandler
     );
   }
 
-  public static async Task<GamePacketMessage> HandleGameReadyRequest(ClientSession client, uint sequence, C2SGameReadyRequest request)
+  public static async Task<GamePacketMessage> HandleRoomReadyRequest(ClientSession client, uint sequence, C2SRoomReadyRequest request)
   {
     using var scope = client.ServiceProvider.CreateScope();
     var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
 
-    var result = await roomService.GameReady(client.UserId, request.IsReady);
+    var result = await roomService.RoomReady(client.UserId, request.IsReady);
 
     // 레디 알림
     if (result.Success)
@@ -163,7 +163,7 @@ public static class LobbyPacketHandler
         var targetUserIds = RoomModel.Instance.GetRoomTargetUserIds(currentRoom.Id, client.UserId);
         if (targetUserIds.Any())
         {
-          var notification = NotificationHelper.CreateGameReadyNotification(
+          var notification = NotificationHelper.CreateRoomReadyNotification(
             client.UserId,
             request.IsReady,
             targetUserIds
@@ -179,9 +179,26 @@ public static class LobbyPacketHandler
       }
     }
 
-    return ResponseHelper.CreateGameReadyResponse(
+    return ResponseHelper.CreateRoomReadyResponse(
       sequence,
       result.Success,
+      result.FailCode
+    );
+  }
+
+  /// <summary>
+  /// 방 레디 상태 요청 처리
+  /// </summary>
+  public static async Task<GamePacketMessage> HandleGetRoomReadyStateRequest(ClientSession client, uint sequence, C2SGetRoomReadyStateRequest request)
+  {
+    using var scope = client.ServiceProvider.CreateScope();
+    var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
+
+    var result = await roomService.GetRoomReadyState(request.RoomId);
+    return ResponseHelper.CreateGetRoomReadyStateResponse(
+      sequence,
+      result.Success,
+      result.Data ?? new List<RoomUserReadyData>(),
       result.FailCode
     );
   }

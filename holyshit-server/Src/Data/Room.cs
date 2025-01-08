@@ -13,16 +13,24 @@ public class Room
 
   // 동시성을 고려한 컬렉션들
   private readonly ConcurrentDictionary<int, UserData> _users = new();
+  private readonly ConcurrentDictionary<int, bool> _userReadyStates = new();
   private readonly ConcurrentDictionary<int, CharacterPositionData> _characterPositions = new();
 
   // 유저 관리 메서드들
   public bool AddUser(UserData userData)
   {
-    return _users.TryAdd(userData.Id, userData);
+    if (_users.TryAdd(userData.Id, userData))
+    {
+      _userReadyStates.TryAdd(userData.Id, false); // false로 초기화
+      return true;
+    }
+
+    return false;
   }
 
   public bool RemoveUser(int userId)
   {
+    _userReadyStates.TryRemove(userId, out _);
     return _users.TryRemove(userId, out _);
   }
 
@@ -50,6 +58,36 @@ public class Room
       Console.WriteLine($"[Room] SetState 실패: {ex.Message}");
       return false;
     }
+  }
+
+  // 레디 상태 관리 메서드들
+  public bool SetUserReady(int userId, bool isReady)
+  {
+    try
+    {
+      _userReadyStates.AddOrUpdate(userId, isReady, (_, _) => isReady);
+      return true;
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[Room] SetUserReady 실패: {ex.Message}");
+      return false;
+    }
+  }
+
+  public bool GetUserReady(int userId)
+  {
+    return _userReadyStates.TryGetValue(userId, out var isReady) && isReady;
+  }
+
+  public List<RoomUserReadyData> GetAllReadyStates()
+  {
+    return _userReadyStates.Select(kvp => new RoomUserReadyData 
+    { 
+      UserId = kvp.Key, 
+      IsReady = kvp.Value 
+    })
+    .ToList();
   }
 
   // 위치 관리 메서드들

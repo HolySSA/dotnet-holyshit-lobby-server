@@ -148,16 +148,36 @@ public static class ResponseHelper
     return new GamePacketMessage(PacketId.LeaveRoomResponse, sequence, gamePacket);
   }
 
-  public static GamePacketMessage CreateGameReadyResponse(uint sequence, bool success, GlobalFailCode failCode)
+  public static GamePacketMessage CreateRoomReadyResponse(uint sequence, bool success, GlobalFailCode failCode)
   {
     var gamePacket = new GamePacket();
-    gamePacket.GameReadyResponse = new S2CGameReadyResponse
+    gamePacket.RoomReadyResponse = new S2CRoomReadyResponse
     {
       Success = success,
       FailCode = failCode
     };
 
-    return new GamePacketMessage(PacketId.GameReadyResponse, sequence, gamePacket);
+    return new GamePacketMessage(PacketId.RoomReadyResponse, sequence, gamePacket);
+  }
+
+  public static GamePacketMessage CreateGetRoomReadyStateResponse(
+    uint sequence,
+    bool success,
+    List<RoomUserReadyData> readyStates,
+    GlobalFailCode failCode)
+  {
+    var response = new S2CGetRoomReadyStateResponse
+    {
+      Success = success,
+      FailCode = failCode
+    };
+
+    response.ReadyStates.AddRange(readyStates);
+
+    var gamePacket = new GamePacket();
+    gamePacket.GetRoomReadyStateResponse = response;
+
+    return new GamePacketMessage(PacketId.GetRoomReadyStateResponse, sequence, gamePacket);
   }
 
   public static GamePacketMessage CreateGamePrepareResponse(uint sequence, bool success, GlobalFailCode failCode)

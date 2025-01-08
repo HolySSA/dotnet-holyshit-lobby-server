@@ -40,21 +40,25 @@ namespace HolyShitServer.Src.Network.Packets {
             "c2VyRGF0YSIVChNDMlNMZWF2ZVJvb21SZXF1ZXN0IkoKFFMyQ0xlYXZlUm9v",
             "bVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSIQoIZmFpbENvZGUYAiABKA4y",
             "Dy5HbG9iYWxGYWlsQ29kZSIqChhTMkNMZWF2ZVJvb21Ob3RpZmljYXRpb24S",
-            "DgoGdXNlcklkGAEgASgFIiYKE0MyU0dhbWVSZWFkeVJlcXVlc3QSDwoHaXNS",
-            "ZWFkeRgBIAEoCCJKChRTMkNHYW1lUmVhZHlSZXNwb25zZRIPCgdzdWNjZXNz",
-            "GAEgASgIEiEKCGZhaWxDb2RlGAIgASgOMg8uR2xvYmFsRmFpbENvZGUiOwoY",
-            "UzJDR2FtZVJlYWR5Tm90aWZpY2F0aW9uEg4KBnVzZXJJZBgBIAEoBRIPCgdp",
-            "c1JlYWR5GAIgASgIIhcKFUMyU0dhbWVQcmVwYXJlUmVxdWVzdCJMChZTMkNH",
-            "YW1lUHJlcGFyZVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSIQoIZmFpbENv",
-            "ZGUYAiABKA4yDy5HbG9iYWxGYWlsQ29kZSI1ChpTMkNHYW1lUHJlcGFyZU5v",
-            "dGlmaWNhdGlvbhIXCgRyb29tGAEgASgLMgkuUm9vbURhdGEiFQoTQzJTR2Ft",
-            "ZVN0YXJ0UmVxdWVzdCJKChRTMkNHYW1lU3RhcnRSZXNwb25zZRIPCgdzdWNj",
-            "ZXNzGAEgASgIEiEKCGZhaWxDb2RlGAIgASgOMg8uR2xvYmFsRmFpbENvZGUi",
-            "iwEKGFMyQ0dhbWVTdGFydE5vdGlmaWNhdGlvbhIhCglnYW1lU3RhdGUYASAB",
-            "KAsyDi5HYW1lU3RhdGVEYXRhEhgKBXVzZXJzGAIgAygLMgkuVXNlckRhdGES",
-            "MgoSY2hhcmFjdGVyUG9zaXRpb25zGAMgAygLMhYuQ2hhcmFjdGVyUG9zaXRp",
-            "b25EYXRhQiWqAiJIb2x5U2hpdFNlcnZlci5TcmMuTmV0d29yay5QYWNrZXRz",
-            "YgZwcm90bzM="));
+            "DgoGdXNlcklkGAEgASgFIiYKE0MyU1Jvb21SZWFkeVJlcXVlc3QSDwoHaXNS",
+            "ZWFkeRgBIAEoCCJKChRTMkNSb29tUmVhZHlSZXNwb25zZRIPCgdzdWNjZXNz",
+            "GAEgASgIEiEKCGZhaWxDb2RlGAIgASgOMg8uR2xvYmFsRmFpbENvZGUiQQoY",
+            "UzJDUm9vbVJlYWR5Tm90aWZpY2F0aW9uEiUKCXVzZXJSZWFkeRgBIAEoCzIS",
+            "LlJvb21Vc2VyUmVhZHlEYXRhIi0KG0MyU0dldFJvb21SZWFkeVN0YXRlUmVx",
+            "dWVzdBIOCgZyb29tSWQYASABKAUiewocUzJDR2V0Um9vbVJlYWR5U3RhdGVS",
+            "ZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEicKC3JlYWR5U3RhdGVzGAIgAygL",
+            "MhIuUm9vbVVzZXJSZWFkeURhdGESIQoIZmFpbENvZGUYAyABKA4yDy5HbG9i",
+            "YWxGYWlsQ29kZSIXChVDMlNHYW1lUHJlcGFyZVJlcXVlc3QiTAoWUzJDR2Ft",
+            "ZVByZXBhcmVSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEiEKCGZhaWxDb2Rl",
+            "GAIgASgOMg8uR2xvYmFsRmFpbENvZGUiNQoaUzJDR2FtZVByZXBhcmVOb3Rp",
+            "ZmljYXRpb24SFwoEcm9vbRgBIAEoCzIJLlJvb21EYXRhIhUKE0MyU0dhbWVT",
+            "dGFydFJlcXVlc3QiSgoUUzJDR2FtZVN0YXJ0UmVzcG9uc2USDwoHc3VjY2Vz",
+            "cxgBIAEoCBIhCghmYWlsQ29kZRgCIAEoDjIPLkdsb2JhbEZhaWxDb2RlIosB",
+            "ChhTMkNHYW1lU3RhcnROb3RpZmljYXRpb24SIQoJZ2FtZVN0YXRlGAEgASgL",
+            "Mg4uR2FtZVN0YXRlRGF0YRIYCgV1c2VycxgCIAMoCzIJLlVzZXJEYXRhEjIK",
+            "EmNoYXJhY3RlclBvc2l0aW9ucxgDIAMoCzIWLkNoYXJhY3RlclBvc2l0aW9u",
+            "RGF0YUIlqgIiSG9seVNoaXRTZXJ2ZXIuU3JjLk5ldHdvcmsuUGFja2V0c2IG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::HolyShitServer.Src.Network.Packets.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -70,9 +74,11 @@ namespace HolyShitServer.Src.Network.Packets {
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SLeaveRoomRequest), global::HolyShitServer.Src.Network.Packets.C2SLeaveRoomRequest.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomResponse), global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomResponse.Parser, new[]{ "Success", "FailCode" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomNotification), global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomNotification.Parser, new[]{ "UserId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest), global::HolyShitServer.Src.Network.Packets.C2SGameReadyRequest.Parser, new[]{ "IsReady" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse), global::HolyShitServer.Src.Network.Packets.S2CGameReadyResponse.Parser, new[]{ "Success", "FailCode" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification), global::HolyShitServer.Src.Network.Packets.S2CGameReadyNotification.Parser, new[]{ "UserId", "IsReady" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest), global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest.Parser, new[]{ "IsReady" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse), global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse.Parser, new[]{ "Success", "FailCode" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification), global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification.Parser, new[]{ "UserReady" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest), global::HolyShitServer.Src.Network.Packets.C2SGetRoomReadyStateRequest.Parser, new[]{ "RoomId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse), global::HolyShitServer.Src.Network.Packets.S2CGetRoomReadyStateResponse.Parser, new[]{ "Success", "ReadyStates", "FailCode" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SGamePrepareRequest), global::HolyShitServer.Src.Network.Packets.C2SGamePrepareRequest.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CGamePrepareResponse), global::HolyShitServer.Src.Network.Packets.S2CGamePrepareResponse.Parser, new[]{ "Success", "FailCode" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CGamePrepareNotification), global::HolyShitServer.Src.Network.Packets.S2CGamePrepareNotification.Parser, new[]{ "Room" }, null, null, null, null),
@@ -2672,16 +2678,16 @@ namespace HolyShitServer.Src.Network.Packets {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class C2SGameReadyRequest : pb::IMessage<C2SGameReadyRequest>
+  public sealed partial class C2SRoomReadyRequest : pb::IMessage<C2SRoomReadyRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<C2SGameReadyRequest> _parser = new pb::MessageParser<C2SGameReadyRequest>(() => new C2SGameReadyRequest());
+    private static readonly pb::MessageParser<C2SRoomReadyRequest> _parser = new pb::MessageParser<C2SRoomReadyRequest>(() => new C2SRoomReadyRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<C2SGameReadyRequest> Parser { get { return _parser; } }
+    public static pb::MessageParser<C2SRoomReadyRequest> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2697,7 +2703,7 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public C2SGameReadyRequest() {
+    public C2SRoomReadyRequest() {
       OnConstruction();
     }
 
@@ -2705,15 +2711,15 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public C2SGameReadyRequest(C2SGameReadyRequest other) : this() {
+    public C2SRoomReadyRequest(C2SRoomReadyRequest other) : this() {
       isReady_ = other.isReady_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public C2SGameReadyRequest Clone() {
-      return new C2SGameReadyRequest(this);
+    public C2SRoomReadyRequest Clone() {
+      return new C2SRoomReadyRequest(this);
     }
 
     /// <summary>Field number for the "isReady" field.</summary>
@@ -2734,12 +2740,12 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as C2SGameReadyRequest);
+      return Equals(other as C2SRoomReadyRequest);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(C2SGameReadyRequest other) {
+    public bool Equals(C2SRoomReadyRequest other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -2812,7 +2818,7 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(C2SGameReadyRequest other) {
+    public void MergeFrom(C2SRoomReadyRequest other) {
       if (other == null) {
         return;
       }
@@ -2873,16 +2879,16 @@ namespace HolyShitServer.Src.Network.Packets {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class S2CGameReadyResponse : pb::IMessage<S2CGameReadyResponse>
+  public sealed partial class S2CRoomReadyResponse : pb::IMessage<S2CRoomReadyResponse>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<S2CGameReadyResponse> _parser = new pb::MessageParser<S2CGameReadyResponse>(() => new S2CGameReadyResponse());
+    private static readonly pb::MessageParser<S2CRoomReadyResponse> _parser = new pb::MessageParser<S2CRoomReadyResponse>(() => new S2CRoomReadyResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<S2CGameReadyResponse> Parser { get { return _parser; } }
+    public static pb::MessageParser<S2CRoomReadyResponse> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2898,7 +2904,7 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CGameReadyResponse() {
+    public S2CRoomReadyResponse() {
       OnConstruction();
     }
 
@@ -2906,7 +2912,7 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CGameReadyResponse(S2CGameReadyResponse other) : this() {
+    public S2CRoomReadyResponse(S2CRoomReadyResponse other) : this() {
       success_ = other.success_;
       failCode_ = other.failCode_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -2914,8 +2920,8 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CGameReadyResponse Clone() {
-      return new S2CGameReadyResponse(this);
+    public S2CRoomReadyResponse Clone() {
+      return new S2CRoomReadyResponse(this);
     }
 
     /// <summary>Field number for the "success" field.</summary>
@@ -2945,12 +2951,12 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as S2CGameReadyResponse);
+      return Equals(other as S2CRoomReadyResponse);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(S2CGameReadyResponse other) {
+    public bool Equals(S2CRoomReadyResponse other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -3036,7 +3042,7 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(S2CGameReadyResponse other) {
+    public void MergeFrom(S2CRoomReadyResponse other) {
       if (other == null) {
         return;
       }
@@ -3108,16 +3114,16 @@ namespace HolyShitServer.Src.Network.Packets {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class S2CGameReadyNotification : pb::IMessage<S2CGameReadyNotification>
+  public sealed partial class S2CRoomReadyNotification : pb::IMessage<S2CRoomReadyNotification>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<S2CGameReadyNotification> _parser = new pb::MessageParser<S2CGameReadyNotification>(() => new S2CGameReadyNotification());
+    private static readonly pb::MessageParser<S2CRoomReadyNotification> _parser = new pb::MessageParser<S2CRoomReadyNotification>(() => new S2CRoomReadyNotification());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<S2CGameReadyNotification> Parser { get { return _parser; } }
+    public static pb::MessageParser<S2CRoomReadyNotification> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -3133,7 +3139,7 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CGameReadyNotification() {
+    public S2CRoomReadyNotification() {
       OnConstruction();
     }
 
@@ -3141,65 +3147,45 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CGameReadyNotification(S2CGameReadyNotification other) : this() {
-      userId_ = other.userId_;
-      isReady_ = other.isReady_;
+    public S2CRoomReadyNotification(S2CRoomReadyNotification other) : this() {
+      userReady_ = other.userReady_ != null ? other.userReady_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CGameReadyNotification Clone() {
-      return new S2CGameReadyNotification(this);
+    public S2CRoomReadyNotification Clone() {
+      return new S2CRoomReadyNotification(this);
     }
 
-    /// <summary>Field number for the "userId" field.</summary>
-    public const int UserIdFieldNumber = 1;
-    private int userId_;
-    /// <summary>
-    /// 레디 상태가 변경된 유저 ID
-    /// </summary>
+    /// <summary>Field number for the "userReady" field.</summary>
+    public const int UserReadyFieldNumber = 1;
+    private global::HolyShitServer.Src.Network.Packets.RoomUserReadyData userReady_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int UserId {
-      get { return userId_; }
+    public global::HolyShitServer.Src.Network.Packets.RoomUserReadyData UserReady {
+      get { return userReady_; }
       set {
-        userId_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "isReady" field.</summary>
-    public const int IsReadyFieldNumber = 2;
-    private bool isReady_;
-    /// <summary>
-    /// 수신한 레디 상태 그대로
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool IsReady {
-      get { return isReady_; }
-      set {
-        isReady_ = value;
+        userReady_ = value;
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as S2CGameReadyNotification);
+      return Equals(other as S2CRoomReadyNotification);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(S2CGameReadyNotification other) {
+    public bool Equals(S2CRoomReadyNotification other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (UserId != other.UserId) return false;
-      if (IsReady != other.IsReady) return false;
+      if (!object.Equals(UserReady, other.UserReady)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3207,8 +3193,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (UserId != 0) hash ^= UserId.GetHashCode();
-      if (IsReady != false) hash ^= IsReady.GetHashCode();
+      if (userReady_ != null) hash ^= UserReady.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3227,13 +3212,9 @@ namespace HolyShitServer.Src.Network.Packets {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (UserId != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(UserId);
-      }
-      if (IsReady != false) {
-        output.WriteRawTag(16);
-        output.WriteBool(IsReady);
+      if (userReady_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(UserReady);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -3245,13 +3226,9 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (UserId != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(UserId);
-      }
-      if (IsReady != false) {
-        output.WriteRawTag(16);
-        output.WriteBool(IsReady);
+      if (userReady_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(UserReady);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -3263,11 +3240,8 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (UserId != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(UserId);
-      }
-      if (IsReady != false) {
-        size += 1 + 1;
+      if (userReady_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(UserReady);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3277,15 +3251,219 @@ namespace HolyShitServer.Src.Network.Packets {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(S2CGameReadyNotification other) {
+    public void MergeFrom(S2CRoomReadyNotification other) {
       if (other == null) {
         return;
       }
-      if (other.UserId != 0) {
-        UserId = other.UserId;
+      if (other.userReady_ != null) {
+        if (userReady_ == null) {
+          UserReady = new global::HolyShitServer.Src.Network.Packets.RoomUserReadyData();
+        }
+        UserReady.MergeFrom(other.UserReady);
       }
-      if (other.IsReady != false) {
-        IsReady = other.IsReady;
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (userReady_ == null) {
+              UserReady = new global::HolyShitServer.Src.Network.Packets.RoomUserReadyData();
+            }
+            input.ReadMessage(UserReady);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (userReady_ == null) {
+              UserReady = new global::HolyShitServer.Src.Network.Packets.RoomUserReadyData();
+            }
+            input.ReadMessage(UserReady);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class C2SGetRoomReadyStateRequest : pb::IMessage<C2SGetRoomReadyStateRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<C2SGetRoomReadyStateRequest> _parser = new pb::MessageParser<C2SGetRoomReadyStateRequest>(() => new C2SGetRoomReadyStateRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<C2SGetRoomReadyStateRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[15]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2SGetRoomReadyStateRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2SGetRoomReadyStateRequest(C2SGetRoomReadyStateRequest other) : this() {
+      roomId_ = other.roomId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public C2SGetRoomReadyStateRequest Clone() {
+      return new C2SGetRoomReadyStateRequest(this);
+    }
+
+    /// <summary>Field number for the "roomId" field.</summary>
+    public const int RoomIdFieldNumber = 1;
+    private int roomId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int RoomId {
+      get { return roomId_; }
+      set {
+        roomId_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as C2SGetRoomReadyStateRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(C2SGetRoomReadyStateRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (RoomId != other.RoomId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (RoomId != 0) hash ^= RoomId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (RoomId != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(RoomId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (RoomId != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(RoomId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (RoomId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(RoomId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(C2SGetRoomReadyStateRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.RoomId != 0) {
+        RoomId = other.RoomId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -3307,11 +3485,7 @@ namespace HolyShitServer.Src.Network.Packets {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            UserId = input.ReadInt32();
-            break;
-          }
-          case 16: {
-            IsReady = input.ReadBool();
+            RoomId = input.ReadInt32();
             break;
           }
         }
@@ -3334,11 +3508,268 @@ namespace HolyShitServer.Src.Network.Packets {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            UserId = input.ReadInt32();
+            RoomId = input.ReadInt32();
             break;
           }
-          case 16: {
-            IsReady = input.ReadBool();
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class S2CGetRoomReadyStateResponse : pb::IMessage<S2CGetRoomReadyStateResponse>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<S2CGetRoomReadyStateResponse> _parser = new pb::MessageParser<S2CGetRoomReadyStateResponse>(() => new S2CGetRoomReadyStateResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<S2CGetRoomReadyStateResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[16]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public S2CGetRoomReadyStateResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public S2CGetRoomReadyStateResponse(S2CGetRoomReadyStateResponse other) : this() {
+      success_ = other.success_;
+      readyStates_ = other.readyStates_.Clone();
+      failCode_ = other.failCode_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public S2CGetRoomReadyStateResponse Clone() {
+      return new S2CGetRoomReadyStateResponse(this);
+    }
+
+    /// <summary>Field number for the "success" field.</summary>
+    public const int SuccessFieldNumber = 1;
+    private bool success_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "readyStates" field.</summary>
+    public const int ReadyStatesFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::HolyShitServer.Src.Network.Packets.RoomUserReadyData> _repeated_readyStates_codec
+        = pb::FieldCodec.ForMessage(18, global::HolyShitServer.Src.Network.Packets.RoomUserReadyData.Parser);
+    private readonly pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.RoomUserReadyData> readyStates_ = new pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.RoomUserReadyData>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::HolyShitServer.Src.Network.Packets.RoomUserReadyData> ReadyStates {
+      get { return readyStates_; }
+    }
+
+    /// <summary>Field number for the "failCode" field.</summary>
+    public const int FailCodeFieldNumber = 3;
+    private global::HolyShitServer.Src.Network.Packets.GlobalFailCode failCode_ = global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::HolyShitServer.Src.Network.Packets.GlobalFailCode FailCode {
+      get { return failCode_; }
+      set {
+        failCode_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as S2CGetRoomReadyStateResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(S2CGetRoomReadyStateResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Success != other.Success) return false;
+      if(!readyStates_.Equals(other.readyStates_)) return false;
+      if (FailCode != other.FailCode) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Success != false) hash ^= Success.GetHashCode();
+      hash ^= readyStates_.GetHashCode();
+      if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) hash ^= FailCode.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      readyStates_.WriteTo(output, _repeated_readyStates_codec);
+      if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) FailCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Success != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Success);
+      }
+      readyStates_.WriteTo(ref output, _repeated_readyStates_codec);
+      if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) FailCode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      size += readyStates_.CalculateSize(_repeated_readyStates_codec);
+      if (FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) FailCode);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(S2CGetRoomReadyStateResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      readyStates_.Add(other.readyStates_);
+      if (other.FailCode != global::HolyShitServer.Src.Network.Packets.GlobalFailCode.NoneFailcode) {
+        FailCode = other.FailCode;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            readyStates_.AddEntriesFrom(input, _repeated_readyStates_codec);
+            break;
+          }
+          case 24: {
+            FailCode = (global::HolyShitServer.Src.Network.Packets.GlobalFailCode) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 18: {
+            readyStates_.AddEntriesFrom(ref input, _repeated_readyStates_codec);
+            break;
+          }
+          case 24: {
+            FailCode = (global::HolyShitServer.Src.Network.Packets.GlobalFailCode) input.ReadEnum();
             break;
           }
         }
@@ -3363,7 +3794,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[15]; }
+      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3524,7 +3955,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[16]; }
+      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3759,7 +4190,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[17]; }
+      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3966,7 +4397,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[18]; }
+      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4127,7 +4558,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[19]; }
+      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4362,7 +4793,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[20]; }
+      get { return global::HolyShitServer.Src.Network.Packets.LobbyReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

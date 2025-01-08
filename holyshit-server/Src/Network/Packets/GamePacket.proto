@@ -28,19 +28,23 @@ message GamePacket {
     C2SLeaveRoomRequest leave_room_request = 14;
     S2CLeaveRoomResponse leave_room_response = 15;
     S2CLeaveRoomNotification leave_room_notification = 16;
-    C2SGameReadyRequest game_ready_request = 17;
-    S2CGameReadyResponse game_ready_response = 18;
-    S2CGameReadyNotification game_ready_notification = 19;
-    C2SGamePrepareRequest game_prepare_request = 20;
-    S2CGamePrepareResponse game_prepare_response = 21;
-    S2CGamePrepareNotification game_prepare_notification = 22;
-    C2SGameStartRequest game_start_request = 23;
-    S2CGameStartResponse game_start_response = 24;
-    S2CGameStartNotification game_start_notification = 25;
+    C2SRoomReadyRequest room_ready_request = 17;
+    S2CRoomReadyResponse room_ready_response = 18;
+    S2CRoomReadyNotification room_ready_notification = 19;
+    C2SGetRoomReadyStateRequest get_room_ready_state_request = 20;
+    S2CGetRoomReadyStateResponse get_room_ready_state_response = 21;
+
+    // Game Start messages
+    C2SGamePrepareRequest game_prepare_request = 22;
+    S2CGamePrepareResponse game_prepare_response = 23;
+    S2CGamePrepareNotification game_prepare_notification = 24;
+    C2SGameStartRequest game_start_request = 25;
+    S2CGameStartResponse game_start_response = 26;
+    S2CGameStartNotification game_start_notification = 27;
 
     // Game messages
-    C2SPositionUpdateRequest position_update_request = 26;
-    S2CPositionUpdateNotification position_update_notification = 27;
+    C2SPositionUpdateRequest position_update_request = 28;
+    S2CPositionUpdateNotification position_update_notification = 29;
   }
 }
 
@@ -65,17 +69,21 @@ enum PacketId {
   LeaveRoomRequest = 14;
   LeaveRoomResponse = 15;
   LeaveRoomNotification = 16;
-  GameReadyRequest = 17;
-  GameReadyResponse = 18;
-  GameReadyNotification = 19;
-  GamePrepareRequest = 20;
-  GamePrepareResponse = 21;
-  GamePrepareNotification = 22;
-  GameStartRequest = 23;
-  GameStartResponse = 24;
-  GameStartNotification = 25;
+  RoomReadyRequest = 17;
+  RoomReadyResponse = 18;
+  RoomReadyNotification = 19;
+  GetRoomReadyStateRequest = 20;
+  GetRoomReadyStateResponse = 21;
+
+  // Game Start messages
+  GamePrepareRequest = 22;
+  GamePrepareResponse = 23;
+  GamePrepareNotification = 24;
+  GameStartRequest = 25;
+  GameStartResponse = 26;
+  GameStartNotification = 27;
 
   // Game messages
-  PositionUpdateRequest = 26;
-  PositionUpdateNotification = 27;
+  PositionUpdateRequest = 28;
+  PositionUpdateNotification = 29;
 }
