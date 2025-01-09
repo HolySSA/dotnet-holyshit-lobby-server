@@ -31,6 +31,18 @@ public static class AuthPacketHandler
   {
     try
     {
+      // 토큰이 없는 요청은 무시
+      if (string.IsNullOrEmpty(request.Token))
+      {
+        return ResponseHelper.CreateLoginResponse(
+          sequence,
+          false,
+          new List<CharacterInfoData>(),
+          CharacterType.NoneCharacter,
+          GlobalFailCode.AuthenticationFailed
+        );
+      }
+
       using var scope = client.ServiceProvider.CreateScope();
       var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
       var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

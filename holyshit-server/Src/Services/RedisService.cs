@@ -253,6 +253,25 @@ public class RedisService
             Console.WriteLine($"[Redis] DB 동기화 실패: {ex.Message}");
         }
     }
+
+    /// <summary>
+    /// 유저 관련 데이터 정리
+    /// </summary>
+    public async Task ClearUserDataAsync(int userId)
+    {
+        var db = _redis.GetDatabase();
+
+        // 유저 관련 모든 Redis 키 삭제
+        var tasks = new List<Task>
+        {
+            // 유저 데이터
+            db.KeyDeleteAsync(string.Format(USER_KEY_FORMAT, userId)),
+            // 유저 캐릭터 데이터
+            db.KeyDeleteAsync(string.Format(USER_CHARACTERS_KEY_FORMAT, userId))
+        };
+
+        await Task.WhenAll(tasks);
+    }
 }
 
 public class UserCharacterTypeData

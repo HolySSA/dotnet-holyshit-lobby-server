@@ -160,11 +160,14 @@ public class ClientSession : IDisposable
     {
       if (UserId > 0)
       {
-        // Redis의 캐릭터 정보를 DB에 동기화
         using var scope = ServiceProvider.CreateScope();
         var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        // Redis 캐릭터 정보 DB에 동기화
         redisService.SyncSelectedCharacterToDbAsync(UserId, dbContext).GetAwaiter().GetResult();
+        // Redis 유저 관련 데이터 정리
+        redisService.ClearUserDataAsync(UserId).GetAwaiter().GetResult();
 
         // 방에서 나가기
         var roomModel = RoomModel.Instance;
