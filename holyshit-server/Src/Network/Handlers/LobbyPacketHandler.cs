@@ -121,17 +121,23 @@ public static class LobbyPacketHandler
     var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
 
     // 방 유저들 가져오기
-     var currentRoom = RoomModel.Instance.GetUserRoom(client.UserId);
-    var targetUserIds = currentRoom != null ? RoomModel.Instance.GetRoomTargetUserIds(currentRoom.Id, client.UserId) : new List<int>();
+    var currentRoom = RoomModel.Instance.GetUserRoom(client.UserId);
+    var wasOwner = currentRoom?.OwnerId == client.UserId;
 
     // 방 퇴장
     var result = await roomService.LeaveRoom(client.UserId);
-
     // 방 퇴장 알림
-    if (result.Success && targetUserIds.Any())
+    if (result.Success)
     {
-      var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
-        var notification = NotificationHelper.CreateLeaveRoomNotification(client.UserId, targetUserIds);
+      var targetUserIds = currentRoom != null ? RoomModel.Instance.GetRoomTargetUserIds(currentRoom.Id, client.UserId) : new List<int>();
+      if (currentRoom != null && targetUserIds.Any())
+      {
+        var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
+        var notification = NotificationHelper.CreateLeaveRoomNotification(
+          client.UserId,
+          wasOwner ? currentRoom.OwnerId : 0,
+          targetUserIds
+        );
         await messageQueueService.BroadcastMessage(
           notification.PacketId,
           notification.Sequence,
@@ -139,6 +145,7 @@ public static class LobbyPacketHandler
           targetUserIds
         );
       }
+    }
 
     return ResponseHelper.CreateLeaveRoomResponse(
       sequence,

@@ -57,6 +57,7 @@ message S2CLeaveRoomResponse {
 
 message S2CLeaveRoomNotification {
     int32 userId = 1;
+    int32 ownerId = 2;
 }
 
 message C2SRoomReadyRequest {

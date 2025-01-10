@@ -172,13 +172,18 @@ public class ClientSession : IDisposable
         // 방에서 나가기
         var roomModel = RoomModel.Instance;
         var currentRoom = roomModel.GetUserRoom(UserId);
+        var wasOwner = currentRoom?.OwnerId == UserId;
         if (currentRoom != null)
         {
           // 방의 다른 유저들에게 나가기 알림 보내기
           var targetUserIds = roomModel.GetRoomTargetUserIds(currentRoom.Id, UserId);
           if (targetUserIds.Any())
           {
-            var notification = NotificationHelper.CreateLeaveRoomNotification(UserId, targetUserIds);
+            var notification = NotificationHelper.CreateLeaveRoomNotification(
+              UserId,
+              wasOwner ? currentRoom.OwnerId : 0,
+              targetUserIds
+            );
             var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
             messageQueueService.BroadcastMessage(
               notification.PacketId,

@@ -39,26 +39,26 @@ namespace HolyShitServer.Src.Network.Packets {
             "UzJDSm9pblJvb21Ob3RpZmljYXRpb24SGwoIam9pblVzZXIYASABKAsyCS5V",
             "c2VyRGF0YSIVChNDMlNMZWF2ZVJvb21SZXF1ZXN0IkoKFFMyQ0xlYXZlUm9v",
             "bVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSIQoIZmFpbENvZGUYAiABKA4y",
-            "Dy5HbG9iYWxGYWlsQ29kZSIqChhTMkNMZWF2ZVJvb21Ob3RpZmljYXRpb24S",
-            "DgoGdXNlcklkGAEgASgFIiYKE0MyU1Jvb21SZWFkeVJlcXVlc3QSDwoHaXNS",
-            "ZWFkeRgBIAEoCCJKChRTMkNSb29tUmVhZHlSZXNwb25zZRIPCgdzdWNjZXNz",
-            "GAEgASgIEiEKCGZhaWxDb2RlGAIgASgOMg8uR2xvYmFsRmFpbENvZGUiQQoY",
-            "UzJDUm9vbVJlYWR5Tm90aWZpY2F0aW9uEiUKCXVzZXJSZWFkeRgBIAEoCzIS",
-            "LlJvb21Vc2VyUmVhZHlEYXRhIi0KG0MyU0dldFJvb21SZWFkeVN0YXRlUmVx",
-            "dWVzdBIOCgZyb29tSWQYASABKAUiewocUzJDR2V0Um9vbVJlYWR5U3RhdGVS",
-            "ZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEicKC3JlYWR5U3RhdGVzGAIgAygL",
-            "MhIuUm9vbVVzZXJSZWFkeURhdGESIQoIZmFpbENvZGUYAyABKA4yDy5HbG9i",
-            "YWxGYWlsQ29kZSIXChVDMlNHYW1lUHJlcGFyZVJlcXVlc3QiTAoWUzJDR2Ft",
-            "ZVByZXBhcmVSZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEiEKCGZhaWxDb2Rl",
-            "GAIgASgOMg8uR2xvYmFsRmFpbENvZGUiNQoaUzJDR2FtZVByZXBhcmVOb3Rp",
-            "ZmljYXRpb24SFwoEcm9vbRgBIAEoCzIJLlJvb21EYXRhIhUKE0MyU0dhbWVT",
-            "dGFydFJlcXVlc3QiSgoUUzJDR2FtZVN0YXJ0UmVzcG9uc2USDwoHc3VjY2Vz",
-            "cxgBIAEoCBIhCghmYWlsQ29kZRgCIAEoDjIPLkdsb2JhbEZhaWxDb2RlIosB",
-            "ChhTMkNHYW1lU3RhcnROb3RpZmljYXRpb24SIQoJZ2FtZVN0YXRlGAEgASgL",
-            "Mg4uR2FtZVN0YXRlRGF0YRIYCgV1c2VycxgCIAMoCzIJLlVzZXJEYXRhEjIK",
-            "EmNoYXJhY3RlclBvc2l0aW9ucxgDIAMoCzIWLkNoYXJhY3RlclBvc2l0aW9u",
-            "RGF0YUIlqgIiSG9seVNoaXRTZXJ2ZXIuU3JjLk5ldHdvcmsuUGFja2V0c2IG",
-            "cHJvdG8z"));
+            "Dy5HbG9iYWxGYWlsQ29kZSI7ChhTMkNMZWF2ZVJvb21Ob3RpZmljYXRpb24S",
+            "DgoGdXNlcklkGAEgASgFEg8KB293bmVySWQYAiABKAUiJgoTQzJTUm9vbVJl",
+            "YWR5UmVxdWVzdBIPCgdpc1JlYWR5GAEgASgIIkoKFFMyQ1Jvb21SZWFkeVJl",
+            "c3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSIQoIZmFpbENvZGUYAiABKA4yDy5H",
+            "bG9iYWxGYWlsQ29kZSJBChhTMkNSb29tUmVhZHlOb3RpZmljYXRpb24SJQoJ",
+            "dXNlclJlYWR5GAEgASgLMhIuUm9vbVVzZXJSZWFkeURhdGEiLQobQzJTR2V0",
+            "Um9vbVJlYWR5U3RhdGVSZXF1ZXN0Eg4KBnJvb21JZBgBIAEoBSJ7ChxTMkNH",
+            "ZXRSb29tUmVhZHlTdGF0ZVJlc3BvbnNlEg8KB3N1Y2Nlc3MYASABKAgSJwoL",
+            "cmVhZHlTdGF0ZXMYAiADKAsyEi5Sb29tVXNlclJlYWR5RGF0YRIhCghmYWls",
+            "Q29kZRgDIAEoDjIPLkdsb2JhbEZhaWxDb2RlIhcKFUMyU0dhbWVQcmVwYXJl",
+            "UmVxdWVzdCJMChZTMkNHYW1lUHJlcGFyZVJlc3BvbnNlEg8KB3N1Y2Nlc3MY",
+            "ASABKAgSIQoIZmFpbENvZGUYAiABKA4yDy5HbG9iYWxGYWlsQ29kZSI1ChpT",
+            "MkNHYW1lUHJlcGFyZU5vdGlmaWNhdGlvbhIXCgRyb29tGAEgASgLMgkuUm9v",
+            "bURhdGEiFQoTQzJTR2FtZVN0YXJ0UmVxdWVzdCJKChRTMkNHYW1lU3RhcnRS",
+            "ZXNwb25zZRIPCgdzdWNjZXNzGAEgASgIEiEKCGZhaWxDb2RlGAIgASgOMg8u",
+            "R2xvYmFsRmFpbENvZGUiiwEKGFMyQ0dhbWVTdGFydE5vdGlmaWNhdGlvbhIh",
+            "CglnYW1lU3RhdGUYASABKAsyDi5HYW1lU3RhdGVEYXRhEhgKBXVzZXJzGAIg",
+            "AygLMgkuVXNlckRhdGESMgoSY2hhcmFjdGVyUG9zaXRpb25zGAMgAygLMhYu",
+            "Q2hhcmFjdGVyUG9zaXRpb25EYXRhQiWqAiJIb2x5U2hpdFNlcnZlci5TcmMu",
+            "TmV0d29yay5QYWNrZXRzYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::HolyShitServer.Src.Network.Packets.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -73,7 +73,7 @@ namespace HolyShitServer.Src.Network.Packets {
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CJoinRoomNotification), global::HolyShitServer.Src.Network.Packets.S2CJoinRoomNotification.Parser, new[]{ "JoinUser" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SLeaveRoomRequest), global::HolyShitServer.Src.Network.Packets.C2SLeaveRoomRequest.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomResponse), global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomResponse.Parser, new[]{ "Success", "FailCode" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomNotification), global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomNotification.Parser, new[]{ "UserId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomNotification), global::HolyShitServer.Src.Network.Packets.S2CLeaveRoomNotification.Parser, new[]{ "UserId", "OwnerId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest), global::HolyShitServer.Src.Network.Packets.C2SRoomReadyRequest.Parser, new[]{ "IsReady" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse), global::HolyShitServer.Src.Network.Packets.S2CRoomReadyResponse.Parser, new[]{ "Success", "FailCode" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification), global::HolyShitServer.Src.Network.Packets.S2CRoomReadyNotification.Parser, new[]{ "UserReady" }, null, null, null, null),
@@ -2515,6 +2515,7 @@ namespace HolyShitServer.Src.Network.Packets {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public S2CLeaveRoomNotification(S2CLeaveRoomNotification other) : this() {
       userId_ = other.userId_;
+      ownerId_ = other.ownerId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2536,6 +2537,18 @@ namespace HolyShitServer.Src.Network.Packets {
       }
     }
 
+    /// <summary>Field number for the "ownerId" field.</summary>
+    public const int OwnerIdFieldNumber = 2;
+    private int ownerId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int OwnerId {
+      get { return ownerId_; }
+      set {
+        ownerId_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2552,6 +2565,7 @@ namespace HolyShitServer.Src.Network.Packets {
         return true;
       }
       if (UserId != other.UserId) return false;
+      if (OwnerId != other.OwnerId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2560,6 +2574,7 @@ namespace HolyShitServer.Src.Network.Packets {
     public override int GetHashCode() {
       int hash = 1;
       if (UserId != 0) hash ^= UserId.GetHashCode();
+      if (OwnerId != 0) hash ^= OwnerId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2582,6 +2597,10 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(8);
         output.WriteInt32(UserId);
       }
+      if (OwnerId != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(OwnerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2596,6 +2615,10 @@ namespace HolyShitServer.Src.Network.Packets {
         output.WriteRawTag(8);
         output.WriteInt32(UserId);
       }
+      if (OwnerId != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(OwnerId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2608,6 +2631,9 @@ namespace HolyShitServer.Src.Network.Packets {
       int size = 0;
       if (UserId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(UserId);
+      }
+      if (OwnerId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(OwnerId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2623,6 +2649,9 @@ namespace HolyShitServer.Src.Network.Packets {
       }
       if (other.UserId != 0) {
         UserId = other.UserId;
+      }
+      if (other.OwnerId != 0) {
+        OwnerId = other.OwnerId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2647,6 +2676,10 @@ namespace HolyShitServer.Src.Network.Packets {
             UserId = input.ReadInt32();
             break;
           }
+          case 16: {
+            OwnerId = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -2668,6 +2701,10 @@ namespace HolyShitServer.Src.Network.Packets {
             break;
           case 8: {
             UserId = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            OwnerId = input.ReadInt32();
             break;
           }
         }

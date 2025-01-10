@@ -20,11 +20,12 @@ public static class NotificationHelper
     );
   }
 
-  public static GamePacketMessage CreateLeaveRoomNotification(int userId, List<int> targetUserIds)
+  public static GamePacketMessage CreateLeaveRoomNotification(int userId, int ownerId, List<int> targetUserIds)
   {
     var notification = new S2CLeaveRoomNotification
     {
-      UserId = userId
+      UserId = userId,
+      OwnerId = ownerId
     };
 
     var gamePacket = new GamePacket();
