@@ -16,12 +16,20 @@ public class Room
   private readonly ConcurrentDictionary<int, bool> _userReadyStates = new();
   private readonly ConcurrentDictionary<int, CharacterPositionData> _characterPositions = new();
 
+  // 입장 순서를 저장하는 리스트 추가
+  private readonly List<int> _joinOrder = new();
+  private readonly object _joinOrderLock = new();  // 리스트 동시성 제어용
+
   // 유저 관리 메서드들
   public bool AddUser(UserData userData)
   {
     if (_users.TryAdd(userData.Id, userData))
     {
-      _userReadyStates.TryAdd(userData.Id, false); // false로 초기화
+      lock (_joinOrderLock)
+      {
+        _joinOrder.Add(userData.Id);  // 입장 순서 저장
+      }
+      _userReadyStates.TryAdd(userData.Id, false); // 입장 유저 레디 false로 초기화
       return true;
     }
 
@@ -30,6 +38,10 @@ public class Room
 
   public bool RemoveUser(int userId)
   {
+    lock (_joinOrderLock)
+    {
+      _joinOrder.Remove(userId);
+    }
     _userReadyStates.TryRemove(userId, out _);
     return _users.TryRemove(userId, out _);
   }
@@ -40,9 +52,16 @@ public class Room
     return userData;
   }
 
+  /// <summary>
+  /// 방 유저 목록 조회
+  /// </summary>
   public List<UserData> GetAllUsers()
   {
-    return _users.Values.ToList();
+    lock (_joinOrderLock)
+    {
+      // 입장 순서대로 유저 반환
+      return _joinOrder.Select(id => _users[id]).ToList();
+    }
   }
 
   // 방 상태 변경 메서드 추가
@@ -119,7 +138,9 @@ public class Room
     return _characterPositions.Values.ToList();
   }
 
-  // Proto 메시지로 변환하는 메서드
+  /// <summary>
+  /// Proto 메시지로 변환하는 메서드
+  /// </summary>
   public RoomData ToProto()
   {
     var roomData = new RoomData
