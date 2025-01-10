@@ -13,6 +13,8 @@ bin/
 obj/
 log/
 logs/
+holyshit-server/[Bb]in/
+holyshit-server/[Oo]bj/
 
 # 사용자별 파일
 *.user
