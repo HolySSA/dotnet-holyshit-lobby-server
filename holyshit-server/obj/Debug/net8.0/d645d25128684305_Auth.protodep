@@ -1,2 +1,0 @@
-obj\Debug\net8.0/Auth.cs: Src/Network/Packets/Common.proto\
- Src/Network/Packets/Auth.proto
