@@ -1,6 +1,18 @@
 # 빌드 결과물
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
 bin/
 obj/
+log/
+logs/
 
 # 사용자별 파일
 *.user
