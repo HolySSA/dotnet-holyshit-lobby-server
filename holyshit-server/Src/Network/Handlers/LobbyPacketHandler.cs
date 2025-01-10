@@ -210,31 +210,33 @@ public static class LobbyPacketHandler
     );
   }
 
-  /*
   public static async Task<GamePacketMessage> HandleGamePrepareRequest(ClientSession client, uint sequence, C2SGamePrepareRequest request)
   {
+    using var scope = client.ServiceProvider.CreateScope();
+    var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
+
     // 게임 준비 요청 처리
-    var result = await _roomService.GamePrepare(client.UserId);
-    
+    var result = await roomService.GamePrepare(client.UserId);
     // 게임 준비 알림
     if (result.Success)
     {
       var currentRoom = RoomModel.Instance.GetUserRoom(client.UserId);
       if (currentRoom != null)
       {
-        var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(currentRoom.Id, 0);
-        if (targetSessionIds.Any())
+        var targetUserIds = RoomModel.Instance.GetRoomTargetUserIds(currentRoom.Id, client.UserId);
+        if (targetUserIds.Any())
         {
           var notification = NotificationHelper.CreateGamePrepareNotification(
             currentRoom.ToProto(),
-            targetSessionIds
+            targetUserIds
           );
 
-          await client.MessageQueue.EnqueueSend(
+          var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
+          await messageQueueService.BroadcastMessage(
             notification.PacketId,
             notification.Sequence,
             notification.Message,
-            notification.TargetSessionIds
+            targetUserIds
           );
         }
       }
@@ -247,6 +249,7 @@ public static class LobbyPacketHandler
     );
   }
 
+  /*
   public static async Task<GamePacketMessage> HandleGameStartRequest(ClientSession client, uint sequence, C2SGameStartRequest request)
   {
     // 게임 시작 처리

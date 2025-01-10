@@ -14,12 +14,14 @@ public class RoomService : IRoomService
   private readonly UserModel _userModel;
   private readonly RoomModel _roomModel;
   private readonly IServiceProvider _serviceProvider;
+  private readonly GameDataManager _gameDataManager;
 
   public RoomService(IServiceProvider serviceProvider)
   {
     _userModel = UserModel.Instance;
     _roomModel = RoomModel.Instance;
     _serviceProvider = serviceProvider;
+    _gameDataManager = serviceProvider.GetRequiredService<GameDataManager>();
   }
 
   /// <summary>
@@ -362,51 +364,54 @@ public class RoomService : IRoomService
   {
     try
     {
-      return await Task.Run(() =>
+      using var scope = _serviceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+      // 유저 검증
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
+      if (userCharacterData == null)
+        return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
+
+      // 현재 방 확인
+      var currentRoom = _roomModel.GetUserRoom(userId);
+      if (currentRoom == null)
+        return ServiceResult.Error(GlobalFailCode.RoomNotFound);
+
+      // 방 상태 검증
+      if (currentRoom.State != RoomStateType.Wait)
+        return ServiceResult.Error(GlobalFailCode.InvalidRoomState, "이미 게임이 시작되었거나 준비 중인 방입니다.");
+
+      // 방장 권한 검증
+      if (currentRoom.OwnerId != userId)
+        return ServiceResult.Error(GlobalFailCode.InvalidRequest, "방장만 게임을 시작할 수 있습니다.");
+
+      // 역할 분배
+      var roles = GetRoleDistribution(currentRoom.GetAllUsers().Count);
+      if (!roles.Any())
+        return ServiceResult.Error(GlobalFailCode.InvalidRequest, "유효하지 않은 인원수입니다.");
+
+      // 역할 목록 생성 및 섞기
+      var roleList = roles.SelectMany(pair => Enumerable.Repeat(pair.Key, pair.Value)).ToList();
+      var random = new Random();
+      var shuffledRoles = roleList.OrderBy(_ => random.Next()).ToList();
+
+      // 각 유저에게 역할 할당
+      var users = currentRoom.GetAllUsers();
+      for (int i = 0; i < users.Count; i++)
       {
-        // 유저 검증
-        var userInfo = _userModel.GetUser(userId);
-        if (userInfo == null)
-          return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
+        var user = users[i];
+        var assignedRole = shuffledRoles[i];
+        var userCharacter = await redisService.GetUserCharacterTypeAsync(user.Id, dbContext);
+        if (userCharacter != null)
+          SetInitialStats(user.Character, userCharacter.LastSelectedCharacter, assignedRole);
+      }
 
-        // 방 검증
-        var currentRoom = _roomModel.GetUserRoom(userId);
-        if (currentRoom == null)
-          return ServiceResult.Error(GlobalFailCode.RoomNotFound);
+      // 게임 준비 상태로 변경
+      if (!_roomModel.SetRoomState(currentRoom.Id, RoomStateType.Prepare))
+        return ServiceResult.Error(GlobalFailCode.UnknownError);
 
-        // 방 상태 검증
-        if (currentRoom.State != RoomStateType.Wait)
-          return ServiceResult.Error(GlobalFailCode.InvalidRoomState, "이미 게임이 시작되었거나 준비 중인 방입니다.");
-
-        // 방장 권한 검증
-        if (currentRoom.OwnerId != userId)
-          return ServiceResult.Error(GlobalFailCode.InvalidRequest, "방장만 게임을 시작할 수 있습니다.");
-
-        // 역할 분배
-        var roles = GetRoleDistribution(currentRoom.GetAllUsers().Count);
-        if (!roles.Any())
-          return ServiceResult.Error(GlobalFailCode.InvalidRequest, "유효하지 않은 인원수입니다.");
-
-        // 역할 목록 생성 및 섞기
-        var roleList = roles.SelectMany(pair => Enumerable.Repeat(pair.Key, pair.Value)).ToList();
-        var random = new Random();
-        var shuffledRoles = roleList.OrderBy(_ => random.Next()).ToList();
-
-        // 각 유저에게 역할 할당
-        var users = currentRoom.GetAllUsers();
-        for (int i = 0; i < users.Count; i++)
-        {
-          var user = users[i];
-          var assignedRole = shuffledRoles[i];
-          SetInitialStats(user.Character, assignedRole);
-        }
-
-        // 게임 준비 상태로 변경
-        if (!_roomModel.SetRoomState(currentRoom.Id, RoomStateType.Prepare))
-          return ServiceResult.Error(GlobalFailCode.UnknownError);
-
-        return ServiceResult.Ok();
-      });
+      return ServiceResult.Ok();
     }
     catch (Exception ex)
     {
@@ -505,9 +510,9 @@ public class RoomService : IRoomService
   }
 
   /// <summary>
-  /// 역할에 따른 초기 스탯 설정
+  /// 초기 스탯 설정
   /// </summary>
-  private void SetInitialStats(CharacterData character, RoleType role)
+  private void SetInitialStats(CharacterData character, CharacterType selectedCharacter, RoleType role)
   {
     // 기존 캐릭터 데이터 초기화 필요
     character.StateInfo = new CharacterStateInfoData
@@ -523,38 +528,15 @@ public class RoomService : IRoomService
     character.Equips.Clear();
     character.Debuffs.Clear();
 
-    // 캐릭터 타입 랜덤 설정 (NONE과 중복을 피하기 위해 1부터 시작)
-    var random = new Random();
-    var characterTypes = Enum.GetValues(typeof(CharacterType))
-      .Cast<CharacterType>()
-      .Where(type => type != CharacterType.NoneCharacter)
-      .ToList();
-    character.CharacterType = characterTypes[random.Next(characterTypes.Count)];
-
-    // 역할 설정
+    // 캐릭터 타입, 역할 설정
+    character.CharacterType = selectedCharacter;
     character.RoleType = role;
-
+    
+    var characterInfo = _gameDataManager.GetCharacterByType(selectedCharacter);
     // 기본 스탯
-    character.Hp = 3;
+    character.Hp = characterInfo?.BaseHp ?? 3;
     character.BbangCount = 1;
     character.HandCardsCount = 4;
     character.Weapon = 0;
-
-    // 역할별 추가 스탯
-    switch (role)
-    {
-      case RoleType.Target:
-        character.Hp = 4;  // 타겟은 체력 +1
-        break;
-      case RoleType.Bodyguard:
-        character.Weapon = 1;  // 보디가드는 기본 무기 장착
-        break;
-      case RoleType.Hitman:
-        character.HandCardsCount = 5;  // 히트맨은 카드 +1
-        break;
-      case RoleType.Psychopath:
-        character.BbangCount = 2;  // 싸이코패스는 빵야 +1
-        break;
-    }
   }
 }

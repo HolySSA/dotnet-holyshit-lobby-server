@@ -1,5 +1,6 @@
 using HolyShitServer.Src.Constants;
 using HolyShitServer.Src.Models;
+using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Utils.Loader;
 
 namespace HolyShitServer.Src.Data;
@@ -62,9 +63,10 @@ public class GameDataManager
     }
   }
 
-  public CharacterStaticData? GetCharacterByType(string type)
+  public CharacterStaticData? GetCharacterByType(CharacterType type)
   {
-    return _characterInfo?.Data.FirstOrDefault(c => c.Type == type);
+    return _characterInfo?.Data.FirstOrDefault(c => 
+      string.Equals(c.Type, type.ToString(), StringComparison.OrdinalIgnoreCase)); // 대소문자 구분 X
   }
   
   public List<CharacterStaticData> GetAllCharacters()

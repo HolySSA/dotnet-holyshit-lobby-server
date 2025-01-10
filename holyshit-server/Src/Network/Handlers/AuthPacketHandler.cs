@@ -13,15 +13,15 @@ public static class AuthPacketHandler
 {
   private static readonly Dictionary<string, CharacterType> CharacterTypeMap = new()
   {
-      { "RED", CharacterType.Red },
-      { "SHARK", CharacterType.Shark },
-      { "MALANG", CharacterType.Malang },
-      { "FROGGY", CharacterType.Froggy },
-      { "PINK", CharacterType.Pink },
-      { "SWIM_GLASSES", CharacterType.SwimGlasses },
-      { "MASK", CharacterType.Mask },
-      { "DINOSAUR", CharacterType.Dinosaur },
-      { "PINK_SLIME", CharacterType.PinkSlime }
+    { "RED", CharacterType.Red },
+    { "SHARK", CharacterType.Shark },
+    { "MALANG", CharacterType.Malang },
+    { "FROGGY", CharacterType.Froggy },
+    { "PINK", CharacterType.Pink },
+    { "SWIM_GLASSES", CharacterType.SwimGlasses },
+    { "MASK", CharacterType.Mask },
+    { "DINOSAUR", CharacterType.Dinosaur },
+    { "PINK_SLIME", CharacterType.PinkSlime }
   };
 
   /// <summary>
