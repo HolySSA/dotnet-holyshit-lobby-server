@@ -1,13 +1,10 @@
 using HolyShitServer.DB.Configuration;
-using HolyShitServer.DB.Contexts;
-using HolyShitServer.Src.Core.Client;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Network.Protocol;
-using HolyShitServer.Src.Services;
-using HolyShitServer.Src.Services.Interfaces;
+using HolyShitServer.Src.Services.Extensions;
+using HolyShitServer.Src.Services.LoadBalancing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 
 namespace HolyShitServer.Src.Core;
 
@@ -17,25 +14,14 @@ public static class ServerConfiguration
   {
     var services = new ServiceCollection();
         
-    // Configuration 설정
-    var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+    var configuration = new ConfigurationBuilder()
+      .SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
     services.AddSingleton<IConfiguration>(configuration);
 
-    // Redis 설정
-    var redisConnection = configuration["Redis:ConnectionString"];
-    if (string.IsNullOrEmpty(redisConnection))
-    {
-        throw new InvalidOperationException("Redis connection string is not configured in appsettings.json");
-    }
-    services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisConnection));
-    
-    // 서비스 등록
-    services.AddDbContext<ApplicationDbContext>();
-    services.AddScoped<RedisService>();
-    services.AddScoped<IRoomService, RoomService>();
-    services.AddSingleton<GameDataManager>();
-    services.AddSingleton<ClientManager>();
-    services.AddSingleton<MessageQueueService>();
+    services
+      .AddInfrastructure(configuration)
+      .AddGameServices()
+      .AddLoadBalancing();
 
     return services.BuildServiceProvider();
   }
@@ -46,8 +32,25 @@ public static class ServerConfiguration
     await DatabaseConfig.InitializeDatabaseAsync(serviceProvider);
 
     // 게임 데이터 로드
-    var gameDataManager = serviceProvider.GetRequiredService<GameDataManager>(); // 싱글톤 인스턴스 사용
+    var gameDataManager = serviceProvider.GetRequiredService<GameDataManager>();
     await gameDataManager.InitializeDataAsync();
+
+    // 게임 서버 초기화
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var loadBalancer = serviceProvider.GetRequiredService<LoadBalancer>();
+    var gameServers = configuration.GetSection("GameServers").Get<List<GameServerInfo>>();
+    if (gameServers != null)
+    {
+      foreach (var server in gameServers)
+      {
+        await loadBalancer.RegisterGameServer(
+          server.Host,
+          server.Port,
+          server.MaxPlayers
+        );
+      }
+      Console.WriteLine($"{gameServers.Count}개의 게임 서버가 등록되었습니다.");
+    }
 
     // 패킷매니저, 핸들러매니저 초기화
     PacketManager.Initialize();

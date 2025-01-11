@@ -74,6 +74,7 @@ public static class NotificationHelper
     );
   }
 
+  /*
   public static GamePacketMessage CreateGameStartNotification(GameStateData gameState, List<UserData> users, List<CharacterPositionData> characterPositions, List<int> targetUserIds)
   {
     var notification = new S2CGameStartNotification
@@ -89,15 +90,5 @@ public static class NotificationHelper
 
     return GamePacketMessage.CreateBroadcast(PacketId.GameStartNotification, gamePacket, targetUserIds);
   }
-
-  public static GamePacketMessage CreatePositionUpdateNotification(List<CharacterPositionData> characterPositions, List<int> targetUserIds)
-  {
-    var notification = new S2CPositionUpdateNotification();
-    notification.CharacterPositions.AddRange(characterPositions);
-
-    var gamePacket = new GamePacket();
-    gamePacket.PositionUpdateNotification = notification;
-
-    return GamePacketMessage.CreateBroadcast(PacketId.PositionUpdateNotification, gamePacket, targetUserIds);
-  }
+  */
 }

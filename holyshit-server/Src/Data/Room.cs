@@ -101,10 +101,10 @@ public class Room
 
   public List<RoomUserReadyData> GetAllReadyStates()
   {
-    return _userReadyStates.Select(kvp => new RoomUserReadyData 
-    { 
-      UserId = kvp.Key, 
-      IsReady = kvp.Value 
+    return _userReadyStates.Select(kvp => new RoomUserReadyData
+    {
+      UserId = kvp.Key,
+      IsReady = kvp.Value
     })
     .ToList();
   }

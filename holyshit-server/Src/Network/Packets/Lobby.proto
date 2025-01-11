@@ -107,6 +107,6 @@ message S2CGameStartResponse {
 
 message S2CGameStartNotification {
     GameStateData gameState = 1;
-    repeated UserData users = 2;
+    GameServerInfoData serverInfo = 2; // 접속할 게임 서버 정보
     repeated CharacterPositionData characterPositions = 3;
 }
