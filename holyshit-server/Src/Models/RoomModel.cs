@@ -4,6 +4,19 @@ using HolyShitServer.Src.Network.Packets;
 
 namespace HolyShitServer.Src.Models;
 
+
+public struct Vector2
+{
+  public double X { get; set; }
+  public double Y { get; set; }
+
+  public Vector2(double x, double y)
+  {
+    X = x;
+    Y = y;
+  }
+}
+
 public class RoomModel
 {
   private static RoomModel? _instance;
@@ -13,6 +26,31 @@ public class RoomModel
   // 동시성을 고려하여 ConcurrentDictionary 컬렉션 사용
   private readonly ConcurrentDictionary<int, Room> _rooms = new();
   private readonly ConcurrentDictionary<int, int> _userRoomMap = new();
+
+  // 스폰 포인트
+  private readonly List<Vector2> _spawnPoints = new()
+  {
+    new Vector2(-3.972, 3.703),
+    new Vector2(10.897, 4.033),
+    new Vector2(11.737, -5.216),
+    new Vector2(5.647, -5.126),
+    new Vector2(-6.202, -5.126),
+    new Vector2(-13.262, 4.213),
+    new Vector2(-22.742, 3.653),
+    new Vector2(-21.622, -6.936),
+    new Vector2(-124.732, -6.886),
+    new Vector2(-15.702, 6.863),
+    new Vector2(-1.562, 6.173),
+    new Vector2(-13.857, 6.073),
+    new Vector2(5.507, 11.963),
+    new Vector2(-18.252, 12.453),
+    new Vector2(-1.752, -7.376),
+    new Vector2(21.517, -4.826),
+    new Vector2(21.717, 3.223),
+    new Vector2(23.877, 10.683),
+    new Vector2(15.337, -12.296),
+    new Vector2(-15.202, -4.736),
+  };
   
   public static RoomModel Instance
   {
@@ -137,18 +175,13 @@ public class RoomModel
     return new List<RoomUserReadyData>();
   }
 
-  /*
-    // 방의 모든 유저가 준비되었는지 확인하는 메서드 추가
-    public bool AreAllUsersReady(int roomId)
-    {
-      if (!_rooms.TryGetValue(roomId, out var room))
-        return false;
+  public List<Vector2> GetRandomSpawnPoints(int count)
+  {
+    if (count <= 0 || count > _spawnPoints.Count)
+      return new List<Vector2>();
 
-
-      // 방장을 제외한 모든 유저가 준비 상태인지 확인
-      return room.Users
-          .Where(u => u.Id != room.OwnerId)
-          .All(u => u.Character.StateInfo.State == CharacterStateType.Wait);
-    }
-    */
+    // 스폰 포인트 리스트를 섞어서 랜덤하게 선택
+    var random = new Random();
+    return _spawnPoints.OrderBy(x => random.Next()).Take(count).ToList();
+  }
 }

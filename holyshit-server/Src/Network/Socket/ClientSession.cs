@@ -15,7 +15,7 @@ public class ClientSession : IDisposable
   private readonly TcpClient _client; // 현재 연결된 클라이언트
   private readonly NetworkStream _stream; // 클라이언트와의 네트워크 스트림
   private readonly IServiceProvider _serviceProvider;  // DI 컨테이너
-  private readonly ClientManager _clientManager; 
+  private readonly ClientManager _clientManager;
   private bool _disposed; // 객체 해제 여부
 
   public MessageQueue MessageQueue { get; } // 메시지 큐
@@ -199,7 +199,6 @@ public class ClientSession : IDisposable
 
         // 세션 제거
         _clientManager.RemoveSession(this);
-        Console.WriteLine($"[Session] 유저 제거: Id={UserId}");
       }
 
       _stream?.Dispose();

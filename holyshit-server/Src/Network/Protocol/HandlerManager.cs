@@ -44,8 +44,7 @@ public static class HandlerManager
     OnHandlers<C2SRoomReadyRequest>(PacketId.RoomReadyRequest, LobbyPacketHandler.HandleRoomReadyRequest);
     OnHandlers<C2SGetRoomReadyStateRequest>(PacketId.GetRoomReadyStateRequest, LobbyPacketHandler.HandleGetRoomReadyStateRequest);
     OnHandlers<C2SGamePrepareRequest>(PacketId.GamePrepareRequest, LobbyPacketHandler.HandleGamePrepareRequest);
-    //OnHandlers<C2SGameStartRequest>(PacketId.GameStartRequest, LobbyPacketHandler.HandleGameStartRequest);
-    // 다른 핸들러들도 여기서 등록...
+    OnHandlers<C2SGameStartRequest>(PacketId.GameStartRequest, LobbyPacketHandler.HandleGameStartRequest);
   }
 
   // 핸들러 등록

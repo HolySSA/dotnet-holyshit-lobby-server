@@ -13,7 +13,6 @@ public class ClientManager
   public void AddSession(ClientSession session)
   {
     _sessions.TryAdd(session.SessionId, session);
-    Console.WriteLine($"[ClientManager] 세션 등록: SessionId={session.SessionId}");
   }
 
   public void RegisterUserSession(int userId, ClientSession session)

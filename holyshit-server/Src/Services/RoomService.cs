@@ -2,8 +2,8 @@ using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.Models;
 using HolyShitServer.Src.Network.Packets;
-using HolyShitServer.Src.Network.Socket;
 using HolyShitServer.Src.Services.Interfaces;
+using HolyShitServer.Src.Services.LoadBalancing;
 using HolyShitServer.Src.Services.Results;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -63,7 +63,7 @@ public class RoomService : IRoomService
       // Redis에서 유저 정보 조회
       var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
       if (userCharacterData == null)
-          return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
+        return ServiceResult<RoomData>.Error(GlobalFailCode.AuthenticationFailed);
 
       // 이미 방에 있는지 체크
       var existingRoom = _roomModel.GetUserRoom(userId);
@@ -127,7 +127,7 @@ public class RoomService : IRoomService
       var existingRoom = _roomModel.GetUserRoom(userId);
       if (existingRoom != null)
         return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
-      
+
       // 요청한 방이 존재하는지 확인
       var targetRoom = _roomModel.GetRoom(roomId);
       if (targetRoom == null)
@@ -168,7 +168,7 @@ public class RoomService : IRoomService
       // 방 입장 처리
       if (!_roomModel.JoinRoom(roomId, userData))
         return ServiceResult<RoomData>.Error(GlobalFailCode.JoinRoomFailed);
-      
+
       var updatedRoom = _roomModel.GetRoom(roomId);
       if (updatedRoom == null)
         return ServiceResult<RoomData>.Error(GlobalFailCode.RoomNotFound);
@@ -279,7 +279,7 @@ public class RoomService : IRoomService
       // 게임 중인지 확인
       if (currentRoom.State == RoomStateType.Ingame)
         return ServiceResult.Error(GlobalFailCode.InvalidRoomState);
-      
+
       // 방 퇴장 처리
       if (!_roomModel.LeaveRoom(userId))
         return ServiceResult.Error(GlobalFailCode.LeaveRoomFailed);
@@ -336,7 +336,8 @@ public class RoomService : IRoomService
   /// </summary>
   public async Task<ServiceResult<List<RoomUserReadyData>>> GetRoomReadyState(int roomId)
   {
-    try{
+    try
+    {
       // 방 존재 여부 확인
       var room = _roomModel.GetRoom(roomId);
       if (room == null)
@@ -423,40 +424,52 @@ public class RoomService : IRoomService
   /// <summary>
   /// 게임 시작
   /// </summary>
-  public async Task<ServiceResult> GameStart(int userId)
+  public async Task<ServiceResult<GameServerInfo>> GameStart(int userId)
   {
     try
     {
-      return await Task.Run(() =>
-      {
-        // 유저 검증
-        var userInfo = _userModel.GetUser(userId);
-        if (userInfo == null)
-          return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
-        // 방 검증
-        var currentRoom = _roomModel.GetUserRoom(userId);
-        if (currentRoom == null)
-          return ServiceResult.Error(GlobalFailCode.RoomNotFound);
+      using var scope = _serviceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+      var loadBalancer = scope.ServiceProvider.GetRequiredService<LoadBalancer>();
 
-        // 방장 권한 검증
-        if (currentRoom.OwnerId != userId)
-          return ServiceResult.Error(GlobalFailCode.InvalidRequest, "방장만 게임을 시작할 수 있습니다.");
+      // 유저 검증
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
+      if (userCharacterData == null)
+        return ServiceResult<GameServerInfo>.Error(GlobalFailCode.AuthenticationFailed);
 
-        // 방 상태 검증
-        if (currentRoom.State != RoomStateType.Prepare)
-          return ServiceResult.Error(GlobalFailCode.InvalidRoomState, "게임 준비 상태가 아닙니다.");
+      // 방 검증
+      var currentRoom = _roomModel.GetUserRoom(userId);
+      if (currentRoom == null)
+        return ServiceResult<GameServerInfo>.Error(GlobalFailCode.RoomNotFound);
 
-        // 게임 시작 상태로 변경
-        if (!_roomModel.SetRoomState(currentRoom.Id, RoomStateType.Ingame))
-          return ServiceResult.Error(GlobalFailCode.UnknownError);
+      // 방장 권한 검증
+      if (currentRoom.OwnerId != userId)
+        return ServiceResult<GameServerInfo>.Error(GlobalFailCode.InvalidRequest, "방장만 게임을 시작할 수 있습니다.");
 
-        return ServiceResult.Ok();
-      });
+      // 방 상태 검증
+      if (currentRoom.State != RoomStateType.Prepare)
+        return ServiceResult<GameServerInfo>.Error(GlobalFailCode.InvalidRoomState, "게임 준비 상태가 아닙니다.");
+
+      // 게임 서버 할당
+      var playerCount = currentRoom.GetAllUsers().Count;
+      var gameServer = await loadBalancer.GetServerForRoom(playerCount);
+      if (gameServer == null)
+        return ServiceResult<GameServerInfo>.Error(GlobalFailCode.UnknownError, "사용 가능한 게임 서버가 없습니다.");
+
+      // 게임 서버 플레이어 수 업데이트
+      await loadBalancer.UpdateServerStatus(gameServer.Host, gameServer.Port, gameServer.CurrentPlayers + playerCount);
+
+      // 게임 시작 상태로 변경
+      if (!_roomModel.SetRoomState(currentRoom.Id, RoomStateType.Ingame))
+        return ServiceResult<GameServerInfo>.Error(GlobalFailCode.UnknownError);
+
+      return ServiceResult<GameServerInfo>.Ok(gameServer);
     }
     catch (Exception ex)
     {
       Console.WriteLine($"[RoomService] GameStart 실패: {ex.Message}");
-      return ServiceResult.Error(GlobalFailCode.UnknownError);
+      return ServiceResult<GameServerInfo>.Error(GlobalFailCode.UnknownError);
     }
   }
 
@@ -469,41 +482,41 @@ public class RoomService : IRoomService
     {
       2 => new Dictionary<RoleType, int>
         {
-            { RoleType.Target, 1 },
-            { RoleType.Hitman, 1 }
+          { RoleType.Target, 1 },
+          { RoleType.Hitman, 1 }
         },
       3 => new Dictionary<RoleType, int>
         {
-            { RoleType.Target, 1 },
-            { RoleType.Hitman, 1 },
-            { RoleType.Psychopath, 1 }
+          { RoleType.Target, 1 },
+          { RoleType.Hitman, 1 },
+          { RoleType.Psychopath, 1 }
         },
       4 => new Dictionary<RoleType, int>
         {
-            { RoleType.Target, 1 },
-            { RoleType.Hitman, 2 },
-            { RoleType.Psychopath, 1 }
+          { RoleType.Target, 1 },
+          { RoleType.Hitman, 2 },
+          { RoleType.Psychopath, 1 }
         },
       5 => new Dictionary<RoleType, int>
         {
-            { RoleType.Target, 1 },
-            { RoleType.Bodyguard, 1 },
-            { RoleType.Hitman, 2 },
-            { RoleType.Psychopath, 1 }
+          { RoleType.Target, 1 },
+          { RoleType.Bodyguard, 1 },
+          { RoleType.Hitman, 2 },
+          { RoleType.Psychopath, 1 }
         },
       6 => new Dictionary<RoleType, int>
         {
-            { RoleType.Target, 1 },
-            { RoleType.Bodyguard, 1 },
-            { RoleType.Hitman, 3 },
-            { RoleType.Psychopath, 1 }
+          { RoleType.Target, 1 },
+          { RoleType.Bodyguard, 1 },
+          { RoleType.Hitman, 3 },
+          { RoleType.Psychopath, 1 }
         },
       7 => new Dictionary<RoleType, int>
         {
-            { RoleType.Target, 1 },
-            { RoleType.Bodyguard, 2 },
-            { RoleType.Hitman, 3 },
-            { RoleType.Psychopath, 1 }
+          { RoleType.Target, 1 },
+          { RoleType.Bodyguard, 2 },
+          { RoleType.Hitman, 3 },
+          { RoleType.Psychopath, 1 }
         },
       _ => new Dictionary<RoleType, int>()
     };
@@ -531,7 +544,7 @@ public class RoomService : IRoomService
     // 캐릭터 타입, 역할 설정
     character.CharacterType = selectedCharacter;
     character.RoleType = role;
-    
+
     var characterInfo = _gameDataManager.GetCharacterByType(selectedCharacter);
     // 기본 스탯
     character.Hp = characterInfo?.BaseHp ?? 3;

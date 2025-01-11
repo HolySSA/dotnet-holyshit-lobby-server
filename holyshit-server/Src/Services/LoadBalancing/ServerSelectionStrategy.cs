@@ -6,7 +6,7 @@ public interface IServerSelectionStrategy
 }
 
 /// <summary>
-/// 라운드 로빈 전략
+/// 라운드 로빈 전략 - 순차적으로 돌아가면서 서버를 선택하여 부하 분산
 /// </summary>
 public class RoundRobinStrategy : IServerSelectionStrategy
 {

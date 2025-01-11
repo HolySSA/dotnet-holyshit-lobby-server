@@ -6,6 +6,7 @@ using HolyShitServer.Src.Services;
 using HolyShitServer.Src.Models;
 using Microsoft.Extensions.DependencyInjection;
 using HolyShitServer.DB.Contexts;
+using HolyShitServer.Src.Services.LoadBalancing;
 
 namespace HolyShitServer.Src.Network.Handlers;
 
@@ -249,52 +250,72 @@ public static class LobbyPacketHandler
     );
   }
 
-  /*
   public static async Task<GamePacketMessage> HandleGameStartRequest(ClientSession client, uint sequence, C2SGameStartRequest request)
   {
-    // 게임 시작 처리
-    var result = await _roomService.GameStart(client.UserId);
+    using var scope = client.ServiceProvider.CreateScope();
+    var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
 
+    // 게임 시작 처리
+    var result = await roomService.GameStart(client.UserId);
     // 게임 시작 알림
     if (result.Success)
     {
       var currentRoom = RoomModel.Instance.GetUserRoom(client.UserId);
       if (currentRoom != null)
       {
-        var targetSessionIds = RoomModel.Instance.GetRoomTargetSessionIds(currentRoom.Id, 0);
-        if (targetSessionIds.Any())
+        var targetUserIds = RoomModel.Instance.GetRoomTargetUserIds(currentRoom.Id, 0); // 모든 유저
+        if (targetUserIds.Any())
         {
-          // 게임 상태 정보 생성
-          var gameState = new GameStateData
+          // 게임 서버 정보 가져오기
+          var gameServer = result.Data;
+          if (gameServer != null)
           {
-            PhaseType = PhaseType.Day, // 낮
-            NextPhaseAt = DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeMilliseconds() // 5분 후 다음 페이즈로 이동
-          };
+            // 게임 서버 정보 생성
+            var serverInfo = new GameServerInfoData
+            {
+              Host = gameServer.Host,
+              Port = gameServer.Port,
+              Token = Guid.NewGuid().ToString() // 인증 토큰 생성 - 일단 JWT는 나중에 구현
+            };
 
-          // 유저 정보에 역할 정보 포함
-          var users = currentRoom.GetAllUsers();
+            // 게임 상태 정보 생성
+            var gameState = new GameStateData
+            {
+              PhaseType = PhaseType.Day, // 낮
+              NextPhaseAt = DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeMilliseconds() // 5분 후 다음 페이즈
+            };
 
-          // 캐릭터 초기 위치 정보 생성
-          var characterPositions = users.Select(user => new CharacterPositionData
-          {
-            Id = user.Id,
-            X = 0,
-            Y = 0
-          }).ToList();
+            // 캐릭터 초기 위치 정보 생성
+            var users = currentRoom.GetAllUsers();
+            var spawnPoints = RoomModel.Instance.GetRandomSpawnPoints(users.Count);
+            var characterPositions = new List<CharacterPositionData>();
+            for (int i = 0; i < users.Count; i++)
+            {
+              var position = spawnPoints[i];
+              currentRoom.UpdatePosition(users[i].Id, position.X, position.Y);
+              characterPositions.Add(new CharacterPositionData
+              {
+                Id = users[i].Id,
+                X = position.X,
+                Y = position.Y
+              });
+            }
 
-          var notification = NotificationHelper.CreateGameStartNotification(
-            gameState,
-            users,
-            characterPositions,
-            targetSessionIds
-          );
+            var notification = NotificationHelper.CreateGameStartNotification(
+              gameState,
+              serverInfo,
+              characterPositions,
+              targetUserIds
+            );
 
-          await client.MessageQueue.EnqueueSend(
-            notification.PacketId,
-            notification.Sequence,
-            notification.Message,
-            notification.TargetSessionIds
-          );
+            var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
+            await messageQueueService.BroadcastMessage(
+              notification.PacketId,
+              notification.Sequence,
+              notification.Message,
+              targetUserIds
+            );
+          }
         }
       }
     }
@@ -305,5 +326,4 @@ public static class LobbyPacketHandler
       result.FailCode
     );
   }
-  */
 }

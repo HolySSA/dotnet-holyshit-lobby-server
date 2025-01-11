@@ -74,15 +74,18 @@ public static class NotificationHelper
     );
   }
 
-  /*
-  public static GamePacketMessage CreateGameStartNotification(GameStateData gameState, List<UserData> users, List<CharacterPositionData> characterPositions, List<int> targetUserIds)
+  public static GamePacketMessage CreateGameStartNotification(
+    GameStateData gameState,
+    GameServerInfoData serverInfo,
+    List<CharacterPositionData> characterPositions,
+    List<int> targetUserIds)
   {
     var notification = new S2CGameStartNotification
     {
-      GameState = gameState
+      GameState = gameState,
+      ServerInfo = serverInfo
     };
 
-    notification.Users.AddRange(users);
     notification.CharacterPositions.AddRange(characterPositions);
 
     var gamePacket = new GamePacket();
@@ -90,5 +93,4 @@ public static class NotificationHelper
 
     return GamePacketMessage.CreateBroadcast(PacketId.GameStartNotification, gamePacket, targetUserIds);
   }
-  */
 }

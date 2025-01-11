@@ -54,7 +54,7 @@ public class LoadBalancer
       new HashEntry("port", port),
       new HashEntry("currentPlayers", 0),
       new HashEntry("maxPlayers", maxPlayers),
-      new HashEntry("isAvailable", true),
+      new HashEntry("isAvailable", "true"),
       new HashEntry("lastHeartbeat", DateTime.UtcNow.ToString("O"))
     };
 
@@ -127,7 +127,7 @@ public class LoadBalancer
       Port = int.Parse(dict["port"]),
       CurrentPlayers = int.Parse(dict["currentPlayers"]),
       MaxPlayers = int.Parse(dict["maxPlayers"]),
-      IsAvailable = bool.Parse(dict["isAvailable"]),
+      IsAvailable = dict["isAvailable"].ToLower() == "true",
       LastHeartbeat = DateTime.Parse(dict["lastHeartbeat"])
     };
   }

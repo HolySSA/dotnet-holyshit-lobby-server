@@ -1,4 +1,5 @@
 using HolyShitServer.Src.Network.Packets;
+using HolyShitServer.Src.Services.LoadBalancing;
 using HolyShitServer.Src.Services.Results;
 
 namespace HolyShitServer.Src.Services.Interfaces;
@@ -13,5 +14,5 @@ public interface IRoomService
   Task<ServiceResult> RoomReady(int userId, bool isReady);
   Task<ServiceResult<List<RoomUserReadyData>>> GetRoomReadyState(int roomId);
   Task<ServiceResult> GamePrepare(int userId);
-  Task<ServiceResult> GameStart(int userId);
+  Task<ServiceResult<GameServerInfo>> GameStart(int userId);
 }
