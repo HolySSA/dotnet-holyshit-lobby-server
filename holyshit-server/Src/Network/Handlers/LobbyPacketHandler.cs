@@ -223,7 +223,7 @@ public static class LobbyPacketHandler
       var currentRoom = RoomModel.Instance.GetUserRoom(client.UserId);
       if (currentRoom != null)
       {
-        var targetUserIds = RoomModel.Instance.GetRoomTargetUserIds(currentRoom.Id, client.UserId);
+        var targetUserIds = RoomModel.Instance.GetRoomTargetUserIds(currentRoom.Id, 0); // 모든 유저
         if (targetUserIds.Any())
         {
           var notification = NotificationHelper.CreateGamePrepareNotification(
