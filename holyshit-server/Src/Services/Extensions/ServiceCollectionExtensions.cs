@@ -39,6 +39,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRoomService, RoomService>();
         services.AddSingleton<ClientManager>();
         services.AddSingleton<MessageQueueService>();
+        services.AddSingleton<JwtTokenService>();
         return services;
     }
 

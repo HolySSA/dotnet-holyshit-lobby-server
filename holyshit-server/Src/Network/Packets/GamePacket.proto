@@ -55,7 +55,7 @@ enum PacketId {
   LoginResponse = 2;
   SelectCharacterRequest = 3;
   SelectCharacterResponse = 4;
-  
+
   // Lobby packets
   CreateRoomRequest = 5;
   CreateRoomResponse = 6;

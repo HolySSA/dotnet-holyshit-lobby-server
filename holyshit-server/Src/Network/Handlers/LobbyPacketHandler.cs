@@ -254,6 +254,7 @@ public static class LobbyPacketHandler
   {
     using var scope = client.ServiceProvider.CreateScope();
     var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
+    var jwtTokenService = scope.ServiceProvider.GetRequiredService<JwtTokenService>();
 
     // 게임 시작 처리
     var result = await roomService.GameStart(client.UserId);
@@ -273,41 +274,12 @@ public static class LobbyPacketHandler
             // 게임 서버 정보 생성
             var serverInfo = new GameServerInfoData
             {
-              Host = gameServer.Host,
-              Port = gameServer.Port,
-              Token = Guid.NewGuid().ToString() // 인증 토큰 생성 - 일단 JWT는 나중에 구현
+              Host = "127.0.0.1",//gameServer.Host,
+              Port = 5000,//gameServer.Port,
+              Token = jwtTokenService.GenerateGameServerToken(client.UserId, currentRoom.Id)
             };
 
-            // 게임 상태 정보 생성
-            var gameState = new GameStateData
-            {
-              PhaseType = PhaseType.Day, // 낮
-              NextPhaseAt = DateTimeOffset.UtcNow.AddMinutes(5).ToUnixTimeMilliseconds() // 5분 후 다음 페이즈
-            };
-
-            // 캐릭터 초기 위치 정보 생성
-            var users = currentRoom.GetAllUsers();
-            var spawnPoints = RoomModel.Instance.GetRandomSpawnPoints(users.Count);
-            var characterPositions = new List<CharacterPositionData>();
-            for (int i = 0; i < users.Count; i++)
-            {
-              var position = spawnPoints[i];
-              currentRoom.UpdatePosition(users[i].Id, position.X, position.Y);
-              characterPositions.Add(new CharacterPositionData
-              {
-                Id = users[i].Id,
-                X = position.X,
-                Y = position.Y
-              });
-            }
-
-            var notification = NotificationHelper.CreateGameStartNotification(
-              gameState,
-              serverInfo,
-              characterPositions,
-              targetUserIds
-            );
-
+            var notification = NotificationHelper.CreateGameStartNotification(serverInfo, targetUserIds);
             var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
             await messageQueueService.BroadcastMessage(
               notification.PacketId,

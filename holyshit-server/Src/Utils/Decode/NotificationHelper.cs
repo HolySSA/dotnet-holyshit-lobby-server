@@ -74,19 +74,12 @@ public static class NotificationHelper
     );
   }
 
-  public static GamePacketMessage CreateGameStartNotification(
-    GameStateData gameState,
-    GameServerInfoData serverInfo,
-    List<CharacterPositionData> characterPositions,
-    List<int> targetUserIds)
+  public static GamePacketMessage CreateGameStartNotification(GameServerInfoData serverInfo, List<int> targetUserIds)
   {
     var notification = new S2CGameStartNotification
     {
-      GameState = gameState,
       ServerInfo = serverInfo
     };
-
-    notification.CharacterPositions.AddRange(characterPositions);
 
     var gamePacket = new GamePacket();
     gamePacket.GameStartNotification = notification;

@@ -106,7 +106,5 @@ message S2CGameStartResponse {
 }
 
 message S2CGameStartNotification {
-    GameStateData gameState = 1;
-    GameServerInfoData serverInfo = 2; // 접속할 게임 서버 정보
-    repeated CharacterPositionData characterPositions = 3; // 위치도 게임 서버에서 초기화할때 보내는 게 나을듯?
+    GameServerInfoData serverInfo = 1; // 접속할 게임 서버 정보
 }
