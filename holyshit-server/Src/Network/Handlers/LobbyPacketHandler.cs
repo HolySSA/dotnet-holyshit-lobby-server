@@ -7,6 +7,7 @@ using HolyShitServer.Src.Models;
 using Microsoft.Extensions.DependencyInjection;
 using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Services.LoadBalancing;
+using HolyShitServer.Src.Core.Client;
 
 namespace HolyShitServer.Src.Network.Handlers;
 
@@ -255,6 +256,7 @@ public static class LobbyPacketHandler
     using var scope = client.ServiceProvider.CreateScope();
     var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
     var jwtTokenService = scope.ServiceProvider.GetRequiredService<JwtTokenService>();
+    var clientManager = scope.ServiceProvider.GetRequiredService<ClientManager>();
 
     // 게임 시작 처리
     var result = await roomService.GameStart(client.UserId);
@@ -267,6 +269,13 @@ public static class LobbyPacketHandler
         var targetUserIds = RoomModel.Instance.GetRoomTargetUserIds(currentRoom.Id, 0); // 모든 유저
         if (targetUserIds.Any())
         {
+          // 방에 있는 모든 유저 게임 시작 상태 설정
+          foreach (var userId in targetUserIds)
+          {
+            if (clientManager.GetSessionByUserId(userId) is ClientSession userSession)
+              userSession.SetGameStarted();
+          }
+
           // 게임 서버 정보 가져오기
           var gameServer = result.Data;
           if (gameServer != null)

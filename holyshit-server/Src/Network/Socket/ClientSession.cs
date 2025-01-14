@@ -17,6 +17,7 @@ public class ClientSession : IDisposable
   private readonly IServiceProvider _serviceProvider;  // DI 컨테이너
   private readonly ClientManager _clientManager;
   private bool _disposed; // 객체 해제 여부
+  private bool _isGameStarted; // 게임 시작 플래그
 
   public MessageQueue MessageQueue { get; } // 메시지 큐
   public string SessionId { get; }
@@ -151,6 +152,14 @@ public class ClientSession : IDisposable
     await _stream.FlushAsync();
   }
 
+  /// <summary>
+  /// 게임 시작 시 플래그 설정
+  /// </summary>
+  public void SetGameStarted()
+  {
+    _isGameStarted = true;
+  }
+
   public void Dispose()
   {
     // 객체 해제 여부 확인
@@ -158,7 +167,7 @@ public class ClientSession : IDisposable
 
     try
     {
-      if (UserId > 0)
+      if (!_isGameStarted && UserId > 0)
       {
         using var scope = ServiceProvider.CreateScope();
         var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
@@ -196,11 +205,10 @@ public class ClientSession : IDisposable
           // 방 나가기 처리
           roomModel.LeaveRoom(UserId);
         }
-
-        // 세션 제거
-        _clientManager.RemoveSession(this);
       }
 
+      // 세션 제거
+      _clientManager.RemoveSession(this);
       _stream?.Dispose();
       _client?.Dispose();
       _disposed = true;

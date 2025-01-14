@@ -19,12 +19,12 @@ public class PacketManager
     lock (_initLock)
     {
       if (_isInitialized) return;
-      
+
       // 프로퍼티 캐시 초기화
       foreach (var payloadCase in Enum.GetValues<GamePacket.PayloadOneofCase>())
       {
         if (payloadCase == GamePacket.PayloadOneofCase.None) continue;
-        
+
         var property = typeof(GamePacket).GetProperty(payloadCase.ToString());
         if (property != null)
         {
@@ -36,7 +36,7 @@ public class PacketManager
       Console.WriteLine("PacketManager 초기화 완료");
     }
   }
-  
+
   public static IMessage? ParseMessage(ReadOnlySpan<byte> payload)
   {
     if (!_isInitialized)
@@ -47,12 +47,12 @@ public class PacketManager
     try
     {
       var gamePacket = GamePacket.Parser.ParseFrom(payload.ToArray());
-      
+
       if (_propertyCache.TryGetValue(gamePacket.PayloadCase, out var property))
       {
         return property.GetValue(gamePacket) as IMessage;
       }
-      
+
       return null;
     }
     catch (Exception ex)
@@ -60,7 +60,7 @@ public class PacketManager
       Console.WriteLine($"메시지 파싱 중 오류: {ex.Message}");
       return null;
     }
-}
+  }
 
   public static async Task ProcessMessageAsync(ClientSession client, PacketId id, uint sequence, IMessage message)
   {
@@ -68,7 +68,7 @@ public class PacketManager
     {
       throw new InvalidOperationException("PacketManager가 초기화되지 않았습니다.");
     }
-    
+
     try
     {
       await HandlerManager.HandleMessageAsync(client, id, sequence, message);
