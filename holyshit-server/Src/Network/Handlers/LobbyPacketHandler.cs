@@ -285,7 +285,7 @@ public static class LobbyPacketHandler
             {
               Host = "127.0.0.1",//gameServer.Host,
               Port = 5000,//gameServer.Port,
-              Token = jwtTokenService.GenerateGameServerToken(client.UserId, currentRoom.Id)
+              Token = jwtTokenService.GenerateGameServerToken()
             };
 
             var notification = NotificationHelper.CreateGameStartNotification(serverInfo, targetUserIds);

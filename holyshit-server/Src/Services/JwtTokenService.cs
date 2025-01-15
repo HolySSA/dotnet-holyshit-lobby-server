@@ -15,27 +15,18 @@ public class JwtTokenService
     _configuration = configuration;
   }
 
-  public string GenerateGameServerToken(int userId, int roomId)
+  public string GenerateGameServerToken()
   {
     var secretKey = _configuration["JwtSettings:SecretKey"];
     if (string.IsNullOrEmpty(secretKey))
-    {
       throw new InvalidOperationException("JWT SecretKey가 설정되지 않았습니다.");
-    }
 
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
     var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-    var claims = new[]
-    {
-      new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-      new Claim("RoomId", roomId.ToString())
-    };
-
     var token = new JwtSecurityToken(
       issuer: _configuration["JwtSettings:Issuer"] ?? "LobbyServer",
       audience: _configuration["JwtSettings:Audience"] ?? "GameServer",
-      claims: claims,
       expires: DateTime.UtcNow.AddMinutes(30), // 토큰 만료 시간
       signingCredentials: credentials
     );
