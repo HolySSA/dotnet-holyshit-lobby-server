@@ -13,7 +13,6 @@ public static class PathConstants
     // 데이터 파일 이름
     public static class DataFiles
     {
-      public static readonly string MONSTER_INFO = "monsterInfo.json";
       public static readonly string CHARACTER_INFO = "characterInfo.json";
     }
   }

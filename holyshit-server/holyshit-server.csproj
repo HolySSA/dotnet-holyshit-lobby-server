@@ -38,12 +38,11 @@
   <ItemGroup>
     <!-- Common.proto를 먼저 컴파일 -->
     <Protobuf Include="Src\Network\Packets\Common.proto" Access="Public" GrpcServices="None" />
-              
+
     <!-- 그 다음 Auth.proto와 Lobby.proto -->
     <Protobuf Include="Src\Network\Packets\Auth.proto" ProtoRoot="Src\Network\Packets" Access="Public" GrpcServices="None" />
     <Protobuf Include="Src\Network\Packets\Lobby.proto" ProtoRoot="Src\Network\Packets" Access="Public" GrpcServices="None" />
-    <Protobuf Include="Src\Network\Packets\Game.proto" ProtoRoot="Src\Network\Packets" Access="Public" GrpcServices="None" />
-              
+
     <!-- 마지막으로 GamePacket.proto -->
     <Protobuf Include="Src\Network\Packets\GamePacket.proto" ProtoRoot="Src\Network\Packets" Access="Public" GrpcServices="None" />
   </ItemGroup>

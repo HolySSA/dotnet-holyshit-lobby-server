@@ -94,47 +94,4 @@ public class UserModel
   {
     return _users.Values.Where(u => u.IsOnline).ToList();
   }
-
-  /*
-      // 특정 방의 모든 유저에게 브로드캐스트
-      public async Task BroadcastToRoom(int roomId, PacketId packetId, IMessage message, uint sequence, int? excludeUserId = null)
-      {
-          var room = RoomModel.Instance.GetRoom(roomId);
-          if (room == null) return;
-
-          foreach (var user in room.Users)
-          {
-              if (excludeUserId.HasValue && user.Id == excludeUserId.Value)
-                  continue;
-
-              if (_users.TryGetValue(user.Id, out var userInfo))
-              {
-                  await userInfo.Client.SendResponseAsync(packetId, sequence, message);
-              }
-          }
-      }
-
-      // 유저 인증 체크
-      public bool ValidateUserToken(int userId, string token)
-      {
-          if (_users.TryGetValue(userId, out var userInfo))
-          {
-              return userInfo.Token == token;
-          }
-          return false;
-      }
-
-      // 비활성 유저 정리 (필요시 주기적으로 호출)
-      public void CleanupInactiveUsers(int minutesThreshold = 30)
-      {
-          var threshold = DateTime.UtcNow.AddMinutes(-minutesThreshold);
-          var inactiveUsers = _users.Values.Where(u => u.LastActivityTime < threshold).ToList();
-
-          foreach (var user in inactiveUsers)
-          {
-              RemoveUser(user.UserId);
-              user.Client.Dispose();
-          }
-      }
-  */
 }

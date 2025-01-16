@@ -14,7 +14,6 @@ public class Room
   // 동시성을 고려한 컬렉션들
   private readonly ConcurrentDictionary<int, UserData> _users = new();
   private readonly ConcurrentDictionary<int, bool> _userReadyStates = new();
-  private readonly ConcurrentDictionary<int, CharacterPositionData> _characterPositions = new();
 
   // 입장 순서를 저장하는 리스트 추가
   private readonly List<int> _joinOrder = new();
@@ -107,35 +106,6 @@ public class Room
       IsReady = kvp.Value
     })
     .ToList();
-  }
-
-  // 위치 관리 메서드들
-  public bool UpdatePosition(int userId, double x, double y)
-  {
-    try
-    {
-      _characterPositions.AddOrUpdate(
-        userId,
-        new CharacterPositionData { Id = userId, X = x, Y = y },
-        (_, existing) =>
-        {
-          existing.X = x;
-          existing.Y = y;
-          return existing;
-        }
-      );
-      return true;
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"[Room] UpdatePosition 실패: {ex.Message}");
-      return false;
-    }
-  }
-
-  public List<CharacterPositionData> GetAllPositions()
-  {
-    return _characterPositions.Values.ToList();
   }
 
   /// <summary>

@@ -8,7 +8,6 @@ namespace HolyShitServer.Src.Data;
 public class GameDataManager
 {
   private readonly JsonFileLoader _jsonLoader;
-  private MonsterInfo? _monsterInfo;
   private CharacterInfo? _characterInfo;
 
   public GameDataManager()
@@ -19,31 +18,8 @@ public class GameDataManager
   public async Task InitializeDataAsync()
   {
     await Task.WhenAll(
-      LoadMonsterInfoAsync(),
       LoadCharacterInfoAsync()
     );
-  }
-
-  private async Task LoadMonsterInfoAsync()
-  {
-    try
-    {
-      _monsterInfo = await Task.Run(() =>
-        _jsonLoader.LoadFromAssets<MonsterInfo>(PathConstants.Assets.DataFiles.MONSTER_INFO)
-      );
-      
-      Console.WriteLine($"몬스터 데이터 로드 성공: {_monsterInfo.Data.Count}개");
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine($"몬스터 데이터 로드 실패: {ex.Message}");
-      throw;
-    }
-  }
-
-  public MonsterData? GetMonsterById(string id)
-  {
-    return _monsterInfo?.Data.FirstOrDefault(m => m.Id == id);
   }
 
   private async Task LoadCharacterInfoAsync()
@@ -53,7 +29,7 @@ public class GameDataManager
       _characterInfo = await Task.Run(() =>
         _jsonLoader.LoadFromAssets<CharacterInfo>(PathConstants.Assets.DataFiles.CHARACTER_INFO)
       );
-      
+
       Console.WriteLine($"캐릭터 데이터 로드 성공: {_characterInfo.Data.Count}개");
     }
     catch (Exception ex)
@@ -65,10 +41,10 @@ public class GameDataManager
 
   public CharacterStaticData? GetCharacterByType(CharacterType type)
   {
-    return _characterInfo?.Data.FirstOrDefault(c => 
+    return _characterInfo?.Data.FirstOrDefault(c =>
       string.Equals(c.Type, type.ToString(), StringComparison.OrdinalIgnoreCase)); // 대소문자 구분 X
   }
-  
+
   public List<CharacterStaticData> GetAllCharacters()
   {
     return _characterInfo?.Data ?? new List<CharacterStaticData>();

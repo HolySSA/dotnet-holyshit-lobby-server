@@ -42,17 +42,6 @@ message RoomData {
     repeated UserData users = 6; // 인덱스 기반으로 턴 진행
 }
 
-message CharacterPositionData {
-    int32 id = 1;
-    double x = 2;
-    double y = 3;
-}
-
-message GameStateData {
-    PhaseType phaseType = 1; // DAY 1, EVENING 2, END 3 (하루 종료시 카드 버리는 턴)
-    int64 nextPhaseAt = 2; // 다음 페이즈 시작 시점(밀리초 타임스탬프)
-}
-
 message RoomUserReadyData {
     int32 userId = 1;
     bool isReady = 2; // 현재 레디 상태
@@ -155,11 +144,4 @@ enum RoomStateType {
     WAIT = 0;
     PREPARE = 1;
     INGAME = 2;
-}
-
-enum PhaseType {
-    NONE_PHASE = 0;
-    DAY = 1;
-    EVENING = 2;
-    END = 3;
 }
