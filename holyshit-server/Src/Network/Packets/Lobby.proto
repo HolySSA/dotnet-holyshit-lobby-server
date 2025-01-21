@@ -106,5 +106,5 @@ message S2CGameStartResponse {
 }
 
 message S2CGameStartNotification {
-    GameServerInfoData serverInfo = 1; // 접속할 게임 서버 정보
+    ServerInfoData serverInfo = 1; // 접속할 게임 서버 정보
 }

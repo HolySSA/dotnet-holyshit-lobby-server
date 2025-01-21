@@ -47,10 +47,10 @@ message RoomUserReadyData {
     bool isReady = 2; // 현재 레디 상태
 }
 
-message GameServerInfoData {
+message ServerInfoData {
     string host = 1;
     int32 port = 2;
-    string token = 3;  // 게임서버 인증용 토큰
+    string token = 3;  // 서버 인증용 토큰
 }
 
 enum CharacterType {

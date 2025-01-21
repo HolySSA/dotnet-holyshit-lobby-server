@@ -74,7 +74,7 @@ public static class NotificationHelper
     );
   }
 
-  public static GamePacketMessage CreateGameStartNotification(GameServerInfoData serverInfo, List<int> targetUserIds)
+  public static GamePacketMessage CreateGameStartNotification(ServerInfoData serverInfo, List<int> targetUserIds)
   {
     var notification = new S2CGameStartNotification
     {

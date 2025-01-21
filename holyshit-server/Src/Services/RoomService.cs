@@ -11,14 +11,12 @@ namespace HolyShitServer.Src.Services;
 
 public class RoomService : IRoomService
 {
-  private readonly UserModel _userModel;
   private readonly RoomModel _roomModel;
   private readonly IServiceProvider _serviceProvider;
   private readonly GameDataManager _gameDataManager;
 
   public RoomService(IServiceProvider serviceProvider)
   {
-    _userModel = UserModel.Instance;
     _roomModel = RoomModel.Instance;
     _serviceProvider = serviceProvider;
     _gameDataManager = serviceProvider.GetRequiredService<GameDataManager>();
@@ -463,6 +461,9 @@ public class RoomService : IRoomService
       // 게임 시작 상태로 변경
       if (!_roomModel.SetRoomState(currentRoom.Id, RoomStateType.Ingame))
         return ServiceResult<GameServerInfo>.Error(GlobalFailCode.UnknownError);
+
+      // 게임 시작 시 방 삭제
+      _roomModel.RemoveRoom(currentRoom.Id);
 
       return ServiceResult<GameServerInfo>.Ok(gameServer);
     }

@@ -4,19 +4,6 @@ using HolyShitServer.Src.Network.Packets;
 
 namespace HolyShitServer.Src.Models;
 
-
-public struct Vector2
-{
-  public double X { get; set; }
-  public double Y { get; set; }
-
-  public Vector2(double x, double y)
-  {
-    X = x;
-    Y = y;
-  }
-}
-
 public class RoomModel
 {
   private static RoomModel? _instance;
@@ -64,6 +51,20 @@ public class RoomModel
     }
 
     return null;
+  }
+
+  public bool RemoveRoom(int roomId)
+  {
+    if (_rooms.TryRemove(roomId, out var room))
+    {
+      // 방에 있는 모든 유저의 매핑 제거
+      foreach (var user in room.GetAllUsers())
+      {
+        _userRoomMap.TryRemove(user.Id, out _);
+      }
+      return true;
+    }
+    return false;
   }
 
   public bool JoinRoom(int roomId, UserData userData)

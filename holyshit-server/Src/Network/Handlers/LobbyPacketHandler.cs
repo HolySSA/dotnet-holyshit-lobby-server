@@ -281,7 +281,7 @@ public static class LobbyPacketHandler
           if (gameServer != null)
           {
             // 게임 서버 정보 생성
-            var serverInfo = new GameServerInfoData
+            var serverInfo = new ServerInfoData
             {
               Host = "127.0.0.1",//gameServer.Host,
               Port = 5000,//gameServer.Port,
