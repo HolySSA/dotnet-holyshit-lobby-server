@@ -65,7 +65,7 @@ public class RedisService
         {
             var db = _redis.GetDatabase();
             var key = string.Format(USER_KEY_FORMAT, user.Id);
-            
+
             var hashFields = new HashEntry[]
             {
                 new HashEntry("Id", user.Id),
@@ -93,10 +93,10 @@ public class RedisService
         {
             var db = _redis.GetDatabase();
             var key = string.Format(USER_CHARACTERS_KEY_FORMAT, userId);
-            
+
             // 기존 캐시 삭제
             await db.KeyDeleteAsync(key);
-            
+
             // 새로운 캐릭터 목록 캐싱
             if (characters.Any())
             {
@@ -207,13 +207,13 @@ public class RedisService
         {
             var db = _redis.GetDatabase();
             var key = string.Format(USER_KEY_FORMAT, userId);
-            
+
             // LastSelectedCharacter 필드만 업데이트
             await db.HashSetAsync(key, new HashEntry[]
             {
                 new HashEntry("LastSelectedCharacter", (int)characterType)
             });
-            
+
             // 캐시 만료 시간 갱신
             await db.KeyExpireAsync(key, TimeSpan.FromHours(24));
             Console.WriteLine($"[Redis] 선택 캐릭터 업데이트 성공. UserId: {userId}, Character: {characterType}");
@@ -233,7 +233,7 @@ public class RedisService
         {
             var db = _redis.GetDatabase();
             var key = string.Format(USER_KEY_FORMAT, userId);
-            
+
             var lastSelectedCharacter = await db.HashGetAsync(key, "LastSelectedCharacter");
             if (!lastSelectedCharacter.HasValue)
             {

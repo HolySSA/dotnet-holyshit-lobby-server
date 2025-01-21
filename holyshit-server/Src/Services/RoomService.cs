@@ -462,9 +462,6 @@ public class RoomService : IRoomService
       if (!_roomModel.SetRoomState(currentRoom.Id, RoomStateType.Ingame))
         return ServiceResult<GameServerInfo>.Error(GlobalFailCode.UnknownError);
 
-      // 게임 시작 시 방 삭제
-      _roomModel.RemoveRoom(currentRoom.Id);
-
       return ServiceResult<GameServerInfo>.Ok(gameServer);
     }
     catch (Exception ex)

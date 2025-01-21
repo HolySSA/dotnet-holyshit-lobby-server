@@ -278,25 +278,25 @@ public static class LobbyPacketHandler
 
           // 게임 서버 정보 가져오기
           var gameServer = result.Data;
-          if (gameServer != null)
+          // 게임 서버 정보 생성
+          var serverInfo = new ServerInfoData
           {
-            // 게임 서버 정보 생성
-            var serverInfo = new ServerInfoData
-            {
-              Host = "127.0.0.1",//gameServer.Host,
-              Port = 5000,//gameServer.Port,
-              Token = jwtTokenService.GenerateGameServerToken()
-            };
+            Host = "127.0.0.1",//gameServer.Host,
+            Port = 5000,//gameServer.Port,
+            Token = jwtTokenService.GenerateGameServerToken()
+          };
 
-            var notification = NotificationHelper.CreateGameStartNotification(serverInfo, targetUserIds);
-            var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
-            await messageQueueService.BroadcastMessage(
-              notification.PacketId,
-              notification.Sequence,
-              notification.Message,
-              targetUserIds
-            );
-          }
+          var notification = NotificationHelper.CreateGameStartNotification(serverInfo, targetUserIds);
+          var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
+          await messageQueueService.BroadcastMessage(
+            notification.PacketId,
+            notification.Sequence,
+            notification.Message,
+            targetUserIds
+          );
+
+          // 모든 처리가 끝난 후 방 삭제
+          RoomModel.Instance.RemoveRoom(currentRoom.Id);
         }
       }
     }
