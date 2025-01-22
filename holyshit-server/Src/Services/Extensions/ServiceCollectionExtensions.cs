@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
         }
         services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisConnection));
         services.AddScoped<RedisService>();
-        
+
         // DB 설정
         services.AddDbContext<ApplicationDbContext>();
         return services;
@@ -52,4 +52,4 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<LoadBalancer>();
         return services;
     }
-} 
+}

@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using HolyShitServer.DB.Contexts;
+using HolyShitServer.Src.Data;
 using HolyShitServer.Src.DB.Entities;
 using HolyShitServer.Src.Network.Packets;
 using Microsoft.EntityFrameworkCore;
@@ -87,21 +88,20 @@ public class RedisService
     /// <summary>
     /// 유저의 보유 캐릭터 정보를 Redis에 캐싱
     /// </summary>
-    public async Task CacheUserCharactersAsync(int userId, List<CharacterType> characters)
+    public async Task CacheUserCharactersAsync(int userId, List<UserCharacterStatsData> characters)
     {
         try
         {
             var db = _redis.GetDatabase();
             var key = string.Format(USER_CHARACTERS_KEY_FORMAT, userId);
 
-            // 기존 캐시 삭제
-            await db.KeyDeleteAsync(key);
-
-            // 새로운 캐릭터 목록 캐싱
-            if (characters.Any())
+            // 기존 캐시 확인
+            var exists = await db.KeyExistsAsync(key);
+            // 없을 경우, 새로운 캐릭터 목록 캐싱
+            if (!exists && characters.Any())
             {
-                var values = characters.Select(c => (RedisValue)((int)c)).ToArray();
-                await db.SetAddAsync(key, values);
+                var values = characters.Select(c => new HashEntry(((int)c.CharacterType), $"{c.PlayCount}:{c.WinCount}")).ToArray();
+                await db.HashSetAsync(key, values);
                 // 캐시 만료 시간 설정 (24시간)
                 await db.KeyExpireAsync(key, TimeSpan.FromHours(24));
             }
@@ -166,7 +166,7 @@ public class RedisService
     /// <summary>
     /// 유저 보유 캐릭터 목록 조회 (없으면 DB에서 조회 후 캐싱)
     /// </summary>
-    public async Task<HashSet<CharacterType>> GetUserCharactersAsync(int userId, ApplicationDbContext dbContext)
+    public async Task<HashSet<UserCharacterStatsData>> GetUserCharactersAsync(int userId, ApplicationDbContext dbContext)
     {
         try
         {
@@ -174,27 +174,44 @@ public class RedisService
             var key = string.Format(USER_CHARACTERS_KEY_FORMAT, userId);
 
             // Redis에서 먼저 조회
-            var characters = await db.SetMembersAsync(key);
-            if (characters.Any())
+            var hashEntries = await db.HashGetAllAsync(key);
+            if (hashEntries.Any())
             {
                 // Redis에 데이터가 있으면 변환해서 반환
-                return characters.Select(c => (CharacterType)int.Parse(c.ToString())).ToHashSet();
+                return hashEntries.Select(h =>
+                {
+                    var characterType = (CharacterType)int.Parse(h.Name);
+                    var stats = h.Value.ToString().Split(':');
+                    return new UserCharacterStatsData
+                    {
+                        CharacterType = characterType,
+                        PlayCount = int.Parse(stats[0]),
+                        WinCount = int.Parse(stats[1])
+                    };
+                }).ToHashSet();
             }
 
             // Redis에 없으면 DB에서 조회
             var userCharacters = await dbContext.UserCharacters
                 .Where(uc => uc.UserId == userId)
-                .Select(uc => uc.CharacterType)
+                .Select(uc => new UserCharacterStatsData
+                {
+                    CharacterType = uc.CharacterType,
+                    PlayCount = uc.PlayCount,
+                    WinCount = uc.WinCount
+                })
                 .ToListAsync();
 
-            // DB에서 찾은 데이터를 Redis에 캐싱
-            await CacheUserCharactersAsync(userId, userCharacters);
+            // DB에서 조회한 데이터를 Redis에 캐싱
+            if (userCharacters.Any())
+                await CacheUserCharactersAsync(userId, userCharacters);
+
             return userCharacters.ToHashSet();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"[Redis] 유저 캐릭터 목록 조회 실패: {ex.Message}");
-            return new HashSet<CharacterType>();
+            return new HashSet<UserCharacterStatsData>();
         }
     }
 
@@ -252,6 +269,15 @@ public class RedisService
         {
             Console.WriteLine($"[Redis] DB 동기화 실패: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// 유저가 특정 캐릭터를 보유하고 있는지 확인
+    /// </summary>
+    public async Task<bool> HasCharacterAsync(int userId, CharacterType characterType, ApplicationDbContext dbContext)
+    {
+        var characters = await GetUserCharactersAsync(userId, dbContext);
+        return characters.Any(c => c.CharacterType == characterType);
     }
 
     /// <summary>

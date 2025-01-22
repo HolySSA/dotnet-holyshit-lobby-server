@@ -69,14 +69,20 @@ public static class AuthPacketHandler
 
       // 전체 캐릭터 조회
       var allCharacters = gameDataManager.GetAllCharacters();
+
       // 유저 보유 캐릭터 조회
       var userCharacters = await dbContext.UserCharacters.Where(uc => uc.UserId == userId).ToListAsync();
 
       // Redis에 유저 현재 캐릭터 정보 캐싱
       await redisService.CacheUserCharacterTypeAsync(user);
       // Redis에 유저의 보유 캐릭터 정보 캐싱
-      var ownedCharacterTypes = userCharacters.Select(uc => uc.CharacterType).ToList();
-      await redisService.CacheUserCharactersAsync(userId, ownedCharacterTypes);
+      var userCharacterStats = userCharacters.Select(uc => new UserCharacterStatsData
+      {
+        CharacterType = uc.CharacterType,
+        PlayCount = uc.PlayCount,
+        WinCount = uc.WinCount
+      }).ToList();
+      await redisService.CacheUserCharactersAsync(userId, userCharacterStats);
 
       // 캐릭터 리스트
       var characterInfoList = allCharacters.Where(c => c != null).Select(c =>
@@ -131,8 +137,7 @@ public static class AuthPacketHandler
       }
 
       // 캐릭터 보유 여부 확인
-      var ownedCharacterTypes = await redisService.GetUserCharactersAsync(client.UserId, dbContext);
-      if (!ownedCharacterTypes.Contains(request.CharacterType))
+      if (!await redisService.HasCharacterAsync(client.UserId, request.CharacterType, dbContext))
       {
         return ResponseHelper.CreateSelectCharacterResponse(
           sequence,
