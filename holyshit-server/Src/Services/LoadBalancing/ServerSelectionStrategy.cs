@@ -2,7 +2,7 @@ namespace HolyShitServer.Src.Services.LoadBalancing;
 
 public interface IServerSelectionStrategy
 {
-  GameServerInfo SelectServer(IEnumerable<GameServerInfo> servers, int requiredSlots);
+  GameServerInfo? SelectServer(IEnumerable<GameServerInfo> servers, int requiredSlots);
 }
 
 /// <summary>
@@ -11,8 +11,8 @@ public interface IServerSelectionStrategy
 public class RoundRobinStrategy : IServerSelectionStrategy
 {
   private int currentIndex = 0;
-  
-  public GameServerInfo SelectServer(IEnumerable<GameServerInfo> servers, int requiredSlots)
+
+  public GameServerInfo? SelectServer(IEnumerable<GameServerInfo> servers, int requiredSlots)
   {
     var availableServers = servers.Where(s => s.IsAvailable && (s.MaxPlayers - s.CurrentPlayers) >= requiredSlots).ToList();
 

@@ -2,7 +2,6 @@ syntax = "proto3";
 
 option csharp_namespace = "HolyShitServer.Src.Network.Packets";
 
-import "Common.proto";
 import "Auth.proto";
 import "Lobby.proto";
 
@@ -13,7 +12,7 @@ message GamePacket {
     S2CLoginResponse login_response = 2;
     C2SSelectCharacterRequest select_character_request = 3;
     S2CSelectCharacterResponse select_character_response = 4;
-    
+
     // Lobby messages
     C2SCreateRoomRequest create_room_request = 5;
     S2CCreateRoomResponse create_room_response = 6;

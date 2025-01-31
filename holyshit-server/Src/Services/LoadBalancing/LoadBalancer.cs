@@ -8,14 +8,14 @@ public class LoadBalancer
   private readonly IServerSelectionStrategy _selectionStrategy;
 
   private const string GAME_SERVERS_KEY = "game_servers";
-  
+
   public LoadBalancer(IConnectionMultiplexer redis, IServerSelectionStrategy strategy)
   {
-     _redis = redis ?? throw new ArgumentNullException(nameof(redis));
+    _redis = redis ?? throw new ArgumentNullException(nameof(redis));
     _selectionStrategy = strategy;
   }
 
-  public async Task<GameServerInfo> GetServerForRoom(int playerCount)
+  public async Task<GameServerInfo?> GetServerForRoom(int playerCount)
   {
     var servers = await GetAllGameServers();
     return _selectionStrategy.SelectServer(servers, playerCount);
@@ -120,7 +120,7 @@ public class LoadBalancer
   private GameServerInfo ConvertToGameServerInfo(HashEntry[] hashFields)
   {
     var dict = hashFields.ToDictionary(h => h.Name.ToString(), h => h.Value.ToString());
-    
+
     return new GameServerInfo
     {
       Host = dict["host"],
