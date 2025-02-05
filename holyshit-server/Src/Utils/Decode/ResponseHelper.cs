@@ -180,6 +180,20 @@ public static class ResponseHelper
     return new GamePacketMessage(PacketId.GetRoomReadyStateResponse, sequence, gamePacket);
   }
 
+  public static GamePacketMessage CreateChatMessageResponse(uint sequence, bool success, GlobalFailCode failCode)
+  {
+    var response = new S2CChatMessageResponse
+    {
+      Success = success,
+      FailCode = failCode
+    };
+    
+    var gamePacket = new GamePacket();
+    gamePacket.ChatMessageResponse = response;
+
+    return new GamePacketMessage(PacketId.ChatMessageResponse, sequence, gamePacket);
+  }
+
   public static GamePacketMessage CreateGamePrepareResponse(uint sequence, bool success, GlobalFailCode failCode)
   {
     var gamePacket = new GamePacket();
@@ -203,22 +217,4 @@ public static class ResponseHelper
 
     return new GamePacketMessage(PacketId.GameStartResponse, sequence, gamePacket);
   }
-
-  /*
-    // 에러 응답
-    public static async Task SendErrorResponse(
-        ClientSession client,
-        uint sequence,
-        string message,
-        GlobalFailCode failCode)
-    {
-        var response = new S2CErrorResponse
-        {
-            Message = message,
-            FailCode = failCode
-        };
-
-        await SendResponse(client, PacketId.S2CerrorResponse, sequence, response);
-    }
-  */
 }

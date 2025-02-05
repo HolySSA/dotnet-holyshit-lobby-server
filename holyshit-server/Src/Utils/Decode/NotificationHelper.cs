@@ -59,6 +59,22 @@ public static class NotificationHelper
     );
   }
 
+  public static GamePacketMessage CreateChatMessageNotification(string nickname, string message, ChatMessageType messageType, List<int> targetUserIds)
+  {
+    var notification = new S2CChatMessageNotification
+    {
+      Nickname = nickname,
+      Message = message,
+      Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+      MessageType = messageType
+    };
+
+    var gamePacket = new GamePacket();
+    gamePacket.ChatMessageNotification = notification;
+
+    return GamePacketMessage.CreateBroadcast(PacketId.ChatMessageNotification, gamePacket, targetUserIds);
+  }
+
   public static GamePacketMessage CreateGamePrepareNotification(RoomData room, List<int> targetUserIds)
   {
     var gamePacket = new GamePacket();

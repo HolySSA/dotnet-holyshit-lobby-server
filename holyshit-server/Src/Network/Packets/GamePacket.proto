@@ -31,14 +31,17 @@ message GamePacket {
     S2CRoomReadyNotification room_ready_notification = 19;
     C2SGetRoomReadyStateRequest get_room_ready_state_request = 20;
     S2CGetRoomReadyStateResponse get_room_ready_state_response = 21;
+    C2SChatMessageRequest chat_message_request = 22;
+    S2CChatMessageResponse chat_message_response = 23;
+    S2CChatMessageNotification chat_message_notification = 24;
 
     // Game Start messages
-    C2SGamePrepareRequest game_prepare_request = 22;
-    S2CGamePrepareResponse game_prepare_response = 23;
-    S2CGamePrepareNotification game_prepare_notification = 24;
-    C2SGameStartRequest game_start_request = 25;
-    S2CGameStartResponse game_start_response = 26;
-    S2CGameStartNotification game_start_notification = 27;
+    C2SGamePrepareRequest game_prepare_request = 45;
+    S2CGamePrepareResponse game_prepare_response = 46;
+    S2CGamePrepareNotification game_prepare_notification = 47;
+    C2SGameStartRequest game_start_request = 48;
+    S2CGameStartResponse game_start_response = 49;
+    S2CGameStartNotification game_start_notification = 50;
   }
 }
 
@@ -68,12 +71,15 @@ enum PacketId {
   RoomReadyNotification = 19;
   GetRoomReadyStateRequest = 20;
   GetRoomReadyStateResponse = 21;
+  ChatMessageRequest = 22;
+  ChatMessageResponse = 23;
+  ChatMessageNotification = 24;
 
   // Game Start messages
-  GamePrepareRequest = 22;
-  GamePrepareResponse = 23;
-  GamePrepareNotification = 24;
-  GameStartRequest = 25;
-  GameStartResponse = 26;
-  GameStartNotification = 27;
+  GamePrepareRequest = 45;
+  GamePrepareResponse = 46;
+  GamePrepareNotification = 47;
+  GameStartRequest = 48;
+  GameStartResponse = 49;
+  GameStartNotification = 50;
 }

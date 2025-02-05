@@ -357,6 +357,35 @@ public class RoomService : IRoomService
   }
 
   /// <summary>
+  /// 채팅 메시지 전송
+  /// </summary>
+  public async Task<ServiceResult> SendChatMessage(int userId, string message, ChatMessageType messageType)
+  {
+    try
+    {
+      using var scope = _serviceProvider.CreateScope();
+      var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+      var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+      // 유저 검증
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
+      if (userCharacterData == null)
+        return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
+
+      // 메시지 유효성 검사
+      if (string.IsNullOrEmpty(message))
+        return ServiceResult.Error(GlobalFailCode.InvalidRequest);
+
+      return ServiceResult.Ok();
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"[RoomService] SendChatMessage 실패: {ex.Message}");
+      return ServiceResult.Error(GlobalFailCode.UnknownError);
+    }
+  }
+
+  /// <summary>
   /// 게임 준비 단계 시작
   /// </summary>
   public async Task<ServiceResult> GamePrepare(int userId)

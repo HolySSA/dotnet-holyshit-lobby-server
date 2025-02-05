@@ -298,6 +298,29 @@ public class RedisService
 
         await Task.WhenAll(tasks);
     }
+
+    /// <summary>
+    /// Redis에 저장된 모든 유저 ID 목록 조회
+    /// </summary>
+    public async Task<List<int>> GetAllOnlineUserIds()
+    {
+        return await Task.Run(() =>
+        {
+            var server = _redis.GetServer(_redis.GetEndPoints().First());
+            var onlineUserIds = new List<int>();
+
+            // user:* 패턴으로 모든 유저 키 조회
+            var userKeys = server.Keys(pattern: USER_KEY_FORMAT.Replace("{0}", "*"));
+            foreach (var key in userKeys)
+            {
+                // userId 추출
+                var userId = int.Parse(key.ToString().Split(':')[1]);
+                onlineUserIds.Add(userId);
+            }
+
+            return onlineUserIds;
+        });
+    }
 }
 
 public class UserCharacterTypeData

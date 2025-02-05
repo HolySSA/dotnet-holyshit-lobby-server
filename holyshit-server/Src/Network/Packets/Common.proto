@@ -145,3 +145,10 @@ enum RoomStateType {
     PREPARE = 1;
     INGAME = 2;
 }
+
+// 채팅 메시지 타입
+enum ChatMessageType {
+    NONE_CHAT = 0;
+    USER_CHAT = 1;
+    SYSTEM_CHAT = 2;
+}

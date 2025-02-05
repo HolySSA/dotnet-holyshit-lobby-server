@@ -83,6 +83,26 @@ message S2CGetRoomReadyStateResponse {
     GlobalFailCode failCode = 3;
 }
 
+// 채팅 메시지 전송 요청
+message C2SChatMessageRequest {
+    string message = 1;           // 채팅 메시지 내용
+    ChatMessageType messageType = 2;  // 메시지 타입
+}
+
+// 채팅 메시지 전송 응답
+message S2CChatMessageResponse {
+    bool success = 1;
+    GlobalFailCode failCode = 2;
+}
+
+// 채팅 메시지 알림 (서버 -> 모든 클라이언트)
+message S2CChatMessageNotification {
+    string nickname = 1; // 닉네임
+    string message = 2; // 메시지 내용
+    int64 timestamp = 3; // 서버 타임스탬프
+    ChatMessageType messageType = 4; // 메시지 타입
+}
+
 message C2SGamePrepareRequest {
 
 }

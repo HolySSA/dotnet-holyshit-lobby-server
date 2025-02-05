@@ -13,6 +13,7 @@ public interface IRoomService
   Task<ServiceResult> LeaveRoom(int userId);
   Task<ServiceResult> RoomReady(int userId, bool isReady);
   Task<ServiceResult<List<RoomUserReadyData>>> GetRoomReadyState(int roomId);
+  Task<ServiceResult> SendChatMessage(int userId, string message, ChatMessageType messageType);
   Task<ServiceResult> GamePrepare(int userId);
   Task<ServiceResult<GameServerInfo>> GameStart(int userId);
 }

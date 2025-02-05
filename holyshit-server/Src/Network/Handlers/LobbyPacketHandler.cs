@@ -212,6 +212,53 @@ public static class LobbyPacketHandler
     );
   }
 
+  public static async Task<GamePacketMessage> HandleChatMessageRequest(ClientSession client, uint sequence, C2SChatMessageRequest request)
+  {
+    using var scope = client.ServiceProvider.CreateScope();
+    var roomService = scope.ServiceProvider.GetRequiredService<IRoomService>();
+    var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    // 채팅 메시지 전송 처리
+    var result = await roomService.SendChatMessage(client.UserId, request.Message, request.MessageType);
+    // 채팅 알림 전송
+    if (result.Success)
+    {
+      // Redis에서 유저 정보 조회
+      var userCharacterData = await redisService.GetUserCharacterTypeAsync(client.UserId, dbContext);
+      if (userCharacterData != null)
+      {
+        // Redis에서 모든 온라인 유저 ID 목록 가져오기
+        var allOnlineUserIds = await redisService.GetAllOnlineUserIds();
+        var uniqueUserIds = allOnlineUserIds.Distinct().Where(id => id > 0).ToList();
+        if (uniqueUserIds.Any())
+        { 
+          // 채팅 알림 생성 및 브로드캐스트
+          var notification = NotificationHelper.CreateChatMessageNotification(
+            userCharacterData.Nickname,
+            request.Message,
+            request.MessageType,
+            uniqueUserIds
+          );
+
+          var messageQueueService = scope.ServiceProvider.GetRequiredService<MessageQueueService>();
+          await messageQueueService.BroadcastMessage(
+            notification.PacketId,
+            notification.Sequence,
+            notification.Message,
+            uniqueUserIds
+          );
+        }
+      }
+    }
+
+    return ResponseHelper.CreateChatMessageResponse(
+      sequence,
+      result.Success,
+      result.FailCode
+    );
+  }
+
   public static async Task<GamePacketMessage> HandleGamePrepareRequest(ClientSession client, uint sequence, C2SGamePrepareRequest request)
   {
     using var scope = client.ServiceProvider.CreateScope();

@@ -43,6 +43,7 @@ public static class HandlerManager
     OnHandlers<C2SLeaveRoomRequest>(PacketId.LeaveRoomRequest, LobbyPacketHandler.HandleLeaveRoomRequest);
     OnHandlers<C2SRoomReadyRequest>(PacketId.RoomReadyRequest, LobbyPacketHandler.HandleRoomReadyRequest);
     OnHandlers<C2SGetRoomReadyStateRequest>(PacketId.GetRoomReadyStateRequest, LobbyPacketHandler.HandleGetRoomReadyStateRequest);
+    OnHandlers<C2SChatMessageRequest>(PacketId.ChatMessageRequest, LobbyPacketHandler.HandleChatMessageRequest);
     OnHandlers<C2SGamePrepareRequest>(PacketId.GamePrepareRequest, LobbyPacketHandler.HandleGamePrepareRequest);
     OnHandlers<C2SGameStartRequest>(PacketId.GameStartRequest, LobbyPacketHandler.HandleGameStartRequest);
   }
