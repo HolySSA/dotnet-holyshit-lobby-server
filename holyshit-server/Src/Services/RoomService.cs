@@ -1,5 +1,6 @@
 using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Data;
+using HolyShitServer.Src.DB.Entities;
 using HolyShitServer.Src.Models;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Services.Interfaces;
@@ -372,9 +373,21 @@ public class RoomService : IRoomService
       if (userCharacterData == null)
         return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
 
-      // 메시지 유효성 검사
-      if (string.IsNullOrEmpty(message))
-        return ServiceResult.Error(GlobalFailCode.InvalidRequest);
+      // 메시지 저장 성능 측정
+      await PerformanceMetrics.MeasureAsync("SaveChatMessage", async () =>
+      {
+        var chatMessage = new ChatMessage
+        {
+          UserId = userId,
+          Nickname = userCharacterData.Nickname,
+          Message = message,
+          MessageType = messageType,
+          CreatedAt = DateTime.UtcNow
+        };
+
+        dbContext.ChatMessages.Add(chatMessage);
+        await dbContext.SaveChangesAsync();
+      });
 
       return ServiceResult.Ok();
     }

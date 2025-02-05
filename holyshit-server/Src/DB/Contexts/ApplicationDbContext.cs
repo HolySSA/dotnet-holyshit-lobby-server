@@ -9,7 +9,8 @@ public class ApplicationDbContext : DbContext
 {
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<UserCharacter> UserCharacters { get; set; } = null!;
-    
+    public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
+
     // 생성자 - 데이터베이스 연결 설정
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -47,13 +48,13 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<UserCharacter>(entity =>
         {
             entity.HasKey(e => e.Id);
-            
+
             // 기존 Users 테이블과 연결
             entity.HasOne(e => e.User)
                 .WithMany(u => u.Characters)
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             // UserId와 CharacterType의 조합은 유니크.
             entity.HasIndex(e => new { e.UserId, e.CharacterType }).IsUnique();
 
