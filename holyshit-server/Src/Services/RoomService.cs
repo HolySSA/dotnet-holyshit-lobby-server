@@ -1,6 +1,7 @@
 using HolyShitServer.DB.Contexts;
 using HolyShitServer.Src.Data;
 using HolyShitServer.Src.DB.Entities;
+using HolyShitServer.Src.DB.MongoEntities;
 using HolyShitServer.Src.Models;
 using HolyShitServer.Src.Network.Packets;
 using HolyShitServer.Src.Services.Interfaces;
@@ -367,6 +368,7 @@ public class RoomService : IRoomService
       using var scope = _serviceProvider.CreateScope();
       var redisService = scope.ServiceProvider.GetRequiredService<RedisService>();
       var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+      var mongoDbService = scope.ServiceProvider.GetRequiredService<MongoDbService>();
 
       // 유저 검증
       var userCharacterData = await redisService.GetUserCharacterTypeAsync(userId, dbContext);
@@ -374,6 +376,7 @@ public class RoomService : IRoomService
         return ServiceResult.Error(GlobalFailCode.AuthenticationFailed);
 
       // 메시지 저장 성능 측정
+      /* PostgreSql 사용 시
       await PerformanceMetrics.MeasureAsync("SaveChatMessage", async () =>
       {
         var chatMessage = new ChatMessage
@@ -387,6 +390,22 @@ public class RoomService : IRoomService
 
         dbContext.ChatMessages.Add(chatMessage);
         await dbContext.SaveChangesAsync();
+      });
+      */
+
+      // MongoDb 사용 시
+      await PerformanceMetrics.MeasureAsync("SaveChatMessage", async () =>
+      {
+        var chatMessage = new ChatMessages
+        {
+          UserId = userId,
+          Nickname = userCharacterData.Nickname,
+          Message = message,
+          MessageType = messageType,
+          CreatedAt = DateTime.UtcNow
+        };
+
+        await mongoDbService.SaveChatMessageAsync(chatMessage);
       });
 
       return ServiceResult.Ok();

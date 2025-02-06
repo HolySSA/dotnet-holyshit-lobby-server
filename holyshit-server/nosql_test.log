@@ -1,0 +1,699 @@
+=== Performance Metrics at 2025-02-06 23:12:20 ===
+Operation: SaveChatMessage
+Average: 118.00ms
+Min: 118ms
+Max: 118ms
+Count: 1
+
+=== Performance Metrics at 2025-02-06 23:12:22 ===
+Operation: SaveChatMessage
+Average: 60.50ms
+Min: 3ms
+Max: 118ms
+Count: 2
+
+=== Performance Metrics at 2025-02-06 23:12:22 ===
+Operation: SaveChatMessage
+Average: 40.67ms
+Min: 1ms
+Max: 118ms
+Count: 3
+
+=== Performance Metrics at 2025-02-06 23:12:23 ===
+Operation: SaveChatMessage
+Average: 30.75ms
+Min: 1ms
+Max: 118ms
+Count: 4
+
+=== Performance Metrics at 2025-02-06 23:12:24 ===
+Operation: SaveChatMessage
+Average: 25.00ms
+Min: 1ms
+Max: 118ms
+Count: 5
+
+=== Performance Metrics at 2025-02-06 23:12:25 ===
+Operation: SaveChatMessage
+Average: 21.00ms
+Min: 1ms
+Max: 118ms
+Count: 6
+
+=== Performance Metrics at 2025-02-06 23:12:25 ===
+Operation: SaveChatMessage
+Average: 18.29ms
+Min: 1ms
+Max: 118ms
+Count: 7
+
+=== Performance Metrics at 2025-02-06 23:12:27 ===
+Operation: SaveChatMessage
+Average: 16.12ms
+Min: 1ms
+Max: 118ms
+Count: 8
+
+=== Performance Metrics at 2025-02-06 23:12:28 ===
+Operation: SaveChatMessage
+Average: 14.44ms
+Min: 1ms
+Max: 118ms
+Count: 9
+
+=== Performance Metrics at 2025-02-06 23:12:28 ===
+Operation: SaveChatMessage
+Average: 13.10ms
+Min: 1ms
+Max: 118ms
+Count: 10
+
+=== Performance Metrics at 2025-02-06 23:12:29 ===
+Operation: SaveChatMessage
+Average: 12.09ms
+Min: 1ms
+Max: 118ms
+Count: 11
+
+=== Performance Metrics at 2025-02-06 23:12:30 ===
+Operation: SaveChatMessage
+Average: 11.17ms
+Min: 1ms
+Max: 118ms
+Count: 12
+
+=== Performance Metrics at 2025-02-06 23:12:31 ===
+Operation: SaveChatMessage
+Average: 10.31ms
+Min: 0ms
+Max: 118ms
+Count: 13
+
+=== Performance Metrics at 2025-02-06 23:12:32 ===
+Operation: SaveChatMessage
+Average: 9.64ms
+Min: 0ms
+Max: 118ms
+Count: 14
+
+=== Performance Metrics at 2025-02-06 23:12:33 ===
+Operation: SaveChatMessage
+Average: 9.07ms
+Min: 0ms
+Max: 118ms
+Count: 15
+
+=== Performance Metrics at 2025-02-06 23:12:33 ===
+Operation: SaveChatMessage
+Average: 8.69ms
+Min: 0ms
+Max: 118ms
+Count: 16
+
+=== Performance Metrics at 2025-02-06 23:12:34 ===
+Operation: SaveChatMessage
+Average: 8.24ms
+Min: 0ms
+Max: 118ms
+Count: 17
+
+=== Performance Metrics at 2025-02-06 23:12:34 ===
+Operation: SaveChatMessage
+Average: 7.83ms
+Min: 0ms
+Max: 118ms
+Count: 18
+
+=== Performance Metrics at 2025-02-06 23:12:35 ===
+Operation: SaveChatMessage
+Average: 7.47ms
+Min: 0ms
+Max: 118ms
+Count: 19
+
+=== Performance Metrics at 2025-02-06 23:12:35 ===
+Operation: SaveChatMessage
+Average: 7.15ms
+Min: 0ms
+Max: 118ms
+Count: 20
+
+=== Performance Metrics at 2025-02-06 23:12:35 ===
+Operation: SaveChatMessage
+Average: 6.86ms
+Min: 0ms
+Max: 118ms
+Count: 21
+
+=== Performance Metrics at 2025-02-06 23:12:38 ===
+Operation: SaveChatMessage
+Average: 6.64ms
+Min: 0ms
+Max: 118ms
+Count: 22
+
+=== Performance Metrics at 2025-02-06 23:12:39 ===
+Operation: SaveChatMessage
+Average: 6.39ms
+Min: 0ms
+Max: 118ms
+Count: 23
+
+=== Performance Metrics at 2025-02-06 23:12:40 ===
+Operation: SaveChatMessage
+Average: 6.17ms
+Min: 0ms
+Max: 118ms
+Count: 24
+
+=== Performance Metrics at 2025-02-06 23:12:41 ===
+Operation: SaveChatMessage
+Average: 5.96ms
+Min: 0ms
+Max: 118ms
+Count: 25
+
+=== Performance Metrics at 2025-02-06 23:12:41 ===
+Operation: SaveChatMessage
+Average: 5.77ms
+Min: 0ms
+Max: 118ms
+Count: 26
+
+=== Performance Metrics at 2025-02-06 23:12:42 ===
+Operation: SaveChatMessage
+Average: 5.56ms
+Min: 0ms
+Max: 118ms
+Count: 27
+
+=== Performance Metrics at 2025-02-06 23:12:45 ===
+Operation: SaveChatMessage
+Average: 5.36ms
+Min: 0ms
+Max: 118ms
+Count: 28
+
+=== Performance Metrics at 2025-02-06 23:12:45 ===
+Operation: SaveChatMessage
+Average: 5.24ms
+Min: 0ms
+Max: 118ms
+Count: 29
+
+=== Performance Metrics at 2025-02-06 23:12:47 ===
+Operation: SaveChatMessage
+Average: 5.10ms
+Min: 0ms
+Max: 118ms
+Count: 30
+
+=== Performance Metrics at 2025-02-06 23:12:51 ===
+Operation: SaveChatMessage
+Average: 4.97ms
+Min: 0ms
+Max: 118ms
+Count: 31
+
+=== Performance Metrics at 2025-02-06 23:12:52 ===
+Operation: SaveChatMessage
+Average: 4.81ms
+Min: 0ms
+Max: 118ms
+Count: 32
+
+=== Performance Metrics at 2025-02-06 23:12:52 ===
+Operation: SaveChatMessage
+Average: 4.67ms
+Min: 0ms
+Max: 118ms
+Count: 33
+
+=== Performance Metrics at 2025-02-06 23:12:52 ===
+Operation: SaveChatMessage
+Average: 4.53ms
+Min: 0ms
+Max: 118ms
+Count: 34
+
+=== Performance Metrics at 2025-02-06 23:12:53 ===
+Operation: SaveChatMessage
+Average: 4.40ms
+Min: 0ms
+Max: 118ms
+Count: 35
+
+=== Performance Metrics at 2025-02-06 23:12:53 ===
+Operation: SaveChatMessage
+Average: 4.28ms
+Min: 0ms
+Max: 118ms
+Count: 36
+
+=== Performance Metrics at 2025-02-06 23:12:53 ===
+Operation: SaveChatMessage
+Average: 4.16ms
+Min: 0ms
+Max: 118ms
+Count: 37
+
+=== Performance Metrics at 2025-02-06 23:12:53 ===
+Operation: SaveChatMessage
+Average: 4.05ms
+Min: 0ms
+Max: 118ms
+Count: 38
+
+=== Performance Metrics at 2025-02-06 23:12:54 ===
+Operation: SaveChatMessage
+Average: 3.97ms
+Min: 0ms
+Max: 118ms
+Count: 39
+
+=== Performance Metrics at 2025-02-06 23:12:55 ===
+Operation: SaveChatMessage
+Average: 3.90ms
+Min: 0ms
+Max: 118ms
+Count: 40
+
+=== Performance Metrics at 2025-02-06 23:12:58 ===
+Operation: SaveChatMessage
+Average: 3.80ms
+Min: 0ms
+Max: 118ms
+Count: 41
+
+=== Performance Metrics at 2025-02-06 23:12:58 ===
+Operation: SaveChatMessage
+Average: 3.71ms
+Min: 0ms
+Max: 118ms
+Count: 42
+
+=== Performance Metrics at 2025-02-06 23:12:58 ===
+Operation: SaveChatMessage
+Average: 3.63ms
+Min: 0ms
+Max: 118ms
+Count: 43
+
+=== Performance Metrics at 2025-02-06 23:12:59 ===
+Operation: SaveChatMessage
+Average: 3.55ms
+Min: 0ms
+Max: 118ms
+Count: 44
+
+=== Performance Metrics at 2025-02-06 23:13:11 ===
+Operation: SaveChatMessage
+Average: 3.47ms
+Min: 0ms
+Max: 118ms
+Count: 45
+
+=== Performance Metrics at 2025-02-06 23:13:11 ===
+Operation: SaveChatMessage
+Average: 3.46ms
+Min: 0ms
+Max: 118ms
+Count: 46
+
+=== Performance Metrics at 2025-02-06 23:13:12 ===
+Operation: SaveChatMessage
+Average: 3.38ms
+Min: 0ms
+Max: 118ms
+Count: 47
+
+=== Performance Metrics at 2025-02-06 23:13:12 ===
+Operation: SaveChatMessage
+Average: 3.31ms
+Min: 0ms
+Max: 118ms
+Count: 48
+
+=== Performance Metrics at 2025-02-06 23:13:16 ===
+Operation: SaveChatMessage
+Average: 3.24ms
+Min: 0ms
+Max: 118ms
+Count: 49
+
+=== Performance Metrics at 2025-02-06 23:13:19 ===
+Operation: SaveChatMessage
+Average: 3.18ms
+Min: 0ms
+Max: 118ms
+Count: 50
+
+=== Performance Metrics at 2025-02-06 23:13:19 ===
+Operation: SaveChatMessage
+Average: 3.14ms
+Min: 0ms
+Max: 118ms
+Count: 51
+
+=== Performance Metrics at 2025-02-06 23:13:19 ===
+Operation: SaveChatMessage
+Average: 3.08ms
+Min: 0ms
+Max: 118ms
+Count: 52
+
+=== Performance Metrics at 2025-02-06 23:13:19 ===
+Operation: SaveChatMessage
+Average: 3.02ms
+Min: 0ms
+Max: 118ms
+Count: 53
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.96ms
+Min: 0ms
+Max: 118ms
+Count: 54
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.93ms
+Min: 0ms
+Max: 118ms
+Count: 55
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 3.02ms
+Min: 0ms
+Max: 118ms
+Count: 56
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.96ms
+Min: 0ms
+Max: 118ms
+Count: 57
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.91ms
+Min: 0ms
+Max: 118ms
+Count: 58
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.88ms
+Min: 0ms
+Max: 118ms
+Count: 59
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.83ms
+Min: 0ms
+Max: 118ms
+Count: 60
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.79ms
+Min: 0ms
+Max: 118ms
+Count: 61
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.74ms
+Min: 0ms
+Max: 118ms
+Count: 62
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.70ms
+Min: 0ms
+Max: 118ms
+Count: 63
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.66ms
+Min: 0ms
+Max: 118ms
+Count: 64
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.62ms
+Min: 0ms
+Max: 118ms
+Count: 65
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.58ms
+Min: 0ms
+Max: 118ms
+Count: 66
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.54ms
+Min: 0ms
+Max: 118ms
+Count: 67
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.50ms
+Min: 0ms
+Max: 118ms
+Count: 68
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.46ms
+Min: 0ms
+Max: 118ms
+Count: 69
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.43ms
+Min: 0ms
+Max: 118ms
+Count: 70
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.39ms
+Min: 0ms
+Max: 118ms
+Count: 71
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.36ms
+Min: 0ms
+Max: 118ms
+Count: 72
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.33ms
+Min: 0ms
+Max: 118ms
+Count: 73
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.30ms
+Min: 0ms
+Max: 118ms
+Count: 74
+
+=== Performance Metrics at 2025-02-06 23:13:20 ===
+Operation: SaveChatMessage
+Average: 2.27ms
+Min: 0ms
+Max: 118ms
+Count: 75
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.24ms
+Min: 0ms
+Max: 118ms
+Count: 76
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.21ms
+Min: 0ms
+Max: 118ms
+Count: 77
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.18ms
+Min: 0ms
+Max: 118ms
+Count: 78
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.15ms
+Min: 0ms
+Max: 118ms
+Count: 79
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.12ms
+Min: 0ms
+Max: 118ms
+Count: 80
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.11ms
+Min: 0ms
+Max: 118ms
+Count: 81
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.09ms
+Min: 0ms
+Max: 118ms
+Count: 82
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.06ms
+Min: 0ms
+Max: 118ms
+Count: 83
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.04ms
+Min: 0ms
+Max: 118ms
+Count: 84
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 2.01ms
+Min: 0ms
+Max: 118ms
+Count: 85
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 1.99ms
+Min: 0ms
+Max: 118ms
+Count: 86
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 1.97ms
+Min: 0ms
+Max: 118ms
+Count: 87
+
+=== Performance Metrics at 2025-02-06 23:13:21 ===
+Operation: SaveChatMessage
+Average: 1.94ms
+Min: 0ms
+Max: 118ms
+Count: 88
+
+=== Performance Metrics at 2025-02-06 23:13:26 ===
+Operation: SaveChatMessage
+Average: 1.92ms
+Min: 0ms
+Max: 118ms
+Count: 89
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.90ms
+Min: 0ms
+Max: 118ms
+Count: 90
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.88ms
+Min: 0ms
+Max: 118ms
+Count: 91
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.86ms
+Min: 0ms
+Max: 118ms
+Count: 92
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.84ms
+Min: 0ms
+Max: 118ms
+Count: 93
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.82ms
+Min: 0ms
+Max: 118ms
+Count: 94
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.80ms
+Min: 0ms
+Max: 118ms
+Count: 95
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.78ms
+Min: 0ms
+Max: 118ms
+Count: 96
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.76ms
+Min: 0ms
+Max: 118ms
+Count: 97
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.74ms
+Min: 0ms
+Max: 118ms
+Count: 98
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.74ms
+Min: 0ms
+Max: 118ms
+Count: 99
+
+=== Performance Metrics at 2025-02-06 23:13:29 ===
+Operation: SaveChatMessage
+Average: 1.72ms
+Min: 0ms
+Max: 118ms
+Count: 100

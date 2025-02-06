@@ -25,8 +25,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisConnection));
         services.AddScoped<RedisService>();
 
-        // DB 설정
+        // DB-MongoDb 설정
         services.AddDbContext<ApplicationDbContext>();
+        services.AddSingleton<MongoDbService>();
+
         return services;
     }
 
