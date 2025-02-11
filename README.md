@@ -11,19 +11,6 @@
 - 게임 장르: 전략/카드
 - 프로젝트 소개: **Holy Shit!** 은 보드 게임 Bang!에서 영감을 받은 실시간 전략 카드 게임입니다. 각 플레이어는 숨겨진 역할에 따라 목표를 달성해야 하며, 승리를 위해 치열한 심리전과 전략적인 플레이가 요구됩니다.
 
-## 관련 링크
-
-- 프로젝트 문서
-  [브로셔](https://dune-poultry-b4f.notion.site/Holy-Shit-18a266df1491805dbb78c9ed6f672c5d?pvs=4)
-- AUTH 서버
-  [dotnet-holyshit-auth-server](https://github.com/HolySSA/dotnet-holyshit-auth-server)
-- GAME 서버
-  [dotnet-holyshit-game-server](https://github.com/HolySSA/dotnet-holyshit-game-server)
-- 클라이언트
-  [holyshit-client](https://github.com/HolySSA/holyshit-client)
-- DB 서버
-  폐쇄.
-
 ## 서비스 아키텍처
 
 <p align="center">
@@ -97,3 +84,18 @@
 | **JWT**              | 토큰 기반 사용자 인증을 제공하여 서버 부하를 줄이고 확장성을 향상시킵니다. 안전한 사용자 인증을 보장합니다.                                                                             |
 | **Protocol Buffers** | 효율적인 데이터 직렬화를 지원하며 다양한 언어와의 호환성을 통해 서버-클라이언트 간 통신이 용이합니다. 네트워크 대역폭 최적화에도 유리합니다.                                            |
 | **GitHub Actions**   | 자동화된 CI/CD 파이프라인을 구축하여 Docker 이미지를 자동으로 빌드하고 ECR에 푸시할 수 있습니다. 테스트 자동화 및 품질 관리를 지원하며, 브랜치 기반 배포 전략도 구현할 수 있습니다.     |
+
+## 관련 링크
+
+- 프로젝트 문서<br>
+  [브로셔](https://dune-poultry-b4f.notion.site/Holy-Shit-18a266df1491805dbb78c9ed6f672c5d?pvs=4)
+- AUTH 서버<br>
+  [dotnet-holyshit-auth-server](https://github.com/HolySSA/dotnet-holyshit-auth-server)
+- LOBBY 서버<br>
+  [dotnet-holyshit-lobby-server](https://github.com/HolySSA/dotnet-holyshit-lobby-server)
+- GAME 서버<br>
+  [dotnet-holyshit-game-server](https://github.com/HolySSA/dotnet-holyshit-game-server)
+- 클라이언트<br>
+  [holyshit-client](https://github.com/HolySSA/holyshit-client)
+- DB 서버<br>
+  폐쇄.
