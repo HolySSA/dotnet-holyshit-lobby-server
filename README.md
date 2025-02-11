@@ -25,27 +25,22 @@
 
 <b>Programming Languages</b>
 <br>
-<img src="https://img.shields.io/badge/JavaScript-yellow?style=for-the-badge&logo=javascript&logoColor=white"
-        alt="JavaScript Badge" />
 <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white"
         alt="C# Badge" />
 <br>
-<b>Socket Programming</b>
+<b>Programming</b>
 <br>
+<img src="https://img.shields.io/badge/HTTP-4A90E2?style=for-the-badge&logo=http&logoColor=white"
+        alt="HTTP Badge" />
 <img src="https://img.shields.io/badge/TCP-00599C?style=for-the-badge&logo=protocol&logoColor=white"
         alt="TCP Badge" />
 <img src="https://img.shields.io/badge/Protobuf-336791?style=for-the-badge&logo=google&logoColor=white"
         alt="Protobuf Badge" />
 <br>
-<b>Game Server & Login Server</b>
+<b>Auth & Lobby & Game Server</b>
 <br>
-<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white"
-        alt="Node.js Badge" />
-<br>
-<b>Pathfinding Server</b>
-<br>
-<img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white"
-        alt="C# Badge" />
+<img src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"
+        alt=".NET Badge" />
 <br>
 <b>Client</b>
 <br>
@@ -54,8 +49,10 @@
 <br>
 <b>DB</b>
 <br>
-<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white"
-        alt="MySQL Badge" />
+<img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white"
+        alt="PostgreSQL Badge" />
+<img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white"
+        alt="MongoDB Badge" />
 <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white"
         alt="Redis Badge" />
 <br>
@@ -63,11 +60,10 @@
 <br>
 <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"
         alt="Docker Badge" />
-<img src="https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white"
-        alt="Docker Compose Badge" />
-<img src="https://img.shields.io/badge/Traefik-000000?style=for-the-badge&logo=traefik&logoColor=white"
-        alt="Traefik Badge" />
-<img src="https://img.shields.io/badge/VPS-FF6600?style=for-the-badge&logo=linux&logoColor=white" alt="VPS Badge" />
+<img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"
+        alt="AWS Badge" />
+<img src="https://img.shields.io/badge/VPS-FF6600?style=for-the-badge&logo=linux&logoColor=white" 
+        alt="VPS Badge" />
 <br>
 <b>VCS (Virsion Control System)</b>
 <br>
