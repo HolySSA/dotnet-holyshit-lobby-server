@@ -1,5 +1,3 @@
-# dotnet-holyshit-lobby-server
-
 # Holy Shit
 
 <p align="center">
@@ -13,7 +11,18 @@
 - 게임 장르: 전략/카드
 - 프로젝트 소개: **Holy Shit!**은 보드 게임 Bang!에서 영감을 받은 실시간 전략 카드 게임입니다. 각 플레이어는 숨겨진 역할에 따라 목표를 달성해야 하며, 승리를 위해 치열한 심리전과 전략적인 플레이가 요구됩니다.
 
-- 프로젝트 문서는 [여기](https://dune-poultry-b4f.notion.site/Holy-Shit-18a266df1491805dbb78c9ed6f672c5d?pvs=4)에서 확인하실 수 있습니다!
+## 관련 링크
+
+- 프로젝트 문서
+  [브로셔](https://dune-poultry-b4f.notion.site/Holy-Shit-18a266df1491805dbb78c9ed6f672c5d?pvs=4)
+- AUTH 서버
+  [dotnet-holyshit-auth-server](https://github.com/HolySSA/dotnet-holyshit-auth-server)
+- GAME 서버
+  [dotnet-holyshit-game-server](https://github.com/HolySSA/dotnet-holyshit-game-server)
+- 클라이언트
+  [holyshit-client](https://github.com/HolySSA/holyshit-client)
+- DB 서버
+  폐쇄.
 
 ## 서비스 아키텍처
 
